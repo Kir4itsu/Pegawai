@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Absensi Kepegawaian</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7ff;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 24px;
+            color: var(--primary);
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .attendance-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .camera-box {
+            width: 300px;
+            height: 300px;
+            border-radius: 20px;
+            border: 2px dashed var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .camera-placeholder {
+            width: 100%;
+            height: 100%;
+            background-color: #e9ecef;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+        }
+        
+        .face-scan-animation {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            animation: scanAnimation 2s linear infinite;
+        }
+        
+        @keyframes scanAnimation {
+            0% {
+                top: 0;
+            }
+            50% {
+                top: 100%;
+            }
+            100% {
+                top: 0;
+            }
+        }
+        
+        .scan-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .scan-btn:hover {
+            background-color: var(--secondary);
+            transform: scale(1.05);
+        }
+        
+        .scan-btn i {
+            margin-right: 8px;
+        }
+        
+        .time-box {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .current-time {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .current-date {
+            font-size: 16px;
+            color: var(--gray);
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+        
+        .status-in {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: var(--success);
+        }
+        
+        .status-out {
+            background-color: rgba(247, 127, 0, 0.1);
+            color: #f77f00;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .schedule-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .schedule-item:last-child {
+            border-bottom: none;
+        }
+        
+        .schedule-time {
+            min-width: 80px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .schedule-details {
+            flex: 1;
+        }
+        
+        .schedule-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .schedule-description {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        .priority-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        
+        .priority-high {
+            background-color: #e63946;
+        }
+        
+        .priority-medium {
+            background-color: #ffb703;
+        }
+        
+        .priority-low {
+            background-color: #06d6a0;
+        }
+        
+        .daily-report {
+            width: 100%;
+        }
+        
+        .report-textarea {
+            width: 100%;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 14px;
+            min-height: 150px;
+            margin-bottom: 15px;
+            resize: none;
+        }
+        
+        .task-list {
+            margin-bottom: 20px;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            background: var(--light);
+            padding: 10px 15px;
+            border-radius: 8px;
+        }
+        
+        .task-checkbox {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .task-title {
+            flex: 1;
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 12px;
+        }
+        
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+        }
+        
+        .success-animation {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background-color: #4cc9f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(76, 201, 240, 0.7);
+            }
+            
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 15px rgba(76, 201, 240, 0);
+            }
+            
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(76, 201, 240, 0);
+            }
+        }
+        
+        .success-message {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .success-details {
+            font-size: 16px;
+            color: var(--gray);
+        }
+        /* Attendance History Page */
+        .filter-container {
+            display: flex;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            background-color: var(--light);
+            border: none;
+            border-radius: 50px;
+            margin-right: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .filter-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .calendar-view {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .month-selector {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .month-selector i {
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+        
+        .calendar-day {
+            text-align: center;
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+        
+        .calendar-date {
+            aspect-ratio: 1/1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 14px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .calendar-date.today {
+            background-color: var(--light-gray);
+            font-weight: 600;
+        }
+        
+        .calendar-date.present {
+            color: white;
+            background-color: var(--success);
+        }
+        
+        .calendar-date.absent {
+            color: white;
+            background-color: var(--danger);
+        }
+        
+        .calendar-date.late {
+            color: white;
+            background-color: var(--warning);
+        }
+        
+        .attendance-record {
+            display: flex;
+            padding: 15px;
+            border-bottom: 1px solid var(--light-gray);
+            align-items: center;
+        }
+        
+        .attendance-record:last-child {
+            border-bottom: none;
+        }
+        
+        .record-date {
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .record-day {
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .record-month {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .record-details {
+            flex: 1;
+            margin-left: 15px;
+        }
+        
+        .record-time {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+        
+        .record-location {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .record-status {
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .status-ontime {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: var(--success);
+        }
+        
+        .status-late {
+            background-color: rgba(255, 183, 3, 0.1);
+            color: var(--warning);
+        }
+        
+        .status-absent {
+            background-color: rgba(230, 57, 70, 0.1);
+            color: var(--danger);
+        }
+        
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+        }
+        
+        .icon-blue {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+        
+        .icon-green {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: var(--success);
+        }
+        
+        .icon-yellow {
+            background-color: rgba(255, 183, 3, 0.1);
+            color: var(--warning);
+        }
+        
+        .icon-red {
+            background-color: rgba(230, 57, 70, 0.1);
+            color: var(--danger);
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        /* Profile Page */
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            margin: 0 auto 15px;
+        }
+        
+        .profile-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .profile-position {
+            font-size: 16px;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+        
+        .profile-tag {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .profile-section {
+            margin-bottom: 20px;
+        }
+        
+        .profile-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .profile-section-title i {
+            margin-right: 8px;
+            color: var(--primary);
+        }
+        
+        .info-item {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        
+        .info-icon {
+            min-width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        .info-details {
+            flex: 1;
+        }
+        
+        .info-label {
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 3px;
+        }
+        
+        .info-value {
+            font-weight: 600;
+        }
+        
+        /* Badges Section */
+        .badges-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .badge-item {
+            text-align: center;
+        }
+        
+        .badge-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 24px;
+        }
+        
+        .badge-icon.locked {
+            background-color: var(--light-gray);
+            color: var(--gray);
+        }
+        
+        .badge-name {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+        
+        .badge-desc {
+            font-size: 10px;
+            color: var(--gray);
+        }
+        
+        /* Action buttons */
+        .action-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--light-gray);
+            color: var(--dark);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px);
+        }
+        
+        .action-btn i {
+            margin-right: 10px;
+        }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>  
+    <!-- Header -->
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-id-card"></i>
+                <span>Absensi Pro</span>
+            </div>
+            <div class="user-profile">
+                <div class="user-avatar">KM</div>
+                <div class="user-name">Kiraitsu M.</div>
+            </div>
+        </div>
+        
+        <!-- Main Content - Clock In Page -->
+        <div id="clockInPage" class="page">
+            <div class="card">
+                <div class="time-box">
+                    <div class="current-time" id="currentTime">08:30</div>
+                    <div class="current-date" id="currentDate">Senin, 20 April 2025</div>
+                    <div class="status status-in">Jam Masuk</div>
+                </div>
+                
+                <div class="attendance-container">
+                    <div class="camera-box">
+                        <div class="camera-placeholder" id="cameraPlaceholderIn">
+                            <i class="fas fa-camera" style="font-size: 48px; margin-bottom: 15px;"></i>
+                            <span>Wajah Anda akan muncul di sini</span>
+                        </div>
+                        <video id="cameraFeedIn" style="display: none; width: 100%; height: 100%; object-fit: cover;"></video>
+                        <div class="face-scan-animation"></div>
+                    </div>
+                    
+                    <button class="scan-btn" id="scanButtonIn" onclick="startCamera('In')">
+                        <i class="fas fa-camera"></i>
+                        Aktifkan Kamera
+                    </button>
+                    
+                    <button class="scan-btn" id="captureButtonIn" style="display: none; background-color: #2ecc71;" onclick="captureFace('In')">
+                        <i class="fas fa-camera"></i>
+                        Scan Wajah untuk Absen Masuk
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">Jadwal Hari Ini</div>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab('schedule')">Jadwal</div>
+                    <div class="tab" onclick="switchTab('tasks')">Tugas</div>
+                </div>
+                
+                <div class="tab-content active" id="schedule">
+                    <div class="schedule-item">
+                        <div class="priority-indicator priority-high"></div>
+                        <div class="schedule-time">09:00</div>
+                        <div class="schedule-details">
+                            <div class="schedule-title">Rapat Tim Marketing</div>
+                            <div class="schedule-description">Ruang Rapat A, Lantai 3</div>
+                        </div>
+                    </div>
+                    
+                    <div class="schedule-item">
+                        <div class="priority-indicator priority-medium"></div>
+                        <div class="schedule-time">11:30</div>
+                        <div class="schedule-details">
+                            <div class="schedule-title">Presentasi Produk Baru</div>
+                            <div class="schedule-description">Ruang Seminar, Lantai 5</div>
+                        </div>
+                    </div>
+                    
+                    <div class="schedule-item">
+                        <div class="priority-indicator priority-low"></div>
+                        <div class="schedule-time">14:00</div>
+                        <div class="schedule-details">
+                            <div class="schedule-title">Review Kinerja Bulanan</div>
+                            <div class="schedule-description">Ruang Manajer, Lantai 4</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="tasks">
+                    <div class="task-list">
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox">
+                            <div class="task-title">Finalisasi laporan kuartal Q1</div>
+                        </div>
+                        
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox">
+                            <div class="task-title">Update data penjualan di sistem CRM</div>
+                        </div>
+                        
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox">
+                            <div class="task-title">Persiapkan presentasi untuk rapat tim</div>
+                        </div>
+                        
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox">
+                            <div class="task-title">Follow-up email ke klien PT Maju Jaya</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Clock Out Page -->
+        <div id="clockOutPage" class="page" style="display: none;">
+            <div class="card">
+                <div class="time-box">
+                    <div class="current-time">17:30</div>
+                    <div class="current-date">Senin, 20 April 2025</div>
+                    <div class="status status-out">Jam Pulang</div>
+                </div>
+                
+                <div class="attendance-container">
+                    <div class="camera-box">
+                        <div class="camera-placeholder" id="cameraPlaceholderOut">
+                            <i class="fas fa-camera" style="font-size: 48px; margin-bottom: 15px;"></i>
+                            <span>Wajah Anda akan muncul di sini</span>
+                        </div>
+                        <video id="cameraFeedOut" style="display: none; width: 100%; height: 100%; object-fit: cover;"></video>
+                        <div class="face-scan-animation"></div>
+                    </div>
+                    
+                    <button class="scan-btn" id="scanButtonOut" onclick="startCamera('Out')">
+                        <i class="fas fa-camera"></i>
+                        Aktifkan Kamera
+                    </button>
+                    
+                    <button class="scan-btn" id="captureButtonOut" style="display: none; background-color: #e74c3c;" onclick="captureFace('Out')">
+                        <i class="fas fa-camera"></i>
+                        Scan Wajah untuk Absen Pulang
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">Laporan Harian</div>
+                
+                <div class="daily-report">
+                    <textarea class="report-textarea" placeholder="Tuliskan laporan kegiatan harian Anda di sini..."></textarea>
+                    
+                    <div class="card-title">Tugas yang Diselesaikan</div>
+                    <div class="task-list">
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" checked>
+                            <div class="task-title">Finalisasi laporan kuartal Q1</div>
+                        </div>
+                        
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" checked>
+                            <div class="task-title">Update data penjualan di sistem CRM</div>
+                        </div>
+                        
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" checked>
+                            <div class="task-title">Persiapkan presentasi untuk rapat tim</div>
+                        </div>
+                        
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox">
+                            <div class="task-title">Follow-up email ke klien PT Maju Jaya</div>
+                        </div>
+                    </div>
+                    
+                    <button class="scan-btn" style="width: 100%; justify-content: center; margin-top: 20px;" onclick="showClockOutSuccess()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Kirim Laporan
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- History Page -->
+        <div id="historyPage" class="page" style="display: none;">
+            <div class="card">
+                <div class="card-title">
+                    <span><i class="fas fa-chart-pie"></i> Statistik Kehadiran</span>
+                    <small>April 2025</small>
+                </div>
+                
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon icon-blue">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-value">15</div>
+                        <div class="stat-label">Total Kehadiran</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon icon-green">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Tepat Waktu</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon icon-yellow">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Terlambat</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon icon-red">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <div class="stat-value">1</div>
+                        <div class="stat-label">Absen</div>
+                    </div>
+                </div>
+            
+                <div class="card-title">
+                    <span><i class="far fa-calendar-alt"></i> Kalender Kehadiran</span>
+                </div>
+                
+                <div class="calendar-view">
+                    <div class="calendar-header">
+                        <div class="month-selector">
+                            <i class="fas fa-chevron-left"></i>
+                            <span style="margin: 0 15px;">April 2025</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar-grid">
+                        <!-- Days of the week -->
+                        <div class="calendar-day">Min</div>
+                        <div class="calendar-day">Sen</div>
+                        <div class="calendar-day">Sel</div>
+                        <div class="calendar-day">Rab</div>
+                        <div class="calendar-day">Kam</div>
+                        <div class="calendar-day">Jum</div>
+                        <div class="calendar-day">Sab</div>
+                        
+                        <!-- Empty spaces for previous month -->
+                        <div class="calendar-date"></div>
+                        <div class="calendar-date"></div>
+                        
+                        <!-- Dates -->
+                        <div class="calendar-date">1</div>
+                        <div class="calendar-date">2</div>
+                        <div class="calendar-date">3</div>
+                        <div class="calendar-date">4</div>
+                        <div class="calendar-date">5</div>
+                        <div class="calendar-date">6</div>
+                        <div class="calendar-date">7</div>
+                        <div class="calendar-date">8</div>
+                        <div class="calendar-date present">9</div>
+                        <div class="calendar-date present">10</div>
+                        <div class="calendar-date present">11</div>
+                        <div class="calendar-date">12</div>
+                        <div class="calendar-date">13</div>
+                        <div class="calendar-date present">14</div>
+                        <div class="calendar-date present">15</div>
+                        <div class="calendar-date late">16</div>
+                        <div class="calendar-date present">17</div>
+                        <div class="calendar-date absent">18</div>
+                        <div class="calendar-date">19</div>
+                        <div class="calendar-date today">20</div>
+                        <div class="calendar-date">21</div>
+                        <div class="calendar-date">22</div>
+                        <div class="calendar-date">23</div>
+                        <div class="calendar-date">24</div>
+                        <div class="calendar-date">25</div>
+                        <div class="calendar-date">26</div>
+                        <div class="calendar-date">27</div>
+                        <div class="calendar-date">28</div>
+                        <div class="calendar-date">29</div>
+                        <div class="calendar-date">30</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; margin-bottom: 15px;">
+                    <div style="display: flex; align-items: center; margin-right: 15px;">
+                        <div style="width: 10px; height: 10px; background-color: var(--success); border-radius: 50%; margin-right: 5px;"></div>
+                        <span style="font-size: 12px;">Hadir</span>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; margin-right: 15px;">
+                        <div style="width: 10px; height: 10px; background-color: var(--warning); border-radius: 50%; margin-right: 5px;"></div>
+                        <span style="font-size: 12px;">Terlambat</span>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center;">
+                        <div style="width: 10px; height: 10px; background-color: var(--danger); border-radius: 50%; margin-right: 5px;"></div>
+                        <span style="font-size: 12px;">Tidak Hadir</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <span><i class="fas fa-history"></i> Riwayat Kehadiran</span>
+                </div>
+                
+                <div class="filter-container">
+                    <button class="filter-btn active" onclick="filterAttendance('all')">Semua</button>
+                    <button class="filter-btn" onclick="filterAttendance('today')">Hari Ini</button>
+                    <button class="filter-btn" onclick="filterAttendance('week')">Minggu Ini</button>
+                    <button class="filter-btn" onclick="filterAttendance('month')">Bulan Ini</button>
+                </div>
+                
+                <div id="attendanceRecords">
+                    <!-- All Records (Default View) -->
+                    <div class="attendance-record" data-date="2025-04-20">
+                        <div class="record-date">
+                            <div class="record-day">20</div>
+                            <div class="record-month">APR</div>
+                        </div>
+                        <div class="record-details">
+                            <div class="record-time">Masuk: 08:30</div>
+                            <div class="record-location">Kantor Pusat, Jakarta</div>
+                        </div>
+                        <div class="record-status status-ontime">Tepat Waktu</div>
+                    </div>
+                    
+                    <div class="attendance-record" data-date="2025-04-19">
+                        <div class="record-date">
+                            <div class="record-day">19</div>
+                            <div class="record-month">APR</div>
+                        </div>
+                        <div class="record-details">
+                            <div class="record-time">Masuk: -</div>
+                            <div class="record-location">-</div>
+                        </div>
+                        <div class="record-status status-absent">Tidak Hadir</div>
+                    </div>
+                    
+                    <div class="attendance-record" data-date="2025-04-18">
+                        <div class="record-date">
+                            <div class="record-day">18</div>
+                            <div class="record-month">APR</div>
+                        </div>
+                        <div class="record-details">
+                            <div class="record-time">Masuk: 08:55</div>
+                            <div class="record-location">Kantor Pusat, Jakarta</div>
+                        </div>
+                        <div class="record-status status-late">Terlambat</div>
+                    </div>
+                    
+                    <div class="attendance-record" data-date="2025-04-17">
+                        <div class="record-date">
+                            <div class="record-day">17</div>
+                            <div class="record-month">APR</div>
+                        </div>
+                        <div class="record-details">
+                            <div class="record-time">Masuk: 08:15</div>
+                            <div class="record-location">Kantor Pusat, Jakarta</div>
+                        </div>
+                        <div class="record-status status-ontime">Tepat Waktu</div>
+                    </div>
+                    
+                    <div class="attendance-record" data-date="2025-04-16">
+                        <div class="record-date">
+                            <div class="record-day">16</div>
+                            <div class="record-month">APR</div>
+                        </div>
+                        <div class="record-details">
+                            <div class="record-time">Masuk: 08:45</div>
+                            <div class="record-location">Kantor Pusat, Jakarta</div>
+                        </div>
+                        <div class="record-status status-late">Terlambat</div>
+                    </div>
+                    
+                    <div class="attendance-record" data-date="2025-04-15">
+                        <div class="record-date">
+                            <div class="record-day">15</div>
+                            <div class="record-month">APR</div>
+                        </div>
+                        <div class="record-details">
+                            <div class="record-time">Masuk: 08:20</div>
+                            <div class="record-location">Kantor Pusat, Jakarta</div>
+                        </div>
+                        <div class="record-status status-ontime">Tepat Waktu</div>
+                    </div>
+                    
+                    <div class="attendance-record" data-date="2025-04-14">
+                        <div class="record-date">
+                            <div class="record-day">14</div>
+                            <div class="record-month">APR</div>
+                        </div>
+                        <div class="record-details">
+                            <div class="record-time">Masuk: 08:25</div>
+                            <div class="record-location">Kantor Pusat, Jakarta</div>
+                        </div>
+                        <div class="record-status status-ontime">Tepat Waktu</div>
+                    </div>
+                    
+                    <div class="attendance-record" data-date="2025-04-10">
+                        <div class="record-date">
+                            <div class="record-day">10</div>
+                            <div class="record-month">APR</div>
+                        </div>
+                        <div class="record-details">
+                            <div class="record-time">Masuk: 08:10</div>
+                            <div class="record-location">Kantor Pusat, Jakarta</div>
+                        </div>
+                        <div class="record-status status-ontime">Tepat Waktu</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Profile Page -->
+        <div id="profilePage" class="page" style="display: none;">
+            <div class="profile-header">
+                <div class="profile-image">KM</div>
+                <div class="profile-name">Kiraitsu M</div>
+                <div class="profile-position">Manusia</div>
+                <div class="profile-tag">Divisi Gaming</div>
+            </div>
+            
+            <div class="card">
+                <div class="profile-section">
+                    <div class="profile-section-title">
+                        <i class="fas fa-user"></i>
+                        Informasi Pribadi
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-id-card"></i>
+                        </div>
+                        <div class="info-details">
+                            <div class="info-label">NIP</div>
+                            <div class="info-value">802306532</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="info-details">
+                            <div class="info-label">Email</div>
+                            <div class="info-value">kiraitsu@mail.com</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="info-details">
+                            <div class="info-label">Telepon</div>
+                            <div class="info-value">+62 89523793649</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="info-details">
+                            <div class="info-label">Tanggal Bergabung</div>
+                            <div class="info-value">10 Januari 2022</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="profile-section">
+                    <div class="profile-section-title">
+                        <i class="fas fa-medal"></i>
+                        Pencapaian
+                    </div>
+                    
+                    <div class="badges-container">
+                        <div class="badge-item">
+                            <div class="badge-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="badge-name">Pegawai Teladan</div>
+                            <div class="badge-desc">3 bulan berturut-turut</div>
+                        </div>
+                        
+                        <div class="badge-item">
+                            <div class="badge-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="badge-name">Ketepatan Waktu</div>
+                            <div class="badge-desc">100% tepat waktu 1 bulan</div>
+                        </div>
+                        
+                        <div class="badge-item">
+                            <div class="badge-icon locked">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="badge-name">Top Performer</div>
+                            <div class="badge-desc">Terkunci</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="profile-section">
+                    <div class="profile-section-title">
+                        <i class="fas fa-cog"></i>
+                        Pengaturan
+                    </div>
+                    
+                    <button class="action-btn btn-primary">
+                        <i class="fas fa-camera"></i>
+                        Perbarui Foto Wajah
+                    </button>
+                    
+                    <button class="action-btn btn-outline">
+                        <i class="fas fa-bell"></i>
+                        Pengaturan Notifikasi
+                    </button>
+                    
+                    <button class="action-btn btn-outline">
+                        <i class="fas fa-lock"></i>
+                        Ubah Password
+                    </button>
+                    
+                    <button class="action-btn btn-outline" style="color: #e63946;">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Success Animation for Clock In -->
+        <div class="success-animation" id="clockInSuccess">
+            <div class="success-icon">
+                <i class="fas fa-check" style="font-size: 50px; color: white;"></i>
+            </div>
+            <div class="success-message">Absen Masuk Berhasil!</div>
+            <div class="success-details">08:30 - Senin, 20 April 2025</div>
+        </div>
+        
+        <!-- Success Animation for Clock Out -->
+        <div class="success-animation" id="clockOutSuccess">
+            <div class="success-icon">
+                <i class="fas fa-check" style="font-size: 50px; color: white;"></i>
+            </div>
+            <div class="success-message">Absen Pulang Berhasil!</div>
+            <div class="success-details">17:30 - Senin, 20 April 2025</div>
+            <div class="success-details">Laporan harian telah disimpan</div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="navigation">
+        <a href="#" class="nav-item active" onclick="switchPage('clockInPage')">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>Masuk</span>
+        </a>
+        <a href="#" class="nav-item" onclick="switchPage('clockOutPage')">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Pulang</span>
+        </a>
+        <a href="#" class="nav-item" onclick="switchPage('historyPage')">
+            <i class="fas fa-history"></i>
+            <span>Riwayat</span>
+        </a>
+        <a href="#" class="nav-item" onclick="switchPage('profilePage')">
+            <i class="fas fa-user"></i>
+            <span>Profil</span>
+        </a>
+    </div>    
+    
+    <script>
+       // Display current time and date
+        function updateDateTime() {
+            const now = new Date();
+            const timeElement = document.getElementById('currentTime');
+            const dateElement = document.getElementById('currentDate');
+            
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const timeString = now.toLocaleTimeString('id-ID', {hour: '2-digit', minute: '2-digit'});
+            const dateString = now.toLocaleDateString('id-ID', options);
+            
+            if(timeElement) timeElement.textContent = timeString;
+            if(dateElement) dateElement.textContent = dateString;
+        }
+
+        // Initial update
+        updateDateTime();
+
+        // Update time every minute
+        setInterval(updateDateTime, 60000);
+
+        // Switch between tabs
+        function switchTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Deactivate all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Activate the selected tab and its content
+            document.getElementById(tabName).classList.add('active');
+            document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
+        }
+
+        // Switch between pages
+        function switchPage(pageName) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.style.display = 'none';
+            });
+            
+            // Show the selected page
+            document.getElementById(pageName).style.display = 'block';
+            
+            // Update navigation active status
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Make the clicked nav item active
+            event.currentTarget.classList.add('active');
+        }
+
+        // Show clock in success animation
+        function showClockInSuccess() {
+            const successAnimation = document.getElementById('clockInSuccess');
+            successAnimation.style.display = 'flex';
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                successAnimation.style.display = 'none';
+            }, 3000);
+        }
+
+        // Show clock out success animation
+        function showClockOutSuccess() {
+            const successAnimation = document.getElementById('clockOutSuccess');
+            successAnimation.style.display = 'flex';
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                successAnimation.style.display = 'none';
+            }, 3000);
+        }
+
+        // Set default page on load
+        document.addEventListener('DOMContentLoaded', function() {
+            switchPage('clockInPage');
+        });
+
+        // Open camera function
+        function startCamera(type) {
+            const videoElement = document.getElementById(`cameraFeed${type}`);
+            const cameraPlaceholder = document.getElementById(`cameraPlaceholder${type}`);
+            const scanButton = document.getElementById(`scanButton${type}`);
+            const captureButton = document.getElementById(`captureButton${type}`);
+
+            // Request camera access
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
+                .then((stream) => {
+                    // Display camera feed to video element
+                    videoElement.srcObject = stream;
+                    videoElement.style.display = 'block';
+                    videoElement.play();
+                    
+                    // Hide placeholder, show capture button
+                    cameraPlaceholder.style.display = 'none';
+                    scanButton.style.display = 'none';
+                    captureButton.style.display = 'block';
+                    
+                    // Add face scan animation
+                    const cameraBox = videoElement.parentElement;
+                    cameraBox.querySelector('.face-scan-animation').style.display = 'block';
+                })
+                .catch((err) => {
+                    console.error("Error accessing camera: ", err);
+                    alert("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.");
+                });
+        }
+
+        // Capture face function
+        function captureFace(type) {
+            // In a real app, this would process face recognition
+            // For demo, we'll just simulate success
+            
+            // Stop the camera
+            const videoElement = document.getElementById(`cameraFeed${type}`);
+            if (videoElement.srcObject) {
+                const tracks = videoElement.srcObject.getTracks();
+                tracks.forEach(track => track.stop());
+                videoElement.srcObject = null;
+            }
+            
+            // Hide camera elements
+            videoElement.style.display = 'none';
+            document.getElementById(`cameraPlaceholder${type}`).style.display = 'flex';
+            document.getElementById(`scanButton${type}`).style.display = 'block';
+            document.getElementById(`captureButton${type}`).style.display = 'none';
+            
+            // Hide face scan animation
+            const cameraBox = videoElement.parentElement;
+            cameraBox.querySelector('.face-scan-animation').style.display = 'none';
+            
+            // Show success
+            if (type === 'In') {
+                showClockInSuccess();
+            } else {
+                showClockOutSuccess();
+            }
+        }
+
+        // Filter attendance records based on period
+        function filterAttendance(period) {
+            // Update active button style
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            const records = document.querySelectorAll('.attendance-record');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            // Calculate start dates for different periods
+            const startWeek = new Date(today);
+            startWeek.setDate(today.getDate() - today.getDay()); // Start of week (Sunday)
+            
+            const startMonth = new Date(today);
+            startMonth.setDate(1); // Start of month
+            
+            records.forEach(record => {
+                const recordDate = new Date(record.getAttribute('data-date'));
+                
+                if (period === 'all') {
+                    record.style.display = 'flex'; // Show all records
+                } else if (period === 'today' && isSameDay(recordDate, today)) {
+                    record.style.display = 'flex'; // Show only today's records
+                } else if (period === 'week' && recordDate >= startWeek) {
+                    record.style.display = 'flex'; // Show only this week's records
+                } else if (period === 'month' && recordDate >= startMonth) {
+                    record.style.display = 'flex'; // Show only this month's records
+                } else {
+                    record.style.display = 'none'; // Hide records that don't match the filter
+                }
+            });
+        }
+
+        // Helper function to check if two dates are the same day
+        function isSameDay(date1, date2) {
+            return date1.getFullYear() === date2.getFullYear() &&
+                date1.getMonth() === date2.getMonth() &&
+                date1.getDate() === date2.getDate();
+        }
+    </script>    
+</body>
+</html>
