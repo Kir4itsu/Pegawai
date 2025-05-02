@@ -52,6 +52,21 @@
                 </div>
             </div>
             
+            <!-- Attendance Modal for Clock In Page -->
+            <div id="attendanceModal" class="attendance-modal" style="display: none;">
+                <div class="attendance-options">
+                    <button class="attendance-option clock-in" onclick="switchPage('clockInPage'); closeAttendanceModal();">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Absen Masuk</span>
+                    </button>
+                    <button class="attendance-option clock-out" onclick="switchPage('clockOutPage'); closeAttendanceModal();">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Absen Pulang</span>
+                    </button>
+                </div>
+            </div>
+            
+            
             <div class="card">
                 <div class="card-title">Jadwal Hari Ini</div>
                 
@@ -142,6 +157,20 @@
                     <button class="scan-btn" id="captureButtonOut" style="display: none; background-color: #e74c3c;" onclick="captureFace('Out')">
                         <i class="fas fa-camera"></i>
                         Scan Wajah untuk Absen Pulang
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Attendance Modal for Clock Out Page -->
+            <div id="attendanceModal" class="attendance-modal" style="display: none;">
+                <div class="attendance-options">
+                    <button class="attendance-option clock-in" onclick="switchPage('clockInPage'); closeAttendanceModal();">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Absen Masuk</span>
+                    </button>
+                    <button class="attendance-option clock-out" onclick="switchPage('clockOutPage'); closeAttendanceModal();">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Absen Pulang</span>
                     </button>
                 </div>
             </div>
@@ -553,7 +582,7 @@
                 <div class="profile-image">KM</div>
                 <div class="profile-name">Kiraitsu M</div>
                 <div class="profile-position">Manusia</div>
-                <div class="profile-tag">Divisi Gaming</div>
+                <div class="profile-tag">Divisi FrontEnd</div>
             </div>
             
             <div class="card">
@@ -713,21 +742,7 @@
             <i class="fas fa-user"></i>
             <span>Profil</span>
         </a>
-    </div>
-    
-    <!-- Status Absensi Modal -->
-    <div id="attendanceModal" class="attendance-modal">
-        <div class="attendance-options">
-            <button class="attendance-option clock-in" onclick="switchPage('clockInPage'); closeAttendanceModal();">
-                <i class="fas fa-sign-in-alt"></i>
-                <span>Absen Masuk</span>
-            </button>
-            <button class="attendance-option clock-out" onclick="switchPage('clockOutPage'); closeAttendanceModal();">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Absen Pulang</span>
-            </button>
-        </div>
-    </div>   
+    </div> 
     
     <script>
        // Display current time and date
@@ -880,23 +895,41 @@
 
         // Fungsi untuk toggle modal absensi
         function toggleAttendance() {
-            const modal = document.getElementById('attendanceModal');
-            if (modal.style.display === 'block') {
-                closeAttendanceModal();
+            const currentPage = document.querySelector('.page[style="display: block;"]') || 
+                            document.querySelector('.page:not([style])');
+            
+            if (currentPage && (currentPage.id === 'clockInPage' || currentPage.id === 'clockOutPage')) {
+                const modal = currentPage.querySelector('#attendanceModal');
+                if (modal.style.display === 'block') {
+                    closeAttendanceModal();
+                } else {
+                    modal.style.display = 'block';
+                }
             } else {
-                modal.style.display = 'block';
+                // Jika tidak di halaman absen, arahkan ke halaman absen masuk
+                switchPage('clockInPage');
             }
         }
 
         // Fungsi untuk menutup modal absensi
         function closeAttendanceModal() {
-            const modal = document.getElementById('attendanceModal');
-            modal.style.display = 'none';
+            const currentPage = document.querySelector('.page[style="display: block;"]') || 
+                               document.querySelector('.page:not([style])');
+            if (currentPage) {
+                const modal = currentPage.querySelector('#attendanceModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+            }
         }
 
         // Menutup modal jika user klik di luar modal
         document.addEventListener('click', function(event) {
-            const modal = document.getElementById('attendanceModal');
+            const currentPage = document.querySelector('.page[style="display: block;"]') || 
+                               document.querySelector('.page:not([style])');
+            if (!currentPage) return;
+            
+            const modal = currentPage.querySelector('#attendanceModal');
             const attendanceBtn = document.getElementById('attendanceButton');
             
             if (modal && modal.style.display === 'block' && 
