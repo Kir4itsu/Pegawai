@@ -49,20 +49,17 @@
                         <i class="fas fa-camera"></i>
                         Scan Wajah untuk Absen Masuk
                     </button>
-                </div>
-            </div>
-            
-            <!-- Attendance Modal for Clock In Page -->
-            <div id="attendanceModal" class="attendance-modal" style="display: none;">
-                <div class="attendance-options">
-                    <button class="attendance-option clock-in" onclick="switchPage('clockInPage'); closeAttendanceModal();">
-                        <i class="fas fa-sign-in-alt"></i>
-                        <span>Absen Masuk</span>
-                    </button>
-                    <button class="attendance-option clock-out" onclick="switchPage('clockOutPage'); closeAttendanceModal();">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Absen Pulang</span>
-                    </button>
+
+                    <div class="clockinout-buttons">
+                        <button class="clock-btn clock-in-btn active" onclick="switchPage('clockInPage')">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Absen Masuk
+                        </button>
+                        <button class="clock-btn clock-out-btn" onclick="switchPage('clockOutPage')">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Absen Pulang
+                        </button>
+                    </div>
                 </div>
             </div>
             
@@ -158,20 +155,17 @@
                         <i class="fas fa-camera"></i>
                         Scan Wajah untuk Absen Pulang
                     </button>
-                </div>
-            </div>
-            
-            <!-- Attendance Modal for Clock Out Page -->
-            <div id="attendanceModal" class="attendance-modal" style="display: none;">
-                <div class="attendance-options">
-                    <button class="attendance-option clock-in" onclick="switchPage('clockInPage'); closeAttendanceModal();">
-                        <i class="fas fa-sign-in-alt"></i>
-                        <span>Absen Masuk</span>
-                    </button>
-                    <button class="attendance-option clock-out" onclick="switchPage('clockOutPage'); closeAttendanceModal();">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Absen Pulang</span>
-                    </button>
+
+                    <div class="clockinout-buttons">
+                        <button class="clock-btn clock-in-btn" onclick="switchPage('clockInPage')">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Absen Masuk
+                        </button>
+                        <button class="clock-btn clock-out-btn active" onclick="switchPage('clockOutPage')">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Absen Pulang
+                        </button>
+                    </div>
                 </div>
             </div>
             
@@ -745,7 +739,7 @@
     </div> 
     
     <script>
-       // Display current time and date
+        // Display current time and date
         function updateDateTime() {
             const now = new Date();
             const timeElement = document.getElementById('currentTime');
@@ -758,13 +752,13 @@
             if(timeElement) timeElement.textContent = timeString;
             if(dateElement) dateElement.textContent = dateString;
         }
-
+    
         // Initial update
         updateDateTime();
-
+    
         // Update time every minute
         setInterval(updateDateTime, 60000);
-
+    
         // Switch between tabs
         function switchTab(tabName) {
             // Hide all tab contents
@@ -783,7 +777,7 @@
             document.getElementById(tabName).classList.add('active');
             document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
         }
-
+    
         // Switch between pages
         function switchPage(pageName) {
             // Hide all pages
@@ -802,9 +796,53 @@
             });
             
             // Make the clicked nav item active
-            event.currentTarget.classList.add('active');
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            }
+            
+            // Update active clock button
+            updateActiveClockButton();
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
         }
-
+    
+        // Toggle between clock in and clock out pages
+        function toggleAttendance() {
+            // Get current page
+            const currentPage = document.querySelector('.page[style="display: block;"]') || 
+                               document.querySelector('.page:not([style])');
+            
+            // Toggle between pages
+            if (currentPage.id === 'clockInPage') {
+                switchPage('clockOutPage');
+            } else {
+                switchPage('clockInPage');
+            }
+        }
+    
+        // Update active clock button based on current page
+        function updateActiveClockButton() {
+            const currentPage = document.querySelector('.page[style="display: block;"]') || 
+                               document.querySelector('.page:not([style])');
+            
+            // Reset all clock buttons
+            document.querySelectorAll('.clock-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Set active button based on current page
+            if (currentPage.id === 'clockInPage') {
+                document.querySelectorAll('.clock-in-btn').forEach(btn => {
+                    btn.classList.add('active');
+                });
+            } else if (currentPage.id === 'clockOutPage') {
+                document.querySelectorAll('.clock-out-btn').forEach(btn => {
+                    btn.classList.add('active');
+                });
+            }
+        }
+    
         // Show clock in success animation
         function showClockInSuccess() {
             const successAnimation = document.getElementById('clockInSuccess');
@@ -815,7 +853,7 @@
                 successAnimation.style.display = 'none';
             }, 3000);
         }
-
+    
         // Show clock out success animation
         function showClockOutSuccess() {
             const successAnimation = document.getElementById('clockOutSuccess');
@@ -826,19 +864,20 @@
                 successAnimation.style.display = 'none';
             }, 3000);
         }
-
+    
         // Set default page on load
         document.addEventListener('DOMContentLoaded', function() {
             switchPage('clockInPage');
+            updateActiveClockButton();
         });
-
+    
         // Open camera function
         function startCamera(type) {
             const videoElement = document.getElementById(`cameraFeed${type}`);
             const cameraPlaceholder = document.getElementById(`cameraPlaceholder${type}`);
             const scanButton = document.getElementById(`scanButton${type}`);
             const captureButton = document.getElementById(`captureButton${type}`);
-
+    
             // Request camera access
             navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
                 .then((stream) => {
@@ -861,11 +900,10 @@
                     alert("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.");
                 });
         }
-
+    
         // Capture face function
         function captureFace(type) {
             // In a real app, this would process face recognition
-            // For demo, we'll just simulate success
             
             // Stop the camera
             const videoElement = document.getElementById(`cameraFeed${type}`);
@@ -891,97 +929,6 @@
             } else {
                 showClockOutSuccess();
             }
-        }
-
-        // Fungsi untuk toggle modal absensi
-        function toggleAttendance() {
-            const currentPage = document.querySelector('.page[style="display: block;"]') || 
-                            document.querySelector('.page:not([style])');
-            
-            if (currentPage && (currentPage.id === 'clockInPage' || currentPage.id === 'clockOutPage')) {
-                const modal = currentPage.querySelector('#attendanceModal');
-                if (modal.style.display === 'block') {
-                    closeAttendanceModal();
-                } else {
-                    modal.style.display = 'block';
-                }
-            } else {
-                // Jika tidak di halaman absen, arahkan ke halaman absen masuk
-                switchPage('clockInPage');
-            }
-        }
-
-        // Fungsi untuk menutup modal absensi
-        function closeAttendanceModal() {
-            const currentPage = document.querySelector('.page[style="display: block;"]') || 
-                               document.querySelector('.page:not([style])');
-            if (currentPage) {
-                const modal = currentPage.querySelector('#attendanceModal');
-                if (modal) {
-                    modal.style.display = 'none';
-                }
-            }
-        }
-
-        // Menutup modal jika user klik di luar modal
-        document.addEventListener('click', function(event) {
-            const currentPage = document.querySelector('.page[style="display: block;"]') || 
-                               document.querySelector('.page:not([style])');
-            if (!currentPage) return;
-            
-            const modal = currentPage.querySelector('#attendanceModal');
-            const attendanceBtn = document.getElementById('attendanceButton');
-            
-            if (modal && modal.style.display === 'block' && 
-                !modal.contains(event.target) && 
-                event.target !== attendanceBtn && 
-                !attendanceBtn.contains(event.target)) {
-                closeAttendanceModal();
-            }
-        });
-
-        // Filter attendance records based on period
-        function filterAttendance(period) {
-            // Update active button style
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            filterButtons.forEach(button => {
-                button.classList.remove('active');
-            });
-            event.currentTarget.classList.add('active');
-            
-            const records = document.querySelectorAll('.attendance-record');
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            
-            // Calculate start dates for different periods
-            const startWeek = new Date(today);
-            startWeek.setDate(today.getDate() - today.getDay()); // Start of week (Sunday)
-            
-            const startMonth = new Date(today);
-            startMonth.setDate(1); // Start of month
-            
-            records.forEach(record => {
-                const recordDate = new Date(record.getAttribute('data-date'));
-                
-                if (period === 'all') {
-                    record.style.display = 'flex'; // Show all records
-                } else if (period === 'today' && isSameDay(recordDate, today)) {
-                    record.style.display = 'flex'; // Show only today's records
-                } else if (period === 'week' && recordDate >= startWeek) {
-                    record.style.display = 'flex'; // Show only this week's records
-                } else if (period === 'month' && recordDate >= startMonth) {
-                    record.style.display = 'flex'; // Show only this month's records
-                } else {
-                    record.style.display = 'none'; // Hide records that don't match the filter
-                }
-            });
-        }
-
-        // Helper function to check if two dates are the same day
-        function isSameDay(date1, date2) {
-            return date1.getFullYear() === date2.getFullYear() &&
-                date1.getMonth() === date2.getMonth() &&
-                date1.getDate() === date2.getDate();
         }
     </script>    
 </body>
