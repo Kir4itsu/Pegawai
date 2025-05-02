@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Absensi Kepegawaian</title>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
@@ -841,288 +842,520 @@
         </a>
     </div>
     
-    <script>
-        // Display current time and date
-        function updateDateTime() {
-            const now = new Date();
-            const timeElement = document.getElementById('currentTime');
-            const dateElement = document.getElementById('currentDate');
-            const homeTimeElement = document.getElementById('homeCurrentTime');
-            const homeDateElement = document.getElementById('homeCurrentDate');
-            
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const timeString = now.toLocaleTimeString('id-ID', {hour: '2-digit', minute: '2-digit'});
-            const dateString = now.toLocaleDateString('id-ID', options);
-            
-            if(timeElement) timeElement.textContent = timeString;
-            if(dateElement) dateElement.textContent = dateString;
-            if(homeTimeElement) homeTimeElement.textContent = timeString;
-            if(homeDateElement) homeDateElement.textContent = dateString;
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+<script>
+    // Variabel untuk pengenalan wajah
+    let faceDetectionModelLoaded = false;
+    let referenceFaceDescriptor = null;
+    let faceDetectionInterval = null;
+
+    // Display current time and date
+    function updateDateTime() {
+        const now = new Date();
+        const timeElement = document.getElementById('currentTime');
+        const dateElement = document.getElementById('currentDate');
+        const homeTimeElement = document.getElementById('homeCurrentTime');
+        const homeDateElement = document.getElementById('homeCurrentDate');
+        
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const timeString = now.toLocaleTimeString('id-ID', {hour: '2-digit', minute: '2-digit'});
+        const dateString = now.toLocaleDateString('id-ID', options);
+        
+        if(timeElement) timeElement.textContent = timeString;
+        if(dateElement) dateElement.textContent = dateString;
+        if(homeTimeElement) homeTimeElement.textContent = timeString;
+        if(homeDateElement) homeDateElement.textContent = dateString;
+    }
+
+    // Initial update
+    updateDateTime();
+
+    // Update time every minute
+    setInterval(updateDateTime, 60000);
+
+    // Switch between tabs
+    function switchTab(tabName) {
+        // Hide all tab contents
+        const tabContents = document.querySelectorAll('.tab-content');
+        tabContents.forEach(content => {
+            content.classList.remove('active');
+        });
+        
+        // Deactivate all tabs
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        // Activate the selected tab and its content
+        document.getElementById(tabName).classList.add('active');
+        document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
+    }
+
+    // Switch between pages
+    function switchPage(pageName) {
+        // Hide all pages
+        const pages = document.querySelectorAll('.page');
+        pages.forEach(page => {
+            page.style.display = 'none';
+        });
+        
+        // Show the selected page
+        document.getElementById(pageName).style.display = 'block';
+        
+        // Update navigation active status
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        // Make the clicked nav item active
+        if (event && event.currentTarget) {
+            event.currentTarget.classList.add('active');
         }
-    
-        // Initial update
-        updateDateTime();
-    
-        // Update time every minute
-        setInterval(updateDateTime, 60000);
-    
-        // Switch between tabs
-        function switchTab(tabName) {
-            // Hide all tab contents
-            const tabContents = document.querySelectorAll('.tab-content');
-            tabContents.forEach(content => {
-                content.classList.remove('active');
+        
+        // Update active clock button
+        updateActiveClockButton();
+        
+        // Update specific page content
+        if (pageName === 'clockOutPage') {
+            updateClockOutTime();
+        }
+        
+        // Scroll to top
+        window.scrollTo(0, 0);
+        
+        // Update page title
+        updatePageTitle(pageName);
+    }
+
+    // Update page title based on current page
+    function updatePageTitle(pageName) {
+        const titles = {
+            'homePage': 'Beranda',
+            'clockInPage': 'Absen Masuk',
+            'clockOutPage': 'Absen Pulang',
+            'historyPage': 'Riwayat',
+            'salaryPage': 'Gaji',
+            'profilePage': 'Profil'
+        };
+        
+        if (titles[pageName]) {
+            document.title = `${titles[pageName]} | Absensi Pro`;
+        }
+    }
+
+    // Toggle between clock in and clock out pages
+    function toggleAttendance() {
+        // Get current page
+        const currentPage = document.querySelector('.page[style="display: block;"]') || 
+                           document.querySelector('.page:not([style])');
+        
+        // Toggle between pages
+        if (currentPage.id === 'clockInPage') {
+            switchPage('clockOutPage');
+        } else {
+            switchPage('clockInPage');
+        }
+    }
+
+    // Update active clock button based on current page
+    function updateActiveClockButton() {
+        const currentPage = document.querySelector('.page[style="display: block;"]') || 
+                           document.querySelector('.page:not([style])');
+        
+        // Reset all clock buttons
+        document.querySelectorAll('.clock-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Set active button based on current page
+        if (currentPage.id === 'clockInPage') {
+            document.querySelectorAll('.clock-in-btn').forEach(btn => {
+                btn.classList.add('active');
             });
-            
-            // Deactivate all tabs
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => {
-                tab.classList.remove('active');
+        } else if (currentPage.id === 'clockOutPage') {
+            document.querySelectorAll('.clock-out-btn').forEach(btn => {
+                btn.classList.add('active');
             });
-            
-            // Activate the selected tab and its content
-            document.getElementById(tabName).classList.add('active');
-            document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
         }
-    
-        // Switch between pages
-        function switchPage(pageName) {
-            // Hide all pages
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => {
-                page.style.display = 'none';
-            });
-            
-            // Show the selected page
-            document.getElementById(pageName).style.display = 'block';
-            
-            // Update navigation active status
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // Make the clicked nav item active
-            if (event && event.currentTarget) {
-                event.currentTarget.classList.add('active');
-            }
-            
-            // Update active clock button
-            updateActiveClockButton();
-            
-            // Update specific page content
-            if (pageName === 'clockOutPage') {
-                updateClockOutTime();
-            }
-            
-            // Scroll to top
-            window.scrollTo(0, 0);
-            
-            // Update page title
-            updatePageTitle(pageName);
-        }
-    
-        // Update page title based on current page
-        function updatePageTitle(pageName) {
-            const titles = {
-                'homePage': 'Beranda',
-                'clockInPage': 'Absen Masuk',
-                'clockOutPage': 'Absen Pulang',
-                'historyPage': 'Riwayat',
-                'salaryPage': 'Gaji',
-                'profilePage': 'Profil'
-            };
-            
-            if (titles[pageName]) {
-                document.title = `${titles[pageName]} | Absensi Pro`;
-            }
-        }
-    
-        // Toggle between clock in and clock out pages
-        function toggleAttendance() {
-            // Get current page
-            const currentPage = document.querySelector('.page[style="display: block;"]') || 
-                               document.querySelector('.page:not([style])');
-            
-            // Toggle between pages
-            if (currentPage.id === 'clockInPage') {
-                switchPage('clockOutPage');
-            } else {
-                switchPage('clockInPage');
-            }
-        }
-    
-        // Update active clock button based on current page
-        function updateActiveClockButton() {
-            const currentPage = document.querySelector('.page[style="display: block;"]') || 
-                               document.querySelector('.page:not([style])');
-            
-            // Reset all clock buttons
-            document.querySelectorAll('.clock-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Set active button based on current page
-            if (currentPage.id === 'clockInPage') {
-                document.querySelectorAll('.clock-in-btn').forEach(btn => {
-                    btn.classList.add('active');
-                });
-            } else if (currentPage.id === 'clockOutPage') {
-                document.querySelectorAll('.clock-out-btn').forEach(btn => {
-                    btn.classList.add('active');
-                });
-            }
-        }
-    
+    }
+
     // Variabel untuk menyimpan interval timer
     let countdownInterval;
-        // Fungsi untuk mengupdate tampilan jam pulang
-        function updateClockOutTime() {
-            const now = new Date();
-            const dateElement = document.getElementById('clockOutDate');
-            
-            // Set jam pulang pukul 14:00 (2 siang)
-            const clockOutTime = new Date();
-            clockOutTime.setHours(14, 0, 0, 0);
-            
-            // Format tanggal
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const dateString = now.toLocaleDateString('id-ID', options);
-            
-            if(dateElement) dateElement.textContent = dateString;
-            
-            // Update countdown timer
-            updateCountdownTimer(now, clockOutTime);
-        }
     
-        // Fungsi untuk menghitung dan menampilkan countdown
-        function updateCountdownTimer(now, targetTime) {
-            const countdownElement = document.getElementById('countdownTimer');
-            if (!countdownElement) return;
+    // Fungsi untuk mengupdate tampilan jam pulang
+    function updateClockOutTime() {
+        const now = new Date();
+        const dateElement = document.getElementById('clockOutDate');
+        
+        // Set jam pulang pukul 14:00 (2 siang)
+        const clockOutTime = new Date();
+        clockOutTime.setHours(14, 0, 0, 0);
+        
+        // Format tanggal
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const dateString = now.toLocaleDateString('id-ID', options);
+        
+        if(dateElement) dateElement.textContent = dateString;
+        
+        // Update countdown timer
+        updateCountdownTimer(now, clockOutTime);
+    }
+
+    // Fungsi untuk menghitung dan menampilkan countdown
+    function updateCountdownTimer(now, targetTime) {
+        const countdownElement = document.getElementById('countdownTimer');
+        if (!countdownElement) return;
+        
+        let diff = targetTime - now;
+        
+        if (diff <= 0) {
+            // Jika sudah lewat jam pulang
+            countdownElement.textContent = "00:00:00";
+            countdownElement.classList.add('countdown-expired');
             
-            let diff = targetTime - now;
+            // Ubah teks status
+            const statusElement = document.querySelector('.clockOutPage .status');
+            if (statusElement) {
+                statusElement.textContent = "Waktunya Pulang!";
+            }
+            return;
+        }
+        
+        // Hitung jam, menit, detik
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        diff -= hours * (1000 * 60 * 60);
+        const minutes = Math.floor(diff / (1000 * 60));
+        diff -= minutes * (1000 * 60);
+        const seconds = Math.floor(diff / 1000);
+        
+        // Format tampilan
+        const formattedTime = 
+            `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        
+        countdownElement.textContent = formattedTime;
+        countdownElement.classList.remove('countdown-expired');
+    }
+
+    // Show clock in success animation
+    function showClockInSuccess() {
+        const successAnimation = document.getElementById('clockInSuccess');
+        successAnimation.style.display = 'flex';
+        
+        // Hide after 3 seconds
+        setTimeout(() => {
+            successAnimation.style.display = 'none';
+        }, 3000);
+    }
+
+    // Show clock out success animation
+    function showClockOutSuccess() {
+        const successAnimation = document.getElementById('clockOutSuccess');
+        successAnimation.style.display = 'flex';
+        
+        // Hide after 3 seconds
+        setTimeout(() => {
+            successAnimation.style.display = 'none';
+        }, 3000);
+    }
+
+    /* FUNGSI PENGENALAN WAJAH */
+    
+    // Fungsi untuk memuat model pengenalan wajah
+    async function loadFaceDetectionModels() {
+        try {
+            // Load model dari CDN
+            await faceapi.nets.tinyFaceDetector.loadFromUri('https://justadudewhohacks.github.io/face-api.js/models');
+            await faceapi.nets.faceLandmark68Net.loadFromUri('https://justadudewhohacks.github.io/face-api.js/models');
+            await faceapi.nets.faceRecognitionNet.loadFromUri('https://justadudewhohacks.github.io/face-api.js/models');
             
-            if (diff <= 0) {
-                // Jika sudah lewat jam pulang
-                countdownElement.textContent = "00:00:00";
-                countdownElement.classList.add('countdown-expired');
-                
-                // Ubah teks status
-                const statusElement = document.querySelector('.clockOutPage .status');
-                if (statusElement) {
-                    statusElement.textContent = "Waktunya Pulang!";
-                }
+            faceDetectionModelLoaded = true;
+            console.log("Model pengenalan wajah berhasil dimuat");
+            
+            // Cek apakah sudah ada wajah referensi di localStorage
+            const savedFace = localStorage.getItem('referenceFaceDescriptor');
+            if (savedFace) {
+                referenceFaceDescriptor = new Float32Array(JSON.parse(savedFace));
+                console.log("Wajah referensi ditemukan di penyimpanan lokal");
+            }
+        } catch (error) {
+            console.error("Gagal memuat model pengenalan wajah:", error);
+            alert("Gagal memuat sistem pengenalan wajah. Silakan refresh halaman.");
+        }
+    }
+
+    // Fungsi untuk mendeteksi wajah
+    async function detectFaces(videoElement) {
+        if (!faceDetectionModelLoaded) {
+            alert("Sistem pengenalan wajah belum siap. Silakan coba lagi nanti.");
+            return null;
+        }
+        
+        try {
+            const detections = await faceapi.detectAllFaces(videoElement, 
+                new faceapi.TinyFaceDetectorOptions())
+                .withFaceLandmarks()
+                .withFaceDescriptors();
+            
+            return detections;
+        } catch (error) {
+            console.error("Error deteksi wajah:", error);
+            return null;
+        }
+    }
+
+    // Fungsi untuk membandingkan wajah
+    function compareFaces(descriptor1, descriptor2) {
+        if (!descriptor1 || !descriptor2) return 1; // Return nilai tinggi jika salah satu tidak ada
+        return faceapi.euclideanDistance(descriptor1, descriptor2);
+    }
+
+    // Modifikasi fungsi startCamera dengan pengenalan wajah
+    async function startCamera(type) {
+        const videoElement = document.getElementById(`cameraFeed${type}`);
+        const cameraPlaceholder = document.getElementById(`cameraPlaceholder${type}`);
+        const scanButton = document.getElementById(`scanButton${type}`);
+        const captureButton = document.getElementById(`captureButton${type}`);
+        
+        // Jika belum ada wajah referensi dan ini absen masuk
+        if (!referenceFaceDescriptor && type === 'In') {
+            if (confirm("Anda belum mendaftarkan wajah. Apakah Anda ingin mendaftarkan wajah sekarang sebagai referensi?")) {
+                await registerReferenceFace(type);
+                return;
+            } else {
                 return;
             }
-            
-            // Hitung jam, menit, detik
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            diff -= hours * (1000 * 60 * 60);
-            const minutes = Math.floor(diff / (1000 * 60));
-            diff -= minutes * (1000 * 60);
-            const seconds = Math.floor(diff / 1000);
-            
-            // Format tampilan
-            const formattedTime = 
-                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            
-            countdownElement.textContent = formattedTime;
-            countdownElement.classList.remove('countdown-expired');
         }
-    
-        // Show clock in success animation
-        function showClockInSuccess() {
-            const successAnimation = document.getElementById('clockInSuccess');
-            successAnimation.style.display = 'flex';
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: "user", width: 640, height: 480 } 
+            });
             
-            // Hide after 3 seconds
-            setTimeout(() => {
-                successAnimation.style.display = 'none';
-            }, 3000);
-        }
-    
-        // Show clock out success animation
-        function showClockOutSuccess() {
-            const successAnimation = document.getElementById('clockOutSuccess');
-            successAnimation.style.display = 'flex';
+            // Set video dimensions
+            videoElement.width = 640;
+            videoElement.height = 480;
             
-            // Hide after 3 seconds
-            setTimeout(() => {
-                successAnimation.style.display = 'none';
-            }, 3000);
-        }
-    
-        // Set default page on load
-        document.addEventListener('DOMContentLoaded', function() {
-            switchPage('homePage');
-            updateActiveClockButton();
-            updateDateTime();
+            videoElement.srcObject = stream;
+            videoElement.style.display = 'block';
+            await videoElement.play();
             
-            // Update jam pulang setiap detik
-            setInterval(updateClockOutTime, 1000);
-            updateClockOutTime(); // Panggil sekali saat pertama kali load
-        });
-    
-        // Open camera function
-        function startCamera(type) {
-            const videoElement = document.getElementById(`cameraFeed${type}`);
-            const cameraPlaceholder = document.getElementById(`cameraPlaceholder${type}`);
-            const scanButton = document.getElementById(`scanButton${type}`);
-            const captureButton = document.getElementById(`captureButton${type}`);
-    
-            // Request camera access
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
-                .then((stream) => {
-                    // Display camera feed to video element
-                    videoElement.srcObject = stream;
-                    videoElement.style.display = 'block';
-                    videoElement.play();
-                    
-                    // Hide placeholder, show capture button
-                    cameraPlaceholder.style.display = 'none';
-                    scanButton.style.display = 'none';
-                    captureButton.style.display = 'block';
-                    
-                    // Add face scan animation
-                    const cameraBox = videoElement.parentElement;
-                    cameraBox.querySelector('.face-scan-animation').style.display = 'block';
-                })
-                .catch((err) => {
-                    console.error("Error accessing camera: ", err);
-                    alert("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.");
-                });
-        }
-    
-        // Capture face function
-        function captureFace(type) {
-            // In a real app, this would process face recognition
-            // For demo, we'll just simulate success
+            cameraPlaceholder.style.display = 'none';
+            scanButton.style.display = 'none';
+            captureButton.style.display = 'block';
             
-            // Stop the camera
-            const videoElement = document.getElementById(`cameraFeed${type}`);
-            if (videoElement.srcObject) {
-                const tracks = videoElement.srcObject.getTracks();
-                tracks.forEach(track => track.stop());
-                videoElement.srcObject = null;
-            }
-            
-            // Hide camera elements
-            videoElement.style.display = 'none';
-            document.getElementById(`cameraPlaceholder${type}`).style.display = 'flex';
-            document.getElementById(`scanButton${type}`).style.display = 'block';
-            document.getElementById(`captureButton${type}`).style.display = 'none';
-            
-            // Hide face scan animation
             const cameraBox = videoElement.parentElement;
-            cameraBox.querySelector('.face-scan-animation').style.display = 'none';
+            cameraBox.querySelector('.face-scan-animation').style.display = 'block';
             
-            // Show success
-            if (type === 'In') {
-                showClockInSuccess();
-            } else {
-                showClockOutSuccess();
+            // Mulai deteksi wajah real-time
+            startFaceDetection(videoElement, type);
+        } catch (err) {
+            console.error("Error mengakses kamera: ", err);
+            alert("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.");
+        }
+    }
+
+    // Fungsi untuk memulai deteksi wajah real-time
+    function startFaceDetection(videoElement, type) {
+        // Hentikan interval sebelumnya jika ada
+        if (faceDetectionInterval) {
+            clearInterval(faceDetectionInterval);
+        }
+        
+        // Buat canvas untuk deteksi wajah
+        const canvas = faceapi.createCanvasFromMedia(videoElement);
+        document.body.append(canvas);
+        canvas.style.display = 'none';
+        
+        const displaySize = { width: videoElement.width, height: videoElement.height };
+        faceapi.matchDimensions(canvas, displaySize);
+        
+        // Jalankan deteksi wajah setiap 500ms
+        faceDetectionInterval = setInterval(async () => {
+            if (!faceDetectionModelLoaded) return;
+            
+            const detections = await faceapi.detectAllFaces(videoElement, 
+                new faceapi.TinyFaceDetectorOptions())
+                .withFaceLandmarks()
+                .withFaceDescriptors();
+            
+            // Jika wajah terdeteksi
+            if (detections && detections.length > 0) {
+                console.log("Wajah terdeteksi");
+            }
+        }, 500);
+    }
+
+    // Fungsi untuk mendaftarkan wajah referensi
+    async function registerReferenceFace(type) {
+        const videoElement = document.getElementById(`cameraFeed${type}`);
+        const cameraPlaceholder = document.getElementById(`cameraPlaceholder${type}`);
+        const scanButton = document.getElementById(`scanButton${type}`);
+        const captureButton = document.getElementById(`captureButton${type}`);
+        
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: "user", width: 640, height: 480 } 
+            });
+            
+            // Set video dimensions
+            videoElement.width = 640;
+            videoElement.height = 480;
+            
+            videoElement.srcObject = stream;
+            videoElement.style.display = 'block';
+            await videoElement.play();
+            
+            cameraPlaceholder.style.display = 'none';
+            scanButton.style.display = 'none';
+            captureButton.style.display = 'block';
+            captureButton.textContent = "Ambil Wajah Referensi";
+            captureButton.onclick = () => captureReferenceFace(type);
+            
+            const cameraBox = videoElement.parentElement;
+            cameraBox.querySelector('.face-scan-animation').style.display = 'block';
+            
+            // Mulai deteksi wajah real-time
+            startFaceDetection(videoElement, type);
+        } catch (err) {
+            console.error("Error mengakses kamera: ", err);
+            alert("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.");
+        }
+    }
+
+    // Fungsi untuk mengambil wajah referensi
+    async function captureReferenceFace(type) {
+        const videoElement = document.getElementById(`cameraFeed${type}`);
+        const detections = await detectFaces(videoElement);
+        
+        if (!detections || detections.length === 0) {
+            alert("Tidak ada wajah yang terdeteksi. Pastikan wajah Anda terlihat jelas di kamera.");
+            return;
+        }
+        
+        // Simpan wajah pertama sebagai referensi
+        referenceFaceDescriptor = detections[0].descriptor;
+        localStorage.setItem('referenceFaceDescriptor', 
+            JSON.stringify(Array.from(referenceFaceDescriptor)));
+        
+        alert("Wajah referensi berhasil disimpan. Sekarang Anda dapat melakukan absen.");
+        
+        // Hentikan kamera dan deteksi wajah
+        stopCameraAndDetection(videoElement, type);
+        
+        // Reset tombol capture ke fungsi semula
+        document.getElementById(`captureButton${type}`).textContent = "Scan Wajah untuk Absen Masuk";
+        document.getElementById(`captureButton${type}`).onclick = () => captureFace(type);
+    }
+
+    // Fungsi untuk menghentikan kamera dan deteksi wajah
+    function stopCameraAndDetection(videoElement, type) {
+        // Hentikan interval deteksi wajah
+        if (faceDetectionInterval) {
+            clearInterval(faceDetectionInterval);
+            faceDetectionInterval = null;
+        }
+        
+        // Hentikan stream kamera
+        if (videoElement.srcObject) {
+            const tracks = videoElement.srcObject.getTracks();
+            tracks.forEach(track => track.stop());
+            videoElement.srcObject = null;
+        }
+        
+        // Reset tampilan
+        videoElement.style.display = 'none';
+        document.getElementById(`cameraPlaceholder${type}`).style.display = 'flex';
+        document.getElementById(`scanButton${type}`).style.display = 'block';
+        document.getElementById(`captureButton${type}`).style.display = 'none';
+        
+        const cameraBox = videoElement.parentElement;
+        cameraBox.querySelector('.face-scan-animation').style.display = 'none';
+    }
+
+    // Modifikasi fungsi captureFace dengan validasi wajah
+    async function captureFace(type) {
+        const videoElement = document.getElementById(`cameraFeed${type}`);
+        const detections = await detectFaces(videoElement);
+        
+        if (!detections || detections.length === 0) {
+            alert("Tidak ada wajah yang terdeteksi. Pastikan wajah Anda terlihat jelas di kamera.");
+            return;
+        }
+        
+        // Jika ada wajah referensi, bandingkan
+        if (referenceFaceDescriptor) {
+            const distance = compareFaces(referenceFaceDescriptor, detections[0].descriptor);
+            const threshold = 0.6; // Threshold untuk kemiripan wajah (semakin kecil semakin mirip)
+            
+            console.log("Jarak kemiripan wajah:", distance);
+            
+            if (distance > threshold) {
+                alert("Wajah tidak cocok dengan referensi. Absen gagal.");
+                return;
             }
         }
-    </script>   
+        
+        // Jika sampai di sini, wajah valid
+        stopCameraAndDetection(videoElement, type);
+        
+        // Show success
+        if (type === 'In') {
+            showClockInSuccess();
+            
+            // Simpan waktu absen masuk
+            const now = new Date();
+            localStorage.setItem('lastClockIn', now.toISOString());
+        } else {
+            showClockOutSuccess();
+            
+            // Simpan waktu absen pulang
+            const now = new Date();
+            localStorage.setItem('lastClockOut', now.toISOString());
+        }
+    }
+
+    // Set default page on load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load model pengenalan wajah
+        loadFaceDetectionModels();
+        
+        // Set halaman default
+        switchPage('homePage');
+        updateActiveClockButton();
+        updateDateTime();
+        
+        // Update jam pulang setiap detik
+        setInterval(updateClockOutTime, 1000);
+        updateClockOutTime();
+        
+        // Cek apakah sudah pernah absen hari ini
+        checkTodayAttendance();
+    });
+
+    // Fungsi untuk mengecek absen hari ini
+    function checkTodayAttendance() {
+        const today = new Date().toDateString();
+        const lastClockIn = localStorage.getItem('lastClockIn');
+        const lastClockOut = localStorage.getItem('lastClockOut');
+        
+        if (lastClockIn) {
+            const lastClockInDate = new Date(lastClockIn).toDateString();
+            if (lastClockInDate === today) {
+                // Sudah absen masuk hari ini
+                console.log("Sudah absen masuk hari ini");
+            }
+        }
+        
+        if (lastClockOut) {
+            const lastClockOutDate = new Date(lastClockOut).toDateString();
+            if (lastClockOutDate === today) {
+                // Sudah absen pulang hari ini
+                console.log("Sudah absen pulang hari ini");
+            }
+        }
+    }
+</script>   
 </body>
 </html>
