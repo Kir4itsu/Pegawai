@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Absensi Kepegawaian</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>  
@@ -183,6 +183,136 @@
             </div>
         </div>
         
+        <!-- Salary Page -->
+        <div id="salaryPage" class="page" style="display: none;">
+            <div class="card">
+                <div class="card-title">
+                    <span><i class="fas fa-money-bill-wave"></i> Ringkasan Gaji</span>
+                    <small>April 2025</small>
+                </div>
+                
+                <div class="salary-summary">
+                    <div class="salary-amount">
+                        <div class="salary-text">Total Gaji</div>
+                        <div class="salary-value">Rp 8.750.000</div>
+                    </div>
+                    
+                    <div class="salary-status">
+                        <div class="status-badge paid">
+                            <i class="fas fa-check-circle"></i>
+                            Sudah Dibayar
+                        </div>
+                        <div class="salary-date">Dibayarkan pada 25 April 2025</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <span><i class="fas fa-receipt"></i> Rincian Gaji</span>
+                </div>
+                
+                <div class="salary-breakdown">
+                    <div class="salary-component">
+                        <div class="component-name">Gaji Pokok</div>
+                        <div class="component-value">Rp 7.500.000</div>
+                    </div>
+                    
+                    <div class="salary-component">
+                        <div class="component-name">Tunjangan Transport</div>
+                        <div class="component-value">Rp 500.000</div>
+                    </div>
+                    
+                    <div class="salary-component">
+                        <div class="component-name">Tunjangan Makan</div>
+                        <div class="component-value">Rp 800.000</div>
+                    </div>
+                    
+                    <div class="salary-component">
+                        <div class="component-name">Bonus Kinerja</div>
+                        <div class="component-value">Rp 450.000</div>
+                    </div>
+                    
+                    <div class="salary-divider"></div>
+                    
+                    <div class="salary-component">
+                        <div class="component-name">Potongan Pajak (PPh 21)</div>
+                        <div class="component-value negative">- Rp 375.000</div>
+                    </div>
+                    
+                    <div class="salary-component">
+                        <div class="component-name">Potongan BPJS</div>
+                        <div class="component-value negative">- Rp 125.000</div>
+                    </div>
+                    
+                    <div class="salary-component total">
+                        <div class="component-name">Total Diterima</div>
+                        <div class="component-value">Rp 8.750.000</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <span><i class="fas fa-calendar-check"></i> Performa Kehadiran</span>
+                </div>
+                
+                <div class="attendance-performance">
+                    <div class="performance-item">
+                        <div class="performance-label">Kehadiran</div>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 95%"></div>
+                        </div>
+                        <div class="performance-value">95%</div>
+                    </div>
+                    
+                    <div class="performance-item">
+                        <div class="performance-label">Ketepatan Waktu</div>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 80%"></div>
+                        </div>
+                        <div class="performance-value">80%</div>
+                    </div>
+                    
+                    <div class="performance-info">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Insentif kehadiran: Rp 150.000 (termasuk dalam bonus kinerja)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <span><i class="fas fa-history"></i> Riwayat Gaji</span>
+                </div>
+                
+                <div class="salary-history">
+                    <div class="salary-history-item">
+                        <div class="history-month">Maret 2025</div>
+                        <div class="history-amount">Rp 8.500.000</div>
+                        <div class="history-status paid">Dibayar</div>
+                    </div>
+                    
+                    <div class="salary-history-item">
+                        <div class="history-month">Februari 2025</div>
+                        <div class="history-amount">Rp 8.500.000</div>
+                        <div class="history-status paid">Dibayar</div>
+                    </div>
+                    
+                    <div class="salary-history-item">
+                        <div class="history-month">Januari 2025</div>
+                        <div class="history-amount">Rp 8.300.000</div>
+                        <div class="history-status paid">Dibayar</div>
+                    </div>
+                </div>
+                
+                <button class="action-btn btn-outline">
+                    <i class="fas fa-download"></i>
+                    Unduh Slip Gaji
+                </button>
+            </div>
+        </div>
+
         <!-- History Page -->
         <div id="historyPage" class="page" style="display: none;">
             <div class="card">
@@ -562,23 +692,42 @@
 
     <!-- Bottom Navigation -->
     <div class="navigation">
-        <a href="#" class="nav-item active" onclick="switchPage('clockInPage')">
-            <i class="fas fa-sign-in-alt"></i>
-            <span>Masuk</span>
-        </a>
-        <a href="#" class="nav-item" onclick="switchPage('clockOutPage')">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Pulang</span>
-        </a>
         <a href="#" class="nav-item" onclick="switchPage('historyPage')">
             <i class="fas fa-history"></i>
             <span>Riwayat</span>
+        </a>
+        <a href="#" class="nav-item" onclick="switchPage('salaryPage')">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>Gaji</span>
+        </a>
+        <div class="nav-center">
+            <a href="#" class="attendance-btn" id="attendanceButton" onclick="toggleAttendance()">
+                <i class="fas fa-fingerprint"></i>
+            </a>
+        </div>
+        <a href="#" class="nav-item" onclick="switchPage('historyPage')">
+            <i class="fas fa-chart-line"></i>
+            <span>Kinerja</span>
         </a>
         <a href="#" class="nav-item" onclick="switchPage('profilePage')">
             <i class="fas fa-user"></i>
             <span>Profil</span>
         </a>
-    </div>    
+    </div>
+    
+    <!-- Status Absensi Modal -->
+    <div id="attendanceModal" class="attendance-modal">
+        <div class="attendance-options">
+            <button class="attendance-option clock-in" onclick="switchPage('clockInPage'); closeAttendanceModal();">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Absen Masuk</span>
+            </button>
+            <button class="attendance-option clock-out" onclick="switchPage('clockOutPage'); closeAttendanceModal();">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Absen Pulang</span>
+            </button>
+        </div>
+    </div>   
     
     <script>
        // Display current time and date
@@ -728,6 +877,35 @@
                 showClockOutSuccess();
             }
         }
+
+        // Fungsi untuk toggle modal absensi
+        function toggleAttendance() {
+            const modal = document.getElementById('attendanceModal');
+            if (modal.style.display === 'block') {
+                closeAttendanceModal();
+            } else {
+                modal.style.display = 'block';
+            }
+        }
+
+        // Fungsi untuk menutup modal absensi
+        function closeAttendanceModal() {
+            const modal = document.getElementById('attendanceModal');
+            modal.style.display = 'none';
+        }
+
+        // Menutup modal jika user klik di luar modal
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('attendanceModal');
+            const attendanceBtn = document.getElementById('attendanceButton');
+            
+            if (modal && modal.style.display === 'block' && 
+                !modal.contains(event.target) && 
+                event.target !== attendanceBtn && 
+                !attendanceBtn.contains(event.target)) {
+                closeAttendanceModal();
+            }
+        });
 
         // Filter attendance records based on period
         function filterAttendance(period) {
