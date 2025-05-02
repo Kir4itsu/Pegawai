@@ -13,7 +13,7 @@
         <div class="header">
             <div class="logo">
                 <i class="fas fa-id-card"></i>
-                <span>Absensi Pro</span>
+                <span>Absensi Jawa</span>
             </div>
             <div class="user-profile">
                 <div class="user-avatar">KM</div>
@@ -21,12 +21,111 @@
             </div>
         </div>
         
+        <!-- Home Page -->
+        <div id="homePage" class="page" style="display: none;">
+            <div class="card greeting-card">
+                <div class="greeting-content">
+                    <div class="greeting-text">
+                        <h3>Selamat Pagi,</h3>
+                        <h1>Kiraitsu M.</h1>
+                    </div>
+                    <div class="user-avatar">KM</div>
+                </div>
+                <div class="current-time" id="homeCurrentTime">08:30</div>
+                <div class="current-date" id="homeCurrentDate">Senin, 20 April 2025</div>
+            </div>
+
+            <div class="quick-actions">
+                <div class="quick-action" onclick="switchPage('clockInPage')">
+                    <div class="action-icon" style="background-color: rgba(44, 204, 228, 0.1); color: var(--success);">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </div>
+                    <span>Absen Masuk</span>
+                </div>
+                <div class="quick-action" onclick="switchPage('clockOutPage')">
+                    <div class="action-icon" style="background-color: rgba(255, 101, 132, 0.1); color: var(--secondary);">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <span>Absen Pulang</span>
+                </div>
+                <div class="quick-action" onclick="switchPage('historyPage')">
+                    <div class="action-icon" style="background-color: rgba(108, 99, 255, 0.1); color: var(--primary);">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <span>Riwayat</span>
+                </div>
+                <div class="quick-action" onclick="switchPage('salaryPage')">
+                    <div class="action-icon" style="background-color: rgba(255, 200, 87, 0.1); color: var(--warning);">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <span>Gaji</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span><i class="fas fa-calendar-check"></i> Hari Ini</span>
+                </div>
+                
+                <div class="today-summary">
+                    <div class="summary-item">
+                        <div class="summary-value">08:30</div>
+                        <div class="summary-label">Absen Masuk</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">-</div>
+                        <div class="summary-label">Absen Pulang</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">3/5</div>
+                        <div class="summary-label">Tugas Selesai</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span><i class="fas fa-calendar-alt"></i> Jadwal Hari Ini</span>
+                    <small>3 Jadwal</small>
+                </div>
+                
+                <div class="schedule-list">
+                    <div class="schedule-item">
+                        <div class="schedule-time">09:00</div>
+                        <div class="schedule-details">
+                            <div class="schedule-title">Rapat Tim Marketing</div>
+                            <div class="schedule-location"><i class="fas fa-map-marker-alt"></i> Ruang Rapat A</div>
+                        </div>
+                        <div class="schedule-status" style="color: var(--danger);"><i class="fas fa-circle"></i></div>
+                    </div>
+                    
+                    <div class="schedule-item">
+                        <div class="schedule-time">11:30</div>
+                        <div class="schedule-details">
+                            <div class="schedule-title">Presentasi Produk Baru</div>
+                            <div class="schedule-location"><i class="fas fa-map-marker-alt"></i> Ruang Seminar</div>
+                        </div>
+                        <div class="schedule-status" style="color: var(--warning);"><i class="fas fa-circle"></i></div>
+                    </div>
+                    
+                    <div class="schedule-item">
+                        <div class="schedule-time">14:00</div>
+                        <div class="schedule-details">
+                            <div class="schedule-title">Review Kinerja Bulanan</div>
+                            <div class="schedule-location"><i class="fas fa-map-marker-alt"></i> Ruang Manajer</div>
+                        </div>
+                        <div class="schedule-status" style="color: var(--success);"><i class="fas fa-circle"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Main Content - Clock In Page -->
         <div id="clockInPage" class="page">
             <div class="card">
                 <div class="time-box">
                     <div class="current-time" id="currentTime">08:30</div>
-                    <div class="current-date" id="currentDate">Senin, 20 April 2025</div>
+                    <div class="current-date" id="currentDate"></div>
                     <div class="status status-in">Jam Masuk</div>
                 </div>
                 
@@ -131,9 +230,13 @@
         <div id="clockOutPage" class="page" style="display: none;">
             <div class="card">
                 <div class="time-box">
-                    <div class="current-time">17:30</div>
-                    <div class="current-date">Senin, 20 April 2025</div>
+                    <div class="current-time" id="clockOutTime">14:00</div>
+                    <div class="current-date" id="clockOutDate"></div>
                     <div class="status status-out">Jam Pulang</div>
+                    <div class="countdown-container">
+                        <div class="countdown-label">Sisa waktu:</div>
+                        <div class="countdown" id="countdownTimer">03:30:00</div>
+                    </div>
                 </div>
                 
                 <div class="attendance-container">
@@ -715,9 +818,9 @@
 
     <!-- Bottom Navigation -->
     <div class="navigation">
-        <a href="#" class="nav-item" onclick="switchPage('historyPage')">
-            <i class="fas fa-history"></i>
-            <span>Riwayat</span>
+        <a href="#" class="nav-item active" onclick="switchPage('homePage')">
+            <i class="fas fa-home"></i>
+            <span>Beranda</span>
         </a>
         <a href="#" class="nav-item" onclick="switchPage('salaryPage')">
             <i class="fas fa-money-bill-wave"></i>
@@ -736,7 +839,7 @@
             <i class="fas fa-user"></i>
             <span>Profil</span>
         </a>
-    </div> 
+    </div>
     
     <script>
         // Display current time and date
@@ -744,6 +847,8 @@
             const now = new Date();
             const timeElement = document.getElementById('currentTime');
             const dateElement = document.getElementById('currentDate');
+            const homeTimeElement = document.getElementById('homeCurrentTime');
+            const homeDateElement = document.getElementById('homeCurrentDate');
             
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             const timeString = now.toLocaleTimeString('id-ID', {hour: '2-digit', minute: '2-digit'});
@@ -751,6 +856,8 @@
             
             if(timeElement) timeElement.textContent = timeString;
             if(dateElement) dateElement.textContent = dateString;
+            if(homeTimeElement) homeTimeElement.textContent = timeString;
+            if(homeDateElement) homeDateElement.textContent = dateString;
         }
     
         // Initial update
@@ -803,8 +910,32 @@
             // Update active clock button
             updateActiveClockButton();
             
+            // Update specific page content
+            if (pageName === 'clockOutPage') {
+                updateClockOutTime();
+            }
+            
             // Scroll to top
             window.scrollTo(0, 0);
+            
+            // Update page title
+            updatePageTitle(pageName);
+        }
+    
+        // Update page title based on current page
+        function updatePageTitle(pageName) {
+            const titles = {
+                'homePage': 'Beranda',
+                'clockInPage': 'Absen Masuk',
+                'clockOutPage': 'Absen Pulang',
+                'historyPage': 'Riwayat',
+                'salaryPage': 'Gaji',
+                'profilePage': 'Profil'
+            };
+            
+            if (titles[pageName]) {
+                document.title = `${titles[pageName]} | Absensi Pro`;
+            }
         }
     
         // Toggle between clock in and clock out pages
@@ -843,6 +974,62 @@
             }
         }
     
+    // Variabel untuk menyimpan interval timer
+    let countdownInterval;
+        // Fungsi untuk mengupdate tampilan jam pulang
+        function updateClockOutTime() {
+            const now = new Date();
+            const dateElement = document.getElementById('clockOutDate');
+            
+            // Set jam pulang pukul 14:00 (2 siang)
+            const clockOutTime = new Date();
+            clockOutTime.setHours(14, 0, 0, 0);
+            
+            // Format tanggal
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateString = now.toLocaleDateString('id-ID', options);
+            
+            if(dateElement) dateElement.textContent = dateString;
+            
+            // Update countdown timer
+            updateCountdownTimer(now, clockOutTime);
+        }
+    
+        // Fungsi untuk menghitung dan menampilkan countdown
+        function updateCountdownTimer(now, targetTime) {
+            const countdownElement = document.getElementById('countdownTimer');
+            if (!countdownElement) return;
+            
+            let diff = targetTime - now;
+            
+            if (diff <= 0) {
+                // Jika sudah lewat jam pulang
+                countdownElement.textContent = "00:00:00";
+                countdownElement.classList.add('countdown-expired');
+                
+                // Ubah teks status
+                const statusElement = document.querySelector('.clockOutPage .status');
+                if (statusElement) {
+                    statusElement.textContent = "Waktunya Pulang!";
+                }
+                return;
+            }
+            
+            // Hitung jam, menit, detik
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            diff -= hours * (1000 * 60 * 60);
+            const minutes = Math.floor(diff / (1000 * 60));
+            diff -= minutes * (1000 * 60);
+            const seconds = Math.floor(diff / 1000);
+            
+            // Format tampilan
+            const formattedTime = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            countdownElement.textContent = formattedTime;
+            countdownElement.classList.remove('countdown-expired');
+        }
+    
         // Show clock in success animation
         function showClockInSuccess() {
             const successAnimation = document.getElementById('clockInSuccess');
@@ -867,8 +1054,13 @@
     
         // Set default page on load
         document.addEventListener('DOMContentLoaded', function() {
-            switchPage('clockInPage');
+            switchPage('homePage');
             updateActiveClockButton();
+            updateDateTime();
+            
+            // Update jam pulang setiap detik
+            setInterval(updateClockOutTime, 1000);
+            updateClockOutTime(); // Panggil sekali saat pertama kali load
         });
     
         // Open camera function
@@ -904,6 +1096,7 @@
         // Capture face function
         function captureFace(type) {
             // In a real app, this would process face recognition
+            // For demo, we'll just simulate success
             
             // Stop the camera
             const videoElement = document.getElementById(`cameraFeed${type}`);
@@ -930,6 +1123,6 @@
                 showClockOutSuccess();
             }
         }
-    </script>    
+    </script>   
 </body>
 </html>
