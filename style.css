@@ -543,6 +543,58 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Clock In/Out Buttons */
+.clockinout-buttons {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.clock-btn {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 16px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.clock-btn i {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.clock-in-btn {
+    background: linear-gradient(135deg, rgba(44, 204, 228, 0.15), rgba(44, 204, 228, 0.25));
+    color: var(--success);
+    border: 1px solid rgba(44, 204, 228, 0.2);
+}
+
+.clock-out-btn {
+    background: linear-gradient(135deg, rgba(255, 101, 132, 0.15), rgba(255, 101, 132, 0.25));
+    color: var(--secondary);
+    border: 1px solid rgba(255, 101, 132, 0.2);
+}
+
+.clock-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.clock-btn.active {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    box-shadow: 0 8px 20px rgba(108, 99, 255, 0.3);
+    border: none;
+}
+
 /* Modern Success Animation */
 .success-animation {
     display: none;
