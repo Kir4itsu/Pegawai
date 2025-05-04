@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring Presensi - Absensi Jawa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <!-- Mode Switch -->
+    <div class="mode-switch">
+        <label class="switch">
+            <input type="checkbox" id="mode-toggle">
+            <span class="slider"></span>
+        </label>
+    </div>
+    
+    <!-- Sidebar Desktop -->
+    <div class="sidebar">
+        <div class="logo-area">
+            <div class="logo">
+                <i class="fas fa-fingerprint"></i>
+            </div>
+            <h2>Absensi Jawa</h2>
+        </div>
+        
+        <ul id="menu">
+            <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+            <li><a href="monitoring-presensi.html" class="active"><i class="fas fa-clock"></i> <span>Monitoring Presensi</span></a></li>
+            <li class="submenu">
+                <a href="#"><i class="fas fa-users"></i> <span>Manajemen Pegawai</span></a>
+                <ul>
+                    <li><a href="biodata-pegawai.html"><i class="fas fa-id-card"></i> <span>Biodata</span></a></li>
+                    <li><a href="unit-kerja.html"><i class="fas fa-building"></i> <span>Unit Kerja</span></a></li>
+                    <li><a href="jam-kerja.html"><i class="fas fa-user-clock"></i> <span>Jam Kerja</span></a></li>
+                </ul>
+            </li>
+            <li><a href="laporan-aktivitas.html"><i class="fas fa-clipboard-list"></i> <span>Laporan Aktivitas</span></a></li>
+        </ul>
+        
+        <div class="profile-preview">
+            <div class="profile-avatar">KM</div>
+            <div class="profile-info">
+                <h4 id="profile-name">Kiraitsu M.</h4>
+                <p id="profile-role">Admin Kepegawaian</p>
+            </div>
+            <i class="fas fa-ellipsis-v"></i>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <header>
+            <div class="search-area">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Cari pegawai...">
+            </div>
+            
+            <div class="header-actions">
+                <div class="icon-button">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">2</span>
+                </div>
+                
+                <div class="user-info">
+                    <div class="avatar">KM</div>
+                    <div class="user-details">
+                        <span class="user-name">Kiraitsu M.</span>
+                        <span class="user-role">Admin Kepegawaian</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="page-header">
+                <h1>Monitoring Presensi</h1>
+                <div class="header-actions">
+                    <button class="btn primary"><i class="fas fa-calendar-alt"></i> Filter Tanggal</button>
+                    <button class="btn secondary"><i class="fas fa-download"></i> Export</button>
+                </div>
+            </div>
+            
+            <div class="filter-section">
+                <div class="filter-group">
+                    <label for="tanggal">Tanggal</label>
+                    <input type="date" id="tanggal" value="2025-05-04">
+                </div>
+                <div class="filter-group">
+                    <label for="unit">Unit Kerja</label>
+                    <select id="unit">
+                        <option value="">Semua Unit</option>
+                        <option value="IT">IT</option>
+                        <option value="HRD">HRD</option>
+                        <option value="Keuangan">Keuangan</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Produksi">Produksi</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="status">Status</label>
+                    <select id="status">
+                        <option value="">Semua Status</option>
+                        <option value="hadir">Hadir</option>
+                        <option value="terlambat">Terlambat</option>
+                        <option value="tidak_hadir">Tidak Hadir</option>
+                    </select>
+                </div>
+                <button class="btn primary"><i class="fas fa-filter"></i> Filter</button>
+            </div>
+            
+            <div class="card table-card">
+                <div class="card-header">
+                    <h3 class="card-title">Data Presensi Hari Ini</h3>
+                    <div class="card-actions">
+                        <button class="btn icon"><i class="fas fa-sync-alt"></i></button>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Nama Pegawai</th>
+                            <th>Unit Kerja</th>
+                            <th>Jam Masuk</th>
+                            <th>Jam Pulang</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Ahmad Rizal</td>
+                            <td>IT</td>
+                            <td>07:50:23</td>
+                            <td>16:05:12</td>
+                            <td><span class="status present">Hadir</span></td>
+                            <td>
+                                <button class="btn icon small"><i class="fas fa-eye"></i></button>
+                                <button class="btn icon small"><i class="fas fa-edit"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Nina Wulandari</td>
+                            <td>HRD</td>
+                            <td>08:15:05</td>
+                            <td>16:30:45</td>
+                            <td><span class="status late">Terlambat</span></td>
+                            <td>
+                                <button class="btn icon small"><i class="fas fa-eye"></i></button>
+                                <button class="btn icon small"><i class="fas fa-edit"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Budi Santoso</td>
+                            <td>Keuangan</td>
+                            <td>07:45:12</td>
+                            <td>16:10:33</td>
+                            <td><span class="status present">Hadir</span></td>
+                            <td>
+                                <button class="btn icon small"><i class="fas fa-eye"></i></button>
+                                <button class="btn icon small"><i class="fas fa-edit"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Siti Rahma</td>
+                            <td>Marketing</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><span class="status absent">Tidak Hadir</span></td>
+                            <td>
+                                <button class="btn icon small"><i class="fas fa-eye"></i></button>
+                                <button class="btn icon small"><i class="fas fa-edit"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Dian Permana</td>
+                            <td>Produksi</td>
+                            <td>07:55:45</td>
+                            <td>16:20:15</td>
+                            <td><span class="status present">Hadir</span></td>
+                            <td>
+                                <button class="btn icon small"><i class="fas fa-eye"></i></button>
+                                <button class="btn icon small"><i class="fas fa-edit"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="table-footer">
+                    <div class="table-info">
+                        Menampilkan 1-5 dari 156 data
+                    </div>
+                    <div class="pagination">
+                        <button class="btn icon"><i class="fas fa-chevron-left"></i></button>
+                        <button class="btn active">1</button>
+                        <button class="btn">2</button>
+                        <button class="btn">3</button>
+                        <button class="btn icon"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Navbar Mobile -->
+    <nav class="mobile-nav">
+        <a href="index.html"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+        <a href="monitoring-presensi.html" class="active"><i class="fas fa-clock"></i><span>Presensi</span></a>
+        <a href="biodata-pegawai.html"><i class="fas fa-users"></i><span>Pegawai</span></a>
+        <a href="laporan-aktivitas.html"><i class="fas fa-clipboard-list"></i><span>Laporan</span><span class="badge">3</span></a>
+        <a href="#"><i class="fas fa-user"></i><span>Profil</span></a>
+    </nav>
+
+    <script>
+        // Toggle between Neumorphism and Glassmorphism
+        const modeToggle = document.getElementById('mode-toggle');
+        modeToggle.addEventListener('change', function() {
+            document.body.classList.toggle('glass-mode');
+        });
+    </script>
+</body>
+</html>

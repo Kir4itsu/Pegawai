@@ -599,6 +599,181 @@ input:checked + .slider:before {
     }
 }
 
+/* Tambahan CSS untuk halaman baru */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn.primary {
+    background: var(--primary);
+    color: white;
+    box-shadow: 5px 5px 10px var(--shadow-dark), 
+               -5px -5px 10px var(--shadow-light);
+}
+
+.btn.primary:hover {
+    background: #6a3ce8;
+    transform: translateY(-2px);
+}
+
+.btn.secondary {
+    background: var(--light-bg);
+    color: var(--primary);
+    box-shadow: 5px 5px 10px var(--shadow-dark), 
+               -5px -5px 10px var(--shadow-light);
+}
+
+.btn.secondary:hover {
+    background: #e6e9ff;
+    transform: translateY(-2px);
+}
+
+.btn.icon {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    justify-content: center;
+    background: var(--light-bg);
+    color: var(--light-text);
+    box-shadow: 5px 5px 10px var(--shadow-dark), 
+               -5px -5px 10px var(--shadow-light);
+}
+
+.btn.icon:hover {
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.btn.icon.small {
+    width: 30px;
+    height: 30px;
+    font-size: 0.8rem;
+}
+
+.btn.danger {
+    color: #e05260;
+}
+
+.filter-section {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.filter-group label {
+    font-size: 0.8rem;
+    color: var(--light-text);
+}
+
+.filter-group input, .filter-group select {
+    padding: 10px 15px;
+    border-radius: 12px;
+    border: none;
+    background: var(--light-bg);
+    box-shadow: inset 5px 5px 10px var(--shadow-dark), 
+               inset -5px -5px 10px var(--shadow-light);
+    color: var(--dark-text);
+    outline: none;
+}
+
+.search-area.small {
+    width: 200px;
+    padding: 8px 15px;
+}
+
+.table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding: 0 15px;
+}
+
+.table-info {
+    font-size: 0.8rem;
+    color: var(--light-text);
+}
+
+.pagination {
+    display: flex;
+    gap: 5px;
+}
+
+.status.active {
+    background: #dafbe8;
+    color: #0d9a5d;
+}
+
+.status.inactive {
+    background: #fee7e7;
+    color: #e05260;
+}
+
+/* Glass mode styles */
+body.glass-mode .btn.secondary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+body.glass-mode .btn.secondary:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+body.glass-mode .btn.icon {
+    background: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+body.glass-mode .btn.icon:hover {
+    color: white;
+}
+
+body.glass-mode .filter-group input, 
+body.glass-mode .filter-group select {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+body.glass-mode .filter-group input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+body.glass-mode .filter-group label {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+body.glass-mode .table-info {
+    color: rgba(255, 255, 255, 0.7);
+}
+
 /* Glassmorphism Mode */
 body.glass-mode {
     background: linear-gradient(135deg, #9d4edd, #7b2cbf);
@@ -670,3 +845,4 @@ body.glass-mode .mobile-nav a.active {
     background: rgba(255, 255, 255, 0.3);
     color: white;
 }
+
