@@ -799,6 +799,268 @@
                 </div>
             </div>
         </div>
+
+            <!-- Update Face Photo Page -->
+            <div id="updateFacePage" class="page" style="display: none;">
+                <div class="header">
+                    
+                    <div class="page-title">Perbarui Foto Wajah</div>
+                    <div></div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-camera"></i>
+                        Ambil Foto Wajah Baru
+                    </div>
+                    
+                    <div class="camera-section">
+                        <div class="camera-preview">
+                            <div class="camera-placeholder">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="face-detection-overlay"></div>
+                        </div>
+                        
+                        <p style="color: var(--gray); margin-bottom: 20px; font-size: 14px;">
+                            Pastikan wajah Anda terlihat jelas dan pencahayaan cukup
+                        </p>
+                        
+                        <div class="camera-controls">
+                            <button class="btn btn-outline" onclick="selectFromGallery()">
+                                <i class="fas fa-images"></i>
+                                Pilih dari Galeri
+                            </button>
+                            <button class="btn btn-primary" onclick="capturePhoto()">
+                                <i class="fas fa-camera"></i>
+                                Ambil Foto
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-info-circle"></i>
+                        Tips Foto Wajah yang Baik
+                    </div>
+                    
+                    <div class="tips-list">
+                        <div class="tip-item">
+                            <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                            <span>Pastikan pencahayaan cukup terang</span>
+                        </div>
+                        <div class="tip-item">
+                            <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                            <span>Wajah menghadap langsung ke kamera</span>
+                        </div>
+                        <div class="tip-item">
+                            <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                            <span>Jangan menggunakan kacamata atau topi</span>
+                        </div>
+                        <div class="tip-item">
+                            <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                            <span>Ekspresi wajah netral</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notification Settings Page -->
+            <div id="notificationPage" class="page" style="display: none;">
+                <div class="header">
+                    
+                    <div class="page-title">Pengaturan Notifikasi</div>
+                    <div></div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-bell"></i>
+                        Notifikasi Kehadiran
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Pengingat Clock In</h4>
+                            <p>Ingatkan saya untuk clock in di pagi hari</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Pengingat Clock Out</h4>
+                            <p>Ingatkan saya untuk clock out di sore hari</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Notifikasi Keterlambatan</h4>
+                            <p>Peringatan jika terlambat clock in</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-clock"></i>
+                        Waktu Pengingat
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Waktu Clock In</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-clock"></i>
+                            <input type="time" value="08:30">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Waktu Clock Out</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-clock"></i>
+                            <input type="time" value="17:00">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-mobile-alt"></i>
+                        Notifikasi Push
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Suara Notifikasi</h4>
+                            <p>Aktifkan suara untuk notifikasi</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Getaran</h4>
+                            <p>Aktifkan getaran untuk notifikasi</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="saveNotificationSettings()">
+                    <i class="fas fa-save"></i>
+                    Simpan Pengaturan
+                </button>
+            </div>
+        
+
+            <!-- Change Password Page -->
+            <div id="changePasswordPage" class="page" style="display: none;">
+                <div class="header">
+                    
+                    <div class="page-title">Ubah Password</div>
+                    <div></div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-lock"></i>
+                        Keamanan Password
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Password Saat Ini</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="currentPassword" placeholder="Masukkan password saat ini">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Password Baru</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-key"></i>
+                            <input type="password" id="newPassword" placeholder="Masukkan password baru" oninput="checkPasswordStrength()">
+                        </div>
+                        
+                        <div class="password-strength" id="passwordStrength" style="display: none;">
+                            <div class="strength-meter">
+                                <div class="strength-bar" id="strengthBar"></div>
+                            </div>
+                            <div class="strength-text" id="strengthText"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Konfirmasi Password Baru</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-check"></i>
+                            <input type="password" id="confirmPassword" placeholder="Konfirmasi password baru">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-shield-alt"></i>
+                        Persyaratan Password
+                    </div>
+                    
+                    <div class="password-requirements">
+                        <div class="requirement-item" id="lengthReq">
+                            <i class="fas fa-times-circle" style="color: var(--danger);"></i>
+                            <span>Minimal 8 karakter</span>
+                        </div>
+                        <div class="requirement-item" id="upperReq">
+                            <i class="fas fa-times-circle" style="color: var(--danger);"></i>
+                            <span>Mengandung huruf besar</span>
+                        </div>
+                        <div class="requirement-item" id="lowerReq">
+                            <i class="fas fa-times-circle" style="color: var(--danger);"></i>
+                            <span>Mengandung huruf kecil</span>
+                        </div>
+                        <div class="requirement-item" id="numberReq">
+                            <i class="fas fa-times-circle" style="color: var(--danger);"></i>
+                            <span>Mengandung angka</span>
+                        </div>
+                        <div class="requirement-item" id="specialReq">
+                            <i class="fas fa-times-circle" style="color: var(--danger);"></i>
+                            <span>Mengandung karakter khusus</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="btn-group" style="display: flex; gap: 15px; margin-top: 20px;">
+                    <button class="btn btn-outline" style="flex: 1;" onclick="showPage('profilePage')">
+                        <i class="fas fa-times"></i>
+                        Batal
+                    </button>
+                    <button class="btn btn-primary" style="flex: 1;" onclick="changePassword()">
+                        <i class="fas fa-save"></i>
+                        Ubah Password
+                    </button>
+                </div>
+            </div>
+        
         
         <!-- Success Animation for Clock In -->
         <div class="success-animation" id="clockInSuccess">
@@ -1311,7 +1573,67 @@
             const cameraBox = videoElement.parentElement;
             cameraBox.querySelector('.face-scan-animation').style.display = 'none';
         }
-    
+        
+        // Fungsi untuk membuka modal
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        // Fungsi untuk menutup modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Fungsi untuk mengubah password
+        function changePassword() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                alert('Harap isi semua field!');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                alert('Password baru dan konfirmasi password tidak cocok!');
+                return;
+            }
+            
+            // Di sini Anda bisa menambahkan logika untuk mengubah password
+            alert('Password berhasil diubah!');
+            closeModal('passwordModal');
+        }
+
+        // Update event handlers untuk tombol di profil
+        document.addEventListener('DOMContentLoaded', function() {
+            // Perbarui Foto Wajah
+            document.querySelector('.profile-section .action-btn.btn-primary').onclick = function() {
+                openModal('updateFaceModal');
+                // Tambahkan logika untuk memulai kamera jika diperlukan
+            };
+            
+            // Pengaturan Notifikasi
+            document.querySelector('.profile-section .action-btn.btn-outline:nth-of-type(1)').onclick = function() {
+                openModal('notificationModal');
+            };
+            
+            // Ubah Password
+            document.querySelector('.profile-section .action-btn.btn-outline:nth-of-type(2)').onclick = function() {
+                openModal('passwordModal');
+            };
+            
+            // Logout
+            document.querySelector('.profile-section .action-btn.btn-outline:nth-of-type(3)').onclick = function() {
+                if (confirm('Apakah Anda yakin ingin logout?')) {
+                    // Tambahkan logika logout di sini
+                    alert('Anda telah logout');
+                    // Redirect ke halaman login atau refresh halaman
+                    window.location.href = 'login.html'; // Ganti dengan URL login yang sesuai
+                }
+            };
+        });
+
         // Modifikasi fungsi captureFace dengan validasi wajah
         async function captureFace(type) {
             // Jika ini absen masuk dan sudah lewat jam 08:30
@@ -1404,6 +1726,196 @@
                 }
             }
         }
+
+        // Update existing profile menu buttons
+        function updateProfileMenuButtons() {
+            const profileButtons = document.querySelectorAll('#profilePage .action-btn');
+            
+            profileButtons[0].onclick = () => showPage('updateFacePage'); // Perbarui Foto Wajah
+            profileButtons[1].onclick = () => showPage('notificationPage'); // Pengaturan Notifikasi
+            profileButtons[2].onclick = () => showPage('changePasswordPage'); // Ubah Password
+            profileButtons[3].onclick = () => logout(); // Logout
+        }
+
+        // Camera Functions
+        function startCamera() {
+            const placeholder = document.querySelector('.camera-placeholder');
+            const overlay = document.querySelector('.face-detection-overlay');
+            
+            placeholder.innerHTML = '<i class="fas fa-video" style="color: var(--primary);"></i>';
+            overlay.style.display = 'block';
+            
+            // Simulate camera activation
+            setTimeout(() => {
+                placeholder.innerHTML = '<i class="fas fa-user-check" style="color: var(--success);"></i>';
+            }, 2000);
+        }
+
+        function capturePhoto() {
+            const placeholder = document.querySelector('.camera-placeholder');
+            const overlay = document.querySelector('.face-detection-overlay');
+            
+            // Simulate photo capture
+            placeholder.style.background = 'var(--success)';
+            placeholder.innerHTML = '<i class="fas fa-check" style="color: white;"></i>';
+            overlay.style.display = 'none';
+            
+            setTimeout(() => {
+                alert('Foto wajah berhasil diperbarui!');
+                showPage('profilePage');
+            }, 1500);
+        }
+
+        // Notification Settings
+        function saveNotificationSettings() {
+            // Simulate saving settings
+            const successAnimation = document.createElement('div');
+            successAnimation.className = 'success-message';
+            successAnimation.innerHTML = '<i class="fas fa-check-circle"></i> Pengaturan berhasil disimpan!';
+            successAnimation.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: var(--success);
+                color: white;
+                padding: 20px;
+                border-radius: 12px;
+                z-index: 1000;
+                animation: fadeInOut 2s ease;
+            `;
+            
+            document.body.appendChild(successAnimation);
+            
+            setTimeout(() => {
+                document.body.removeChild(successAnimation);
+                showPage('profilePage');
+            }, 2000);
+        }
+
+        // Password Strength Checker
+        function checkPasswordStrength() {
+            const password = document.getElementById('newPassword').value;
+            const strengthContainer = document.getElementById('passwordStrength');
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthText = document.getElementById('strengthText');
+            
+            if (password.length === 0) {
+                strengthContainer.style.display = 'none';
+                return;
+            }
+            
+            strengthContainer.style.display = 'block';
+            
+            let strength = 0;
+            const requirements = {
+                length: password.length >= 8,
+                upper: /[A-Z]/.test(password),
+                lower: /[a-z]/.test(password),
+                number: /\d/.test(password),
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+            };
+            
+            // Update requirement indicators
+            updateRequirement('lengthReq', requirements.length);
+            updateRequirement('upperReq', requirements.upper);
+            updateRequirement('lowerReq', requirements.lower);
+            updateRequirement('numberReq', requirements.number);
+            updateRequirement('specialReq', requirements.special);
+            
+            // Calculate strength
+            strength = Object.values(requirements).filter(Boolean).length;
+            
+            if (strength < 3) {
+                strengthBar.className = 'strength-bar weak';
+                strengthText.textContent = 'Password lemah';
+                strengthText.style.color = 'var(--danger)';
+            } else if (strength < 5) {
+                strengthBar.className = 'strength-bar medium';
+                strengthText.textContent = 'Password sedang';
+                strengthText.style.color = 'var(--warning)';
+            } else {
+                strengthBar.className = 'strength-bar strong';
+                strengthText.textContent = 'Password kuat';
+                strengthText.style.color = 'var(--success)';
+            }
+        }
+
+            function updateRequirement(elementId, isValid) {
+                const element = document.getElementById(elementId);
+                const icon = element.querySelector('i');
+                
+                if (isValid) {
+                    element.classList.add('valid');
+                    icon.className = 'fas fa-check-circle';
+                    icon.style.color = 'var(--success)';
+                } else {
+                    element.classList.remove('valid');
+                    icon.className = 'fas fa-times-circle';
+                    icon.style.color = 'var(--danger)';
+                }
+            }
+
+            // Change Password
+            function changePassword() {
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                if (!currentPassword || !newPassword || !confirmPassword) {
+                    alert('Harap isi semua field password!');
+                    return;
+                }
+                
+                if (newPassword !== confirmPassword) {
+                    alert('Password baru dan konfirmasi password tidak cocok!');
+                    return;
+                }
+                
+                // Simulate password change
+                alert('Password berhasil diubah!');
+                showPage('profilePage');
+            }
+
+            // Logout Function
+            function logout() {
+                if (confirm('Apakah Anda yakin ingin logout?')) {
+                    alert('Anda telah logout');
+                    // Redirect to login page or clear session
+                }
+            }
+
+            // Initialize profile menu buttons when page loads
+            document.addEventListener('DOMContentLoaded', function() {
+                updateProfileMenuButtons();
+            });
+
+            // Add CSS animation
+            const style = document.createElement('style');
+            style.textContent = `
+            @keyframes fadeInOut {
+                0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+                20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            }
+            `;
+            document.head.appendChild(style);
+
+            // Sembunyikan semua halaman dan tampilkan halaman tertentu
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.style.display = 'none');
+            const pageToShow = document.getElementById(pageId);
+            if (pageToShow) pageToShow.style.display = 'block';
+        }
+
+        // Listener untuk tombol-tombol pengaturan profil
+        document.addEventListener('DOMContentLoaded', function() {
+    // Ganti dengan selector yang lebih spesifik
+    document.getElementById('notificationSettingsBtn')?.addEventListener('click', () => showPage('notificationPage'));
+    document.getElementById('changePasswordBtn')?.addEventListener('click', () => showPage('changePasswordPage'));
+        });
     </script>   
 </body>
 </html>
