@@ -3,1919 +3,955 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Absensi Kepegawaian</title>
-    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <title>Campus Persona</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8f9fa;
+            color: #2d3436;
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 100%;
+            width: 100%;
+            margin: 0 auto;
+            background: #ffffff;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .header {
+            padding: 20px;
+            text-align: center;
+            background: #ffffff;
+            border-bottom: 1px solid #e9ecef;
+            width: 100%;
+        }
+
+        .profile-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 24px;
+            margin: 20px 16px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(116, 75, 162, 0.15);
+            color: white;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            will-change: transform;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .avatar-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+        }
+
+        .player-info h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .player-type {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .level-section {
+            position: relative;
+            z-index: 2;
+        }
+
+        .level-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .level-number {
+            font-size: 48px;
+            font-weight: 900;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .xp-info {
+            text-align: right;
+        }
+
+        .xp-bar {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .xp-fill {
+            width: 68%;
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ffed4e);
+            border-radius: 10px;
+            animation: pulse 2s ease-in-out infinite;
+            will-change: opacity;
+            transition: width 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 20px 16px;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(116, 75, 162, 0.08);
+            border: 1px solid rgba(116, 75, 162, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .stat-card:active {
+            transform: translateY(-2px);
+        }
+
+        .stat-icon {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: #764ba2;
+        }
+
+        .stat-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .activities-section {
+            margin: 20px 16px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #2d3436;
+        }
+
+        .section-title svg {
+            width: 20px;
+            height: 20px;
+            color: #764ba2;
+        }
+
+        .activity-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 10px rgba(116, 75, 162, 0.08);
+            border: 1px solid rgba(116, 75, 162, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .activity-card:active {
+            transform: translateX(4px);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .activity-time {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .activity-xp {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .activity-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .activity-location {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .daily-missions {
+            margin: 20px 16px;
+        }
+
+        .mission-item {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(116, 75, 162, 0.06);
+            border: 1px solid rgba(116, 75, 162, 0.1);
+        }
+
+        .mission-progress {
+            font-size: 12px;
+            color: #4ecdc4;
+            font-weight: 600;
+        }
+
+        .floating-btn {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(116, 75, 162, 0.3);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            color: white;
+            z-index: 99;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .floating-btn:active {
+            transform: scale(0.95);
+        }
+
+        .floating-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 12px;
+            height: 12px;
+            background: #ff4757;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .social-skills {
+            margin: 20px 16px;
+        }
+
+        .skill-item {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 10px rgba(116, 75, 162, 0.06);
+            border: 1px solid rgba(116, 75, 162, 0.1);
+        }
+
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .skill-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .skill-level {
+            background: linear-gradient(45deg, #a55eea, #8e44ad);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* QR Modal Styles */
+        .qr-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-modal.show {
+            display: flex;
+        }
+
+        .qr-modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            position: relative;
+            max-width: 90%;
+            width: 320px;
+            margin: 0 16px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        #qr-reader {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* Test QR Section */
+        .test-qr-section {
+            margin: 20px 16px;
+            padding: 16px;
+            background: #e8f4f8;
+            border-radius: 12px;
+            border: 2px dashed #4ecdc4;
+        }
+
+        .test-qr-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3436;
+            margin-bottom: 8px;
+        }
+
+        .test-qr-info {
+            font-size: 12px;
+            color: #636e72;
+            margin-bottom: 12px;
+        }
+
+        .qr-dummy {
+            background: white;
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
+            font-family: monospace;
+            font-size: 10px;
+            word-break: break-all;
+            margin-bottom: 8px;
+        }
+
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            border-radius: 16px;
+            color: white;
+            font-weight: 600;
+            z-index: 10000;
+            text-align: center;
+            max-width: 280px;
+            animation: notificationPop 0.5s ease-out;
+        }
+
+        .notification.xp {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        }
+
+        .notification.level-up {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 20px 40px rgba(116, 75, 162, 0.3);
+        }
+
+        @keyframes notificationPop {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* Responsive improvements */
+        @media screen and (max-width: 390px) {
+            .profile-card {
+                margin: 16px 12px;
+                padding: 20px;
+            }
+            
+            .stats-grid {
+                margin: 16px 12px;
+                gap: 10px;
+            }
+            
+            .activities-section,
+            .daily-missions,
+            .social-skills,
+            .test-qr-section {
+                margin: 16px 12px;
+            }
+            
+            .floating-btn {
+                right: 16px;
+                bottom: 75px;
+            }
+        }
+    </style>
 </head>
-<body>  
-    <!-- Header -->
+<body>
     <div class="container">
         <div class="header">
-            <div class="logo">
-                <i class="fas fa-id-card"></i>
-                <span>Absensi Jawa</span>
-            </div>
-            <div class="user-profile">
-                <div class="user-avatar">KM</div>
-                <div class="user-name">Kiraitsu M.</div>
-            </div>
+            <h1 style="color: #764ba2; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <i data-lucide="gamepad-2"></i> Campus Persona
+            </h1>
+            <p style="opacity: 0.7; font-size: 14px; margin-top: 4px; color: #636e72;">Level up your campus life!</p>
         </div>
-        
-        <!-- Home Page -->
-        <div id="homePage" class="page" style="display: none;">
-            <div class="card greeting-card">
-                <div class="greeting-content">
-                    <div class="greeting-text">
-                        <h3>Selamat Pagi,</h3>
-                        <h1>Kiraitsu M.</h1>
-                    </div>
-                    <div class="user-avatar">KM</div>
-                </div>
-                <div class="current-time" id="homeCurrentTime">08:30</div>
-                <div class="current-date" id="homeCurrentDate">Senin, 20 April 2025</div>
-            </div>
 
-            <div class="quick-actions">
-                <div class="quick-action" onclick="switchPage('clockInPage')">
-                    <div class="action-icon" style="background-color: rgba(44, 204, 228, 0.1); color: var(--success);">
-                        <i class="fas fa-sign-in-alt"></i>
+        <!-- HOME SECTION -->
+        <div id="home-section" class="main-section" style="display: block;">
+            <div class="profile-card">
+                <div class="avatar-section">
+                    <div class="avatar">
+                        <i data-lucide="graduation-cap" style="font-size: 36px;"></i>
                     </div>
-                    <span>Absen Masuk</span>
-                </div>
-                <div class="quick-action" onclick="switchPage('clockOutPage')">
-                    <div class="action-icon" style="background-color: rgba(255, 101, 132, 0.1); color: var(--secondary);">
-                        <i class="fas fa-sign-out-alt"></i>
-                    </div>
-                    <span>Absen Pulang</span>
-                </div>
-                <div class="quick-action" onclick="switchPage('historyPage')">
-                    <div class="action-icon" style="background-color: rgba(108, 99, 255, 0.1); color: var(--primary);">
-                        <i class="fas fa-history"></i>
-                    </div>
-                    <span>Riwayat</span>
-                </div>
-                <div class="quick-action" onclick="switchPage('salaryPage')">
-                    <div class="action-icon" style="background-color: rgba(255, 200, 87, 0.1); color: var(--warning);">
-                        <i class="fas fa-money-bill-wave"></i>
-                    </div>
-                    <span>Gaji</span>
+                <div class="player-info">
+                    <h2>Kiraitsu M.</h2>
+                    <div class="player-type">The Creative Leader</div>
                 </div>
             </div>
-
-            <div class="card">
-                <div class="card-title">
-                    <span><i class="fas fa-calendar-check"></i> Hari Ini</span>
-                </div>
-                
-                <div class="today-summary">
-                    <div class="summary-item">
-                        <div class="summary-value">08:30</div>
-                        <div class="summary-label">Absen Masuk</div>
-                    </div>
-                    <div class="summary-item">
-                        <div class="summary-value">-</div>
-                        <div class="summary-label">Absen Pulang</div>
-                    </div>
-                    <div class="summary-item">
-                        <div class="summary-value">3/5</div>
-                        <div class="summary-label">Tugas Selesai</div>
+            <div class="level-section">
+                <div class="level-display">
+                    <div class="level-number">1</div>
+                    <div class="xp-info">
+                        <div style="font-size: 14px; font-weight: 600;">0 / 1000 XP</div>
+                        <div style="font-size: 12px; opacity: 0.8;">1000 XP to next level</div>
                     </div>
                 </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">
-                    <span><i class="fas fa-calendar-alt"></i> Jadwal Hari Ini</span>
-                    <small>3 Jadwal</small>
-                </div>
-                
-                <div class="schedule-list">
-                    <div class="schedule-item">
-                        <div class="schedule-time">09:00</div>
-                        <div class="schedule-details">
-                            <div class="schedule-title">Rapat Tim Marketing</div>
-                            <div class="schedule-location"><i class="fas fa-map-marker-alt"></i> Ruang Rapat A</div>
-                        </div>
-                        <div class="schedule-status" style="color: var(--danger);"><i class="fas fa-circle"></i></div>
-                    </div>
-                    
-                    <div class="schedule-item">
-                        <div class="schedule-time">11:30</div>
-                        <div class="schedule-details">
-                            <div class="schedule-title">Presentasi Produk Baru</div>
-                            <div class="schedule-location"><i class="fas fa-map-marker-alt"></i> Ruang Seminar</div>
-                        </div>
-                        <div class="schedule-status" style="color: var(--warning);"><i class="fas fa-circle"></i></div>
-                    </div>
-                    
-                    <div class="schedule-item">
-                        <div class="schedule-time">14:00</div>
-                        <div class="schedule-details">
-                            <div class="schedule-title">Review Kinerja Bulanan</div>
-                            <div class="schedule-location"><i class="fas fa-map-marker-alt"></i> Ruang Manajer</div>
-                        </div>
-                        <div class="schedule-status" style="color: var(--success);"><i class="fas fa-circle"></i></div>
-                    </div>
+                <div class="xp-bar">
+                    <div class="xp-fill"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Main Content - Clock In Page -->
-        <div id="clockInPage" class="page">
-            <div class="card">
-                <div class="time-box">
-                    <div class="current-time" id="currentTime">08:30</div>
-                    <div class="current-date" id="currentDate"></div>
-                    <div class="status status-in">Jam Masuk</div>
-                    <div id="lateWarning" style="display: none; color: var(--danger); margin-top: 10px; font-weight: 600;">
-                        <i class="fas fa-exclamation-triangle"></i> Waktu absen masuk sudah habis
-                    </div>
-                </div>
-                
-                <div class="attendance-container">
-                    <div class="camera-box">
-                        <div class="camera-placeholder" id="cameraPlaceholderIn">
-                            <i class="fas fa-camera" style="font-size: 48px; margin-bottom: 15px;"></i>
-                            <span>Wajah Anda akan muncul di sini</span>
-                        </div>
-                        <video id="cameraFeedIn" style="display: none; width: 100%; height: 100%; object-fit: cover;"></video>
-                        <div class="face-scan-animation"></div>
-                    </div>
-                    
-                    <button class="scan-btn" id="scanButtonIn" onclick="startCamera('In')">
-                        <i class="fas fa-camera"></i>
-                        Aktifkan Kamera
-                    </button>
-                    
-                    <button class="scan-btn" id="captureButtonIn" style="display: none; background-color: #2ecc71;" onclick="captureFace('In')">
-                        <i class="fas fa-camera"></i>
-                        Scan Wajah untuk Absen Masuk
-                    </button>
-
-                    <div class="clockinout-buttons">
-                        <button class="clock-btn clock-in-btn active" onclick="switchPage('clockInPage')">
-                            <i class="fas fa-sign-in-alt"></i>
-                            Absen Masuk
-                        </button>
-                        <button class="clock-btn clock-out-btn" onclick="switchPage('clockOutPage')">
-                            <i class="fas fa-sign-out-alt"></i>
-                            Absen Pulang
-                        </button>
-                    </div>
-                </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i data-lucide="users"></i></div>
+                <div class="stat-label">Social</div>
+                <div class="stat-value">85</div>
             </div>
-            
-            
-            <div class="card">
-                <div class="card-title">Jadwal Hari Ini</div>
-                
-                <div class="tabs">
-                    <div class="tab active" onclick="switchTab('schedule')">Jadwal</div>
-                    <div class="tab" onclick="switchTab('tasks')">Tugas</div>
-                </div>
-                
-                <div class="tab-content active" id="schedule">
-                    <div class="schedule-item">
-                        <div class="priority-indicator priority-high"></div>
-                        <div class="schedule-time">09:00</div>
-                        <div class="schedule-details">
-                            <div class="schedule-title">Rapat Tim Marketing</div>
-                            <div class="schedule-description">Ruang Rapat A, Lantai 3</div>
-                        </div>
-                    </div>
-                    
-                    <div class="schedule-item">
-                        <div class="priority-indicator priority-medium"></div>
-                        <div class="schedule-time">11:30</div>
-                        <div class="schedule-details">
-                            <div class="schedule-title">Presentasi Produk Baru</div>
-                            <div class="schedule-description">Ruang Seminar, Lantai 5</div>
-                        </div>
-                    </div>
-                    
-                    <div class="schedule-item">
-                        <div class="priority-indicator priority-low"></div>
-                        <div class="schedule-time">14:00</div>
-                        <div class="schedule-details">
-                            <div class="schedule-title">Review Kinerja Bulanan</div>
-                            <div class="schedule-description">Ruang Manajer, Lantai 4</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="tab-content" id="tasks">
-                    <div class="task-list">
-                        <div class="task-item">
-                            <input type="checkbox" class="task-checkbox">
-                            <div class="task-title">Finalisasi laporan kuartal Q1</div>
-                        </div>
-                        
-                        <div class="task-item">
-                            <input type="checkbox" class="task-checkbox">
-                            <div class="task-title">Update data penjualan di sistem CRM</div>
-                        </div>
-                        
-                        <div class="task-item">
-                            <input type="checkbox" class="task-checkbox">
-                            <div class="task-title">Persiapkan presentasi untuk rapat tim</div>
-                        </div>
-                        
-                        <div class="task-item">
-                            <input type="checkbox" class="task-checkbox">
-                            <div class="task-title">Follow-up email ke klien PT Maju Jaya</div>
-                        </div>
-                    </div>
-                </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i data-lucide="brain"></i></div>
+                <div class="stat-label">Academic</div>
+                <div class="stat-value">92</div>
             </div>
-        </div>
-        
-        <!-- Clock Out Page -->
-        <div id="clockOutPage" class="page" style="display: none;">
-            <div class="card">
-                <div class="time-box">
-                    <div class="current-time" id="clockOutTime">14:00</div>
-                    <div class="current-date" id="clockOutDate"></div>
-                    <div class="status status-out">Jam Pulang</div>
-                    <div class="countdown-container">
-                        <div class="countdown-label">Sisa waktu:</div>
-                        <div class="countdown" id="countdownTimer">03:30:00</div>
-                    </div>
-                </div>
-                
-                <div class="attendance-container">
-                    <div class="camera-box">
-                        <div class="camera-placeholder" id="cameraPlaceholderOut">
-                            <i class="fas fa-camera" style="font-size: 48px; margin-bottom: 15px;"></i>
-                            <span>Wajah Anda akan muncul di sini</span>
-                        </div>
-                        <video id="cameraFeedOut" style="display: none; width: 100%; height: 100%; object-fit: cover;"></video>
-                        <div class="face-scan-animation"></div>
-                    </div>
-                    
-                    <button class="scan-btn" id="scanButtonOut" onclick="startCamera('Out')">
-                        <i class="fas fa-camera"></i>
-                        Aktifkan Kamera
-                    </button>
-                    
-                    <button class="scan-btn" id="captureButtonOut" style="display: none; background-color: #e74c3c;" onclick="captureFace('Out')">
-                        <i class="fas fa-camera"></i>
-                        Scan Wajah untuk Absen Pulang
-                    </button>
-
-                    <div class="clockinout-buttons">
-                        <button class="clock-btn clock-in-btn" onclick="switchPage('clockInPage')">
-                            <i class="fas fa-sign-in-alt"></i>
-                            Absen Masuk
-                        </button>
-                        <button class="clock-btn clock-out-btn active" onclick="switchPage('clockOutPage')">
-                            <i class="fas fa-sign-out-alt"></i>
-                            Absen Pulang
-                        </button>
-                    </div>
-                </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i data-lucide="crown"></i></div>
+                <div class="stat-label">Leadership</div>
+                <div class="stat-value">78</div>
             </div>
-            
-            <div class="card">
-                <div class="card-title">Laporan Harian</div>
-                
-                <div class="daily-report">
-                    <textarea class="report-textarea" placeholder="Tuliskan laporan kegiatan harian Anda di sini..."></textarea>
-                    
-                    <div class="card-title">Tugas yang Diselesaikan</div>
-                    <div class="task-list">
-                        <div class="task-item">
-                            <input type="checkbox" class="task-checkbox" checked>
-                            <div class="task-title">Finalisasi laporan kuartal Q1</div>
-                        </div>
-                        
-                        <div class="task-item">
-                            <input type="checkbox" class="task-checkbox" checked>
-                            <div class="task-title">Update data penjualan di sistem CRM</div>
-                        </div>
-                        
-                        <div class="task-item">
-                            <input type="checkbox" class="task-checkbox" checked>
-                            <div class="task-title">Persiapkan presentasi untuk rapat tim</div>
-                        </div>
-                        
-                        <div class="task-item">
-                            <input type="checkbox" class="task-checkbox">
-                            <div class="task-title">Follow-up email ke klien PT Maju Jaya</div>
-                        </div>
-                    </div>
-                    
-                    <button class="scan-btn" style="width: 100%; justify-content: center; margin-top: 20px;" onclick="showClockOutSuccess()">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Kirim Laporan
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Salary Page -->
-        <div id="salaryPage" class="page" style="display: none;">
-            <div class="card">
-                <div class="card-title">
-                    <span><i class="fas fa-money-bill-wave"></i> Ringkasan Gaji</span>
-                    <small>April 2025</small>
-                </div>
-                
-                <div class="salary-summary">
-                    <div class="salary-amount">
-                        <div class="salary-text">Total Gaji</div>
-                        <div class="salary-value">Rp 8.750.000</div>
-                    </div>
-                    
-                    <div class="salary-status">
-                        <div class="status-badge paid">
-                            <i class="fas fa-check-circle"></i>
-                            Sudah Dibayar
-                        </div>
-                        <div class="salary-date">Dibayarkan pada 25 April 2025</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="card-title">
-                    <span><i class="fas fa-receipt"></i> Rincian Gaji</span>
-                </div>
-                
-                <div class="salary-breakdown">
-                    <div class="salary-component">
-                        <div class="component-name">Gaji Pokok</div>
-                        <div class="component-value">Rp 7.500.000</div>
-                    </div>
-                    
-                    <div class="salary-component">
-                        <div class="component-name">Tunjangan Transport</div>
-                        <div class="component-value">Rp 500.000</div>
-                    </div>
-                    
-                    <div class="salary-component">
-                        <div class="component-name">Tunjangan Makan</div>
-                        <div class="component-value">Rp 800.000</div>
-                    </div>
-                    
-                    <div class="salary-component">
-                        <div class="component-name">Bonus Kinerja</div>
-                        <div class="component-value">Rp 450.000</div>
-                    </div>
-                    
-                    <div class="salary-divider"></div>
-                    
-                    <div class="salary-component">
-                        <div class="component-name">Potongan Pajak (PPh 21)</div>
-                        <div class="component-value negative">- Rp 375.000</div>
-                    </div>
-                    
-                    <div class="salary-component">
-                        <div class="component-name">Potongan BPJS</div>
-                        <div class="component-value negative">- Rp 125.000</div>
-                    </div>
-                    
-                    <div class="salary-component total">
-                        <div class="component-name">Total Diterima</div>
-                        <div class="component-value">Rp 8.750.000</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="card-title">
-                    <span><i class="fas fa-calendar-check"></i> Performa Kehadiran</span>
-                </div>
-                
-                <div class="attendance-performance">
-                    <div class="performance-item">
-                        <div class="performance-label">Kehadiran</div>
-                        <div class="progress-bar">
-                            <div class="progress" style="width: 95%"></div>
-                        </div>
-                        <div class="performance-value">95%</div>
-                    </div>
-                    
-                    <div class="performance-item">
-                        <div class="performance-label">Ketepatan Waktu</div>
-                        <div class="progress-bar">
-                            <div class="progress" style="width: 80%"></div>
-                        </div>
-                        <div class="performance-value">80%</div>
-                    </div>
-                    
-                    <div class="performance-info">
-                        <i class="fas fa-info-circle"></i>
-                        <span>Insentif kehadiran: Rp 150.000 (termasuk dalam bonus kinerja)</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="card-title">
-                    <span><i class="fas fa-history"></i> Riwayat Gaji</span>
-                </div>
-                
-                <div class="salary-history">
-                    <div class="salary-history-item">
-                        <div class="history-month">Maret 2025</div>
-                        <div class="history-amount">Rp 8.500.000</div>
-                        <div class="history-status paid">Dibayar</div>
-                    </div>
-                    
-                    <div class="salary-history-item">
-                        <div class="history-month">Februari 2025</div>
-                        <div class="history-amount">Rp 8.500.000</div>
-                        <div class="history-status paid">Dibayar</div>
-                    </div>
-                    
-                    <div class="salary-history-item">
-                        <div class="history-month">Januari 2025</div>
-                        <div class="history-amount">Rp 8.300.000</div>
-                        <div class="history-status paid">Dibayar</div>
-                    </div>
-                </div>
-                
-                <button class="action-btn btn-outline">
-                    <i class="fas fa-download"></i>
-                    Unduh Slip Gaji
-                </button>
+            <div class="stat-card">
+                <div class="stat-icon"><i data-lucide="palette"></i></div>
+                <div class="stat-label">Creative</div>
+                <div class="stat-value">96</div>
             </div>
         </div>
 
-        <!-- History Page -->
-        <div id="historyPage" class="page" style="display: none;">
-            <div class="card">
-                <div class="card-title">
-                    <span><i class="fas fa-chart-pie"></i> Statistik Kehadiran</span>
-                    <small>April 2025</small>
-                </div>
-                
-                <div class="stats-container">
-                    <div class="stat-card">
-                        <div class="stat-icon icon-blue">
-                            <i class="fas fa-calendar-check"></i>
-                        </div>
-                        <div class="stat-value">15</div>
-                        <div class="stat-label">Total Kehadiran</div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-icon icon-green">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div class="stat-value">12</div>
-                        <div class="stat-label">Tepat Waktu</div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-icon icon-yellow">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </div>
-                        <div class="stat-value">3</div>
-                        <div class="stat-label">Terlambat</div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-icon icon-red">
-                            <i class="fas fa-times-circle"></i>
-                        </div>
-                        <div class="stat-value">1</div>
-                        <div class="stat-label">Absen</div>
-                    </div>
-                </div>
-            
-                <div class="card-title">
-                    <span><i class="far fa-calendar-alt"></i> Kalender Kehadiran</span>
-                </div>
-                
-                <div class="calendar-view">
-                    <div class="calendar-header">
-                        <div class="month-selector">
-                            <i class="fas fa-chevron-left"></i>
-                            <span style="margin: 0 15px;">April 2025</span>
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
-                    </div>
-                    
-                    <div class="calendar-grid">
-                        <!-- Days of the week -->
-                        <div class="calendar-day">Min</div>
-                        <div class="calendar-day">Sen</div>
-                        <div class="calendar-day">Sel</div>
-                        <div class="calendar-day">Rab</div>
-                        <div class="calendar-day">Kam</div>
-                        <div class="calendar-day">Jum</div>
-                        <div class="calendar-day">Sab</div>
-                        
-                        <!-- Empty spaces for previous month -->
-                        <div class="calendar-date"></div>
-                        <div class="calendar-date"></div>
-                        
-                        <!-- Dates -->
-                        <div class="calendar-date">1</div>
-                        <div class="calendar-date">2</div>
-                        <div class="calendar-date">3</div>
-                        <div class="calendar-date">4</div>
-                        <div class="calendar-date">5</div>
-                        <div class="calendar-date">6</div>
-                        <div class="calendar-date">7</div>
-                        <div class="calendar-date">8</div>
-                        <div class="calendar-date present">9</div>
-                        <div class="calendar-date present">10</div>
-                        <div class="calendar-date present">11</div>
-                        <div class="calendar-date">12</div>
-                        <div class="calendar-date">13</div>
-                        <div class="calendar-date present">14</div>
-                        <div class="calendar-date present">15</div>
-                        <div class="calendar-date late">16</div>
-                        <div class="calendar-date present">17</div>
-                        <div class="calendar-date absent">18</div>
-                        <div class="calendar-date">19</div>
-                        <div class="calendar-date today">20</div>
-                        <div class="calendar-date">21</div>
-                        <div class="calendar-date">22</div>
-                        <div class="calendar-date">23</div>
-                        <div class="calendar-date">24</div>
-                        <div class="calendar-date">25</div>
-                        <div class="calendar-date">26</div>
-                        <div class="calendar-date">27</div>
-                        <div class="calendar-date">28</div>
-                        <div class="calendar-date">29</div>
-                        <div class="calendar-date">30</div>
-                    </div>
-                </div>
-                
-                <div style="display: flex; margin-bottom: 15px;">
-                    <div style="display: flex; align-items: center; margin-right: 15px;">
-                        <div style="width: 10px; height: 10px; background-color: var(--success); border-radius: 50%; margin-right: 5px;"></div>
-                        <span style="font-size: 12px;">Hadir</span>
-                    </div>
-                    
-                    <div style="display: flex; align-items: center; margin-right: 15px;">
-                        <div style="width: 10px; height: 10px; background-color: var(--warning); border-radius: 50%; margin-right: 5px;"></div>
-                        <span style="font-size: 12px;">Terlambat</span>
-                    </div>
-                    
-                    <div style="display: flex; align-items: center;">
-                        <div style="width: 10px; height: 10px; background-color: var(--danger); border-radius: 50%; margin-right: 5px;"></div>
-                        <span style="font-size: 12px;">Tidak Hadir</span>
-                    </div>
-                </div>
+        <!-- Test QR Section -->
+        <div class="test-qr-section">
+    <div class="test-qr-title">🧪 Test QR Codes</div>
+    <div class="test-qr-info">Scan QR codes di bawah untuk testing:</div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px;">
+        <div style="text-align: center;">
+            <div style="background: white; padding: 8px; border-radius: 8px; margin-bottom: 4px;">
+                <canvas id="qr1" width="80" height="80" style="border: 1px solid #ddd;"></canvas>
             </div>
-            
-            <div class="card">
-                <div class="card-title">
-                    <span><i class="fas fa-history"></i> Riwayat Kehadiran</span>
-                </div>
-                
-                <div class="filter-container">
-                    <button class="filter-btn active" onclick="filterAttendance('all')">Semua</button>
-                    <button class="filter-btn" onclick="filterAttendance('today')">Hari Ini</button>
-                    <button class="filter-btn" onclick="filterAttendance('week')">Minggu Ini</button>
-                    <button class="filter-btn" onclick="filterAttendance('month')">Bulan Ini</button>
-                </div>
-                
-                <div id="attendanceRecords">
-                    <!-- All Records (Default View) -->
-                    <div class="attendance-record" data-date="2025-04-20">
-                        <div class="record-date">
-                            <div class="record-day">20</div>
-                            <div class="record-month">APR</div>
-                        </div>
-                        <div class="record-details">
-                            <div class="record-time">Masuk: 08:30</div>
-                            <div class="record-location">Kantor Pusat, Jakarta</div>
-                        </div>
-                        <div class="record-status status-ontime">Tepat Waktu</div>
-                    </div>
-                    
-                    <div class="attendance-record" data-date="2025-04-19">
-                        <div class="record-date">
-                            <div class="record-day">19</div>
-                            <div class="record-month">APR</div>
-                        </div>
-                        <div class="record-details">
-                            <div class="record-time">Masuk: -</div>
-                            <div class="record-location">-</div>
-                        </div>
-                        <div class="record-status status-absent">Tidak Hadir</div>
-                    </div>
-                    
-                    <div class="attendance-record" data-date="2025-04-18">
-                        <div class="record-date">
-                            <div class="record-day">18</div>
-                            <div class="record-month">APR</div>
-                        </div>
-                        <div class="record-details">
-                            <div class="record-time">Masuk: 08:55</div>
-                            <div class="record-location">Kantor Pusat, Jakarta</div>
-                        </div>
-                        <div class="record-status status-late">Terlambat</div>
-                    </div>
-                    
-                    <div class="attendance-record" data-date="2025-04-17">
-                        <div class="record-date">
-                            <div class="record-day">17</div>
-                            <div class="record-month">APR</div>
-                        </div>
-                        <div class="record-details">
-                            <div class="record-time">Masuk: 08:15</div>
-                            <div class="record-location">Kantor Pusat, Jakarta</div>
-                        </div>
-                        <div class="record-status status-ontime">Tepat Waktu</div>
-                    </div>
-                    
-                    <div class="attendance-record" data-date="2025-04-16">
-                        <div class="record-date">
-                            <div class="record-day">16</div>
-                            <div class="record-month">APR</div>
-                        </div>
-                        <div class="record-details">
-                            <div class="record-time">Masuk: 08:45</div>
-                            <div class="record-location">Kantor Pusat, Jakarta</div>
-                        </div>
-                        <div class="record-status status-late">Terlambat</div>
-                    </div>
-                    
-                    <div class="attendance-record" data-date="2025-04-15">
-                        <div class="record-date">
-                            <div class="record-day">15</div>
-                            <div class="record-month">APR</div>
-                        </div>
-                        <div class="record-details">
-                            <div class="record-time">Masuk: 08:20</div>
-                            <div class="record-location">Kantor Pusat, Jakarta</div>
-                        </div>
-                        <div class="record-status status-ontime">Tepat Waktu</div>
-                    </div>
-                    
-                    <div class="attendance-record" data-date="2025-04-14">
-                        <div class="record-date">
-                            <div class="record-day">14</div>
-                            <div class="record-month">APR</div>
-                        </div>
-                        <div class="record-details">
-                            <div class="record-time">Masuk: 08:25</div>
-                            <div class="record-location">Kantor Pusat, Jakarta</div>
-                        </div>
-                        <div class="record-status status-ontime">Tepat Waktu</div>
-                    </div>
-                    
-                    <div class="attendance-record" data-date="2025-04-10">
-                        <div class="record-date">
-                            <div class="record-day">10</div>
-                            <div class="record-month">APR</div>
-                        </div>
-                        <div class="record-details">
-                            <div class="record-time">Masuk: 08:10</div>
-                            <div class="record-location">Kantor Pusat, Jakarta</div>
-                        </div>
-                        <div class="record-status status-ontime">Tepat Waktu</div>
-                    </div>
-                </div>
-            </div>
+            <div style="font-size: 10px; color: #636e72;">Event Marketing (+250 XP)</div>
         </div>
         
-        <!-- Profile Page -->
-        <div id="profilePage" class="page" style="display: none;">
-            <div class="profile-header">
-                <div class="profile-image">KM</div>
-                <div class="profile-name">Kiraitsu M</div>
-                <div class="profile-position">Manusia</div>
-                <div class="profile-tag">Divisi FrontEnd</div>
+        <div style="text-align: center;">
+            <div style="background: white; padding: 8px; border-radius: 8px; margin-bottom: 4px;">
+                <canvas id="qr2" width="80" height="80" style="border: 1px solid #ddd;"></canvas>
             </div>
-            
-            <div class="card">
-                <div class="profile-section">
-                    <div class="profile-section-title">
-                        <i class="fas fa-user"></i>
-                        Informasi Pribadi
-                    </div>
-                    
-                    <div class="info-item">
-                        <div class="info-icon">
-                            <i class="fas fa-id-card"></i>
-                        </div>
-                        <div class="info-details">
-                            <div class="info-label">NIP</div>
-                            <div class="info-value">802306532</div>
-                        </div>
-                    </div>
-                    
-                    <div class="info-item">
-                        <div class="info-icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div class="info-details">
-                            <div class="info-label">Email</div>
-                            <div class="info-value">kiraitsu@mail.com</div>
-                        </div>
-                    </div>
-                    
-                    <div class="info-item">
-                        <div class="info-icon">
-                            <i class="fas fa-phone"></i>
-                        </div>
-                        <div class="info-details">
-                            <div class="info-label">Telepon</div>
-                            <div class="info-value">+62 89523793649</div>
-                        </div>
-                    </div>
-                    
-                    <div class="info-item">
-                        <div class="info-icon">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                        <div class="info-details">
-                            <div class="info-label">Tanggal Bergabung</div>
-                            <div class="info-value">10 Januari 2022</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="profile-section">
-                    <div class="profile-section-title">
-                        <i class="fas fa-medal"></i>
-                        Pencapaian
-                    </div>
-                    
-                    <div class="badges-container">
-                        <div class="badge-item">
-                            <div class="badge-icon">
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <div class="badge-name">Pegawai Teladan</div>
-                            <div class="badge-desc">3 bulan berturut-turut</div>
-                        </div>
-                        
-                        <div class="badge-item">
-                            <div class="badge-icon">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                            <div class="badge-name">Ketepatan Waktu</div>
-                            <div class="badge-desc">100% tepat waktu 1 bulan</div>
-                        </div>
-                        
-                        <div class="badge-item">
-                            <div class="badge-icon locked">
-                                <i class="fas fa-trophy"></i>
-                            </div>
-                            <div class="badge-name">Top Performer</div>
-                            <div class="badge-desc">Terkunci</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="profile-section">
-                    <div class="profile-section-title">
-                        <i class="fas fa-cog"></i>
-                        Pengaturan
-                    </div>
-                    
-                    <button class="action-btn btn-primary">
-                        <i class="fas fa-camera"></i>
-                        Perbarui Foto Wajah
-                    </button>
-                    
-                    <button class="action-btn btn-outline">
-                        <i class="fas fa-bell"></i>
-                        Pengaturan Notifikasi
-                    </button>
-                    
-                    <button class="action-btn btn-outline">
-                        <i class="fas fa-lock"></i>
-                        Ubah Password
-                    </button>
-                    
-                    <button class="action-btn btn-outline" style="color: #e63946;">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Logout
-                    </button>
-                </div>
-            </div>
-        </div>
-
-            <!-- Update Face Photo Page -->
-            <div id="updateFacePage" class="page" style="display: none;">
-                <div class="header">
-                    
-                    <div class="page-title">Perbarui Foto Wajah</div>
-                    <div></div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-title">
-                        <i class="fas fa-camera"></i>
-                        Ambil Foto Wajah Baru
-                    </div>
-                    
-                    <div class="camera-section">
-                        <div class="camera-preview">
-                            <div class="camera-placeholder">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            <div class="face-detection-overlay"></div>
-                        </div>
-                        
-                        <p style="color: var(--gray); margin-bottom: 20px; font-size: 14px;">
-                            Pastikan wajah Anda terlihat jelas dan pencahayaan cukup
-                        </p>
-                        
-                        <div class="camera-controls">
-                            <button class="btn btn-outline" onclick="selectFromGallery()">
-                                <i class="fas fa-images"></i>
-                                Pilih dari Galeri
-                            </button>
-                            <button class="btn btn-primary" onclick="capturePhoto()">
-                                <i class="fas fa-camera"></i>
-                                Ambil Foto
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-title">
-                        <i class="fas fa-info-circle"></i>
-                        Tips Foto Wajah yang Baik
-                    </div>
-                    
-                    <div class="tips-list">
-                        <div class="tip-item">
-                            <i class="fas fa-check-circle" style="color: var(--success);"></i>
-                            <span>Pastikan pencahayaan cukup terang</span>
-                        </div>
-                        <div class="tip-item">
-                            <i class="fas fa-check-circle" style="color: var(--success);"></i>
-                            <span>Wajah menghadap langsung ke kamera</span>
-                        </div>
-                        <div class="tip-item">
-                            <i class="fas fa-check-circle" style="color: var(--success);"></i>
-                            <span>Jangan menggunakan kacamata atau topi</span>
-                        </div>
-                        <div class="tip-item">
-                            <i class="fas fa-check-circle" style="color: var(--success);"></i>
-                            <span>Ekspresi wajah netral</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Notification Settings Page -->
-            <div id="notificationPage" class="page" style="display: none;">
-                <div class="header">
-                    
-                    <div class="page-title">Pengaturan Notifikasi</div>
-                    <div></div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-title">
-                        <i class="fas fa-bell"></i>
-                        Notifikasi Kehadiran
-                    </div>
-                    
-                    <div class="setting-item">
-                        <div class="setting-info">
-                            <h4>Pengingat Clock In</h4>
-                            <p>Ingatkan saya untuk clock in di pagi hari</p>
-                        </div>
-                        <label class="switch">
-                            <input type="checkbox" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    
-                    <div class="setting-item">
-                        <div class="setting-info">
-                            <h4>Pengingat Clock Out</h4>
-                            <p>Ingatkan saya untuk clock out di sore hari</p>
-                        </div>
-                        <label class="switch">
-                            <input type="checkbox" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    
-                    <div class="setting-item">
-                        <div class="setting-info">
-                            <h4>Notifikasi Keterlambatan</h4>
-                            <p>Peringatan jika terlambat clock in</p>
-                        </div>
-                        <label class="switch">
-                            <input type="checkbox">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-title">
-                        <i class="fas fa-clock"></i>
-                        Waktu Pengingat
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Waktu Clock In</label>
-                        <div class="input-with-icon">
-                            <i class="fas fa-clock"></i>
-                            <input type="time" value="08:30">
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Waktu Clock Out</label>
-                        <div class="input-with-icon">
-                            <i class="fas fa-clock"></i>
-                            <input type="time" value="17:00">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-title">
-                        <i class="fas fa-mobile-alt"></i>
-                        Notifikasi Push
-                    </div>
-                    
-                    <div class="setting-item">
-                        <div class="setting-info">
-                            <h4>Suara Notifikasi</h4>
-                            <p>Aktifkan suara untuk notifikasi</p>
-                        </div>
-                        <label class="switch">
-                            <input type="checkbox" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    
-                    <div class="setting-item">
-                        <div class="setting-info">
-                            <h4>Getaran</h4>
-                            <p>Aktifkan getaran untuk notifikasi</p>
-                        </div>
-                        <label class="switch">
-                            <input type="checkbox" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </div>
-                
-                <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="saveNotificationSettings()">
-                    <i class="fas fa-save"></i>
-                    Simpan Pengaturan
-                </button>
-            </div>
-        
-
-            <!-- Change Password Page -->
-            <div id="changePasswordPage" class="page" style="display: none;">
-                <div class="header">
-                    
-                    <div class="page-title">Ubah Password</div>
-                    <div></div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-title">
-                        <i class="fas fa-lock"></i>
-                        Keamanan Password
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Password Saat Ini</label>
-                        <div class="input-with-icon">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="currentPassword" placeholder="Masukkan password saat ini">
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Password Baru</label>
-                        <div class="input-with-icon">
-                            <i class="fas fa-key"></i>
-                            <input type="password" id="newPassword" placeholder="Masukkan password baru" oninput="checkPasswordStrength()">
-                        </div>
-                        
-                        <div class="password-strength" id="passwordStrength" style="display: none;">
-                            <div class="strength-meter">
-                                <div class="strength-bar" id="strengthBar"></div>
-                            </div>
-                            <div class="strength-text" id="strengthText"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Konfirmasi Password Baru</label>
-                        <div class="input-with-icon">
-                            <i class="fas fa-check"></i>
-                            <input type="password" id="confirmPassword" placeholder="Konfirmasi password baru">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-title">
-                        <i class="fas fa-shield-alt"></i>
-                        Persyaratan Password
-                    </div>
-                    
-                    <div class="password-requirements">
-                        <div class="requirement-item" id="lengthReq">
-                            <i class="fas fa-times-circle" style="color: var(--danger);"></i>
-                            <span>Minimal 8 karakter</span>
-                        </div>
-                        <div class="requirement-item" id="upperReq">
-                            <i class="fas fa-times-circle" style="color: var(--danger);"></i>
-                            <span>Mengandung huruf besar</span>
-                        </div>
-                        <div class="requirement-item" id="lowerReq">
-                            <i class="fas fa-times-circle" style="color: var(--danger);"></i>
-                            <span>Mengandung huruf kecil</span>
-                        </div>
-                        <div class="requirement-item" id="numberReq">
-                            <i class="fas fa-times-circle" style="color: var(--danger);"></i>
-                            <span>Mengandung angka</span>
-                        </div>
-                        <div class="requirement-item" id="specialReq">
-                            <i class="fas fa-times-circle" style="color: var(--danger);"></i>
-                            <span>Mengandung karakter khusus</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="btn-group" style="display: flex; gap: 15px; margin-top: 20px;">
-                    <button class="btn btn-outline" style="flex: 1;" onclick="showPage('profilePage')">
-                        <i class="fas fa-times"></i>
-                        Batal
-                    </button>
-                    <button class="btn btn-primary" style="flex: 1;" onclick="changePassword()">
-                        <i class="fas fa-save"></i>
-                        Ubah Password
-                    </button>
-                </div>
-            </div>
-        
-        
-        <!-- Success Animation for Clock In -->
-        <div class="success-animation" id="clockInSuccess">
-            <div class="success-icon">
-                <i class="fas fa-check" style="font-size: 50px; color: white;"></i>
-            </div>
-            <div class="success-message">Absen Masuk Berhasil!</div>
-            <div class="success-details">08:30 - Senin, 20 April 2025</div>
+            <div style="font-size: 10px; color: #636e72;">Workshop Design (+400 XP)</div>
         </div>
         
-        <!-- Success Animation for Clock Out -->
-        <div class="success-animation" id="clockOutSuccess">
-            <div class="success-icon">
-                <i class="fas fa-check" style="font-size: 50px; color: white;"></i>
+        <div style="text-align: center;">
+            <div style="background: white; padding: 8px; border-radius: 8px; margin-bottom: 4px;">
+                <canvas id="qr3" width="80" height="80" style="border: 1px solid #ddd;"></canvas>
             </div>
-            <div class="success-message">Absen Pulang Berhasil!</div>
-            <div class="success-details">17:30 - Senin, 20 April 2025</div>
-            <div class="success-details">Laporan harian telah disimpan</div>
+            <div style="font-size: 10px; color: #636e72;">Social Gathering (+150 XP)</div>
+        </div>
+        
+        <div style="text-align: center;">
+            <div style="background: white; padding: 8px; border-radius: 8px; margin-bottom: 4px;">
+                <canvas id="qr4" width="80" height="80" style="border: 1px solid #ddd;"></canvas>
+            </div>
+            <div style="font-size: 10px; color: #636e72;">Level Up Test (+900 XP)</div>
         </div>
     </div>
-
-    <!-- Bottom Navigation -->
-    <div class="navigation">
-        <a href="#" class="nav-item active" onclick="switchPage('homePage')">
-            <i class="fas fa-home"></i>
-            <span>Beranda</span>
-        </a>
-        <a href="#" class="nav-item" onclick="switchPage('salaryPage')">
-            <i class="fas fa-money-bill-wave"></i>
-            <span>Gaji</span>
-        </a>
-        <div class="nav-center">
-            <a href="#" class="attendance-btn" id="attendanceButton" onclick="toggleAttendance()">
-                <i class="fas fa-fingerprint"></i>
-            </a>
-        </div>
-        <a href="#" class="nav-item" onclick="switchPage('historyPage')">
-            <i class="fas fa-chart-line"></i>
-            <span>Kinerja</span>
-        </a>
-        <a href="#" class="nav-item" onclick="switchPage('profilePage')">
-            <i class="fas fa-user"></i>
-            <span>Profil</span>
-        </a>
+    
+    <div style="font-size: 11px; color: #636e72; margin-top: 8px; text-align: center;">
+        📱 Tekan tombol QR di bawah untuk mulai scan
     </div>
     
-    
+    <!-- Debug button untuk testing -->
+    <div style="margin-top: 12px; text-align: center;">
+        <button onclick="generateTestQRs()" style="background: #4ecdc4; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 12px;">
+            🔄 Reload QR Codes
+        </button>
+    </div>
+</div>
+
+        <div class="activities-section">
+            <div class="section-title">
+                <i data-lucide="calendar-days"></i> Today's Activities
+            </div>
+            <div class="activity-card">
+                <div class="activity-header">
+                    <div class="activity-time">09:00</div>
+                    <div class="activity-xp">+250 XP</div>
+                </div>
+                <div class="activity-title">Rapat Tim Marketing</div>
+                <div class="activity-location">
+                    <i data-lucide="map-pin" style="width: 12px; height: 12px; display: inline;"></i> Ruang Rapat A
+                </div>
+            </div>
+            <div class="activity-card">
+                <div class="activity-header">
+                    <div class="activity-time">13:30</div>
+                    <div class="activity-xp">+180 XP</div>
+                </div>
+                <div class="activity-title">Workshop Design Thinking</div>
+                <div class="activity-location">
+                    <i data-lucide="map-pin" style="width: 12px; height: 12px; display: inline;"></i> Lab Komputer 2
+                </div>
+            </div>
+            <div class="activity-card">
+                <div class="activity-header">
+                    <div class="activity-time">16:00</div>
+                    <div class="activity-xp">+120 XP</div>
+                </div>
+                <div class="activity-title">Hangout with Squad</div>
+                <div class="activity-location">
+                    <i data-lucide="map-pin" style="width: 12px; height: 12px; display: inline;"></i> Cafeteria
+                </div>
+            </div>
+        </div>
+
+        <div class="daily-missions">
+            <div class="section-title">
+                <i data-lucide="target"></i> Daily Missions
+            </div>
+            <div class="mission-item">
+                <span>Attend 2 classes</span>
+                <span class="mission-progress">2/2 <i data-lucide="check-circle" style="width: 14px; height: 14px; color: #00b894; display: inline;"></i></span>
+            </div>
+            <div class="mission-item">
+                <span>Help 1 friend</span>
+                <span class="mission-progress">1/1 <i data-lucide="check-circle" style="width: 14px; height: 14px; color: #00b894; display: inline;"></i></span>
+            </div>
+            <div class="mission-item">
+                <span>Join 1 UKM activity</span>
+                <span class="mission-progress">0/1 <i data-lucide="clock" style="width: 14px; height: 14px; color: #fdcb6e; display: inline;"></i></span>
+            </div>
+            <div class="mission-item">
+                <span>Scan 3 QR codes</span>
+                <span class="mission-progress">2/3 <i data-lucide="clock" style="width: 14px; height: 14px; color: #fdcb6e; display: inline;"></i></span>
+            </div>
+        </div>
+
+        <div class="social-skills">
+            <div class="section-title">
+                <i data-lucide="shield-check"></i> Social Skills Unlocked
+            </div>
+            <div class="skill-item">
+                <div class="skill-header">
+                    <div class="skill-name">
+                        <i data-lucide="message-circle" style="width: 16px; height: 16px; display: inline; margin-right: 8px; color: #764ba2;"></i>
+                        Si Paling Diskusi
+                    </div>
+                    <div class="skill-level">Lv. 8</div>
+                </div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-header">
+                    <div class="skill-name">
+                        <i data-lucide="presentation" style="width: 16px; height: 16px; display: inline; margin-right: 8px; color: #764ba2;"></i>
+                        Master Presenter
+                    </div>
+                    <div class="skill-level">Lv. 6</div>
+                </div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-header">
+                    <div class="skill-name">
+                        <i data-lucide="handshake" style="width: 16px; height: 16px; display: inline; margin-right: 8px; color: #764ba2;"></i>
+                        Team Player Pro
+                    </div>
+                    <div class="skill-level">Lv. 9</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="height: 120px;"></div>
+
+        <button class="floating-btn" onclick="startScanner()">
+            <i data-lucide="qr-code"></i>
+            <div class="notification-dot"></div>
+        </button>
+
+        <!-- Modal Floating QR Scanner -->
+        <div id="qrModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:999; align-items:center; justify-content:center;">
+            <div style="background:white; padding:16px; border-radius:16px; position:relative; max-width:90%; width:360px;">
+                <div id="qr-reader" style="width:100%;"></div>
+                <button onclick="closeScanner()" style="position:absolute; top:8px; right:8px; background:#ff4757; color:white; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; font-weight:bold;">✖</button>
+            </div>
+        </div>
+
+        <div id="navbar-placeholder"></div>
+    </div>
+
+    <!-- QR Code Generator Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+
     <script>
-        // Variabel untuk pengenalan wajah
-        let faceDetectionModelLoaded = false;
-        let referenceFaceDescriptor = null;
-        let faceDetectionInterval = null;
-    
-        // Fungsi untuk mengecek apakah sudah lewat jam 08:30
-        function isLateForClockIn() {
-            const now = new Date();
-            const lateTime = new Date();
-            
-            // Set jam 08:30
-            lateTime.setHours(8, 30, 0, 0);
-            
-            // Jika sekarang sudah lewat jam 08:30
-            return now > lateTime;
-        }
-    
-        // Fungsi untuk update peringatan keterlambatan
-        function updateLateWarning() {
-            const lateWarning = document.getElementById('lateWarning');
-            if (lateWarning) {
-                lateWarning.style.display = isLateForClockIn() ? 'block' : 'none';
-            }
-        }
-    
-        // Display current time and date
-        function updateDateTime() {
-            const now = new Date();
-            const timeElement = document.getElementById('currentTime');
-            const dateElement = document.getElementById('currentDate');
-            const homeTimeElement = document.getElementById('homeCurrentTime');
-            const homeDateElement = document.getElementById('homeCurrentDate');
-            
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const timeString = now.toLocaleTimeString('id-ID', {hour: '2-digit', minute: '2-digit'});
-            const dateString = now.toLocaleDateString('id-ID', options);
-            
-            if(timeElement) timeElement.textContent = timeString;
-            if(dateElement) dateElement.textContent = dateString;
-            if(homeTimeElement) homeTimeElement.textContent = timeString;
-            if(homeDateElement) homeDateElement.textContent = dateString;
-            
-            // Update peringatan keterlambatan
-            updateLateWarning();
-        }
-    
-        // Initial update
-        updateDateTime();
-    
-        // Update time every minute
-        setInterval(updateDateTime, 60000);
-    
-        // Switch between tabs
-        function switchTab(tabName) {
-            // Hide all tab contents
-            const tabContents = document.querySelectorAll('.tab-content');
-            tabContents.forEach(content => {
-                content.classList.remove('active');
+        // Generate QR codes for testing
+        function generateTestQRs() {
+            const qrConfigs = [
+                { id: 'qr1', text: 'event_marketing_250' },
+                { id: 'qr2', text: 'event_workshop_400' },
+                { id: 'qr3', text: 'event_social_150' },
+                { id: 'qr4', text: 'event_levelup_900' }
+            ];
+
+            qrConfigs.forEach(config => {
+                const canvas = document.getElementById(config.id);
+                if (canvas) {
+                    QRCode.toCanvas(canvas, config.text, {
+                        width: 80,
+                        height: 80,
+                        margin: 1,
+                        color: {
+                            dark: '#764ba2',
+                            light: '#ffffff'
+                        }
+                    });
+                }
             });
-            
-            // Deactivate all tabs
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Activate the selected tab and its content
-            document.getElementById(tabName).classList.add('active');
-            document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
-        }
-    
-        // Switch between pages
-        function switchPage(pageName) {
-            // Hide all pages
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => {
-                page.style.display = 'none';
-            });
-            
-            // Show the selected page
-            document.getElementById(pageName).style.display = 'block';
-            
-            // Update navigation active status
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // Make the clicked nav item active
-            if (event && event.currentTarget) {
-                event.currentTarget.classList.add('active');
-            }
-            
-            // Update active clock button
-            updateActiveClockButton();
-            
-            // Update specific page content
-            if (pageName === 'clockOutPage') {
-                updateClockOutTime();
-            }
-            
-            // Scroll to top
-            window.scrollTo(0, 0);
-            
-            // Update page title
-            updatePageTitle(pageName);
-        }
-    
-        // Update page title based on current page
-        function updatePageTitle(pageName) {
-            const titles = {
-                'homePage': 'Beranda',
-                'clockInPage': 'Absen Masuk',
-                'clockOutPage': 'Absen Pulang',
-                'historyPage': 'Riwayat',
-                'salaryPage': 'Gaji',
-                'profilePage': 'Profil'
-            };
-            
-            if (titles[pageName]) {
-                document.title = `${titles[pageName]} | Absensi Pro`;
-            }
-        }
-    
-        // Toggle between clock in and clock out pages
-        function toggleAttendance() {
-            // Get current page
-            const currentPage = document.querySelector('.page[style="display: block;"]') || 
-                               document.querySelector('.page:not([style])');
-            
-            // Jika mencoba absen masuk setelah jam 08:30
-            if (currentPage.id !== 'clockInPage' && isLateForClockIn()) {
-                alert("Maaf, waktu absen masuk sudah habis (pukul 08:30). Anda tidak dapat melakukan absen masuk sekarang.");
-                return;
-            }
-            
-            // Toggle between pages
-            if (currentPage.id === 'clockInPage') {
-                switchPage('clockOutPage');
-            } else {
-                switchPage('clockInPage');
-            }
-        }
-    
-        // Update active clock button based on current page
-        function updateActiveClockButton() {
-            const currentPage = document.querySelector('.page[style="display: block;"]') || 
-                               document.querySelector('.page:not([style])');
-            
-            // Reset all clock buttons
-            document.querySelectorAll('.clock-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Set active button based on current page
-            if (currentPage.id === 'clockInPage') {
-                document.querySelectorAll('.clock-in-btn').forEach(btn => {
-                    btn.classList.add('active');
-                });
-            } else if (currentPage.id === 'clockOutPage') {
-                document.querySelectorAll('.clock-out-btn').forEach(btn => {
-                    btn.classList.add('active');
-                });
-            }
-        }
-    
-        // Variabel untuk menyimpan interval timer
-        let countdownInterval;
-        
-        // Fungsi untuk mengupdate tampilan jam pulang
-        function updateClockOutTime() {
-            const now = new Date();
-            const dateElement = document.getElementById('clockOutDate');
-            
-            // Set jam pulang pukul 14:00 (2 siang)
-            const clockOutTime = new Date();
-            clockOutTime.setHours(14, 0, 0, 0);
-            
-            // Format tanggal
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const dateString = now.toLocaleDateString('id-ID', options);
-            
-            if(dateElement) dateElement.textContent = dateString;
-            
-            // Update countdown timer
-            updateCountdownTimer(now, clockOutTime);
-        }
-    
-        // Fungsi untuk menghitung dan menampilkan countdown
-        function updateCountdownTimer(now, targetTime) {
-            const countdownElement = document.getElementById('countdownTimer');
-            if (!countdownElement) return;
-            
-            let diff = targetTime - now;
-            
-            if (diff <= 0) {
-                // Jika sudah lewat jam pulang
-                countdownElement.textContent = "00:00:00";
-                countdownElement.classList.add('countdown-expired');
-                
-                // Ubah teks status
-                const statusElement = document.querySelector('.clockOutPage .status');
-                if (statusElement) {
-                    statusElement.textContent = "Waktunya Pulang!";
-                }
-                return;
-            }
-            
-            // Hitung jam, menit, detik
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            diff -= hours * (1000 * 60 * 60);
-            const minutes = Math.floor(diff / (1000 * 60));
-            diff -= minutes * (1000 * 60);
-            const seconds = Math.floor(diff / 1000);
-            
-            // Format tampilan
-            const formattedTime = 
-                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            
-            countdownElement.textContent = formattedTime;
-            countdownElement.classList.remove('countdown-expired');
-        }
-    
-        // Show clock in success animation
-        function showClockInSuccess() {
-            const successAnimation = document.getElementById('clockInSuccess');
-            successAnimation.style.display = 'flex';
-            
-            // Hide after 3 seconds
-            setTimeout(() => {
-                successAnimation.style.display = 'none';
-            }, 3000);
-        }
-    
-        // Show clock out success animation
-        function showClockOutSuccess() {
-            const successAnimation = document.getElementById('clockOutSuccess');
-            successAnimation.style.display = 'flex';
-            
-            // Hide after 3 seconds
-            setTimeout(() => {
-                successAnimation.style.display = 'none';
-            }, 3000);
-        }
-    
-        /* FUNGSI PENGENALAN WAJAH */
-        
-        // Fungsi untuk memuat model pengenalan wajah
-        async function loadFaceDetectionModels() {
-            try {
-                // Load model dari CDN
-                await faceapi.nets.tinyFaceDetector.loadFromUri('https://justadudewhohacks.github.io/face-api.js/models');
-                await faceapi.nets.faceLandmark68Net.loadFromUri('https://justadudewhohacks.github.io/face-api.js/models');
-                await faceapi.nets.faceRecognitionNet.loadFromUri('https://justadudewhohacks.github.io/face-api.js/models');
-                
-                faceDetectionModelLoaded = true;
-                console.log("Model pengenalan wajah berhasil dimuat");
-                
-                // Cek apakah sudah ada wajah referensi di localStorage
-                const savedFace = localStorage.getItem('referenceFaceDescriptor');
-                if (savedFace) {
-                    referenceFaceDescriptor = new Float32Array(JSON.parse(savedFace));
-                    console.log("Wajah referensi ditemukan di penyimpanan lokal");
-                }
-            } catch (error) {
-                console.error("Gagal memuat model pengenalan wajah:", error);
-                alert("Gagal memuat sistem pengenalan wajah. Silakan refresh halaman.");
-            }
-        }
-    
-        // Fungsi untuk mendeteksi wajah
-        async function detectFaces(videoElement) {
-            if (!faceDetectionModelLoaded) {
-                alert("Sistem pengenalan wajah belum siap. Silakan coba lagi nanti.");
-                return null;
-            }
-            
-            try {
-                const detections = await faceapi.detectAllFaces(videoElement, 
-                    new faceapi.TinyFaceDetectorOptions())
-                    .withFaceLandmarks()
-                    .withFaceDescriptors();
-                
-                return detections;
-            } catch (error) {
-                console.error("Error deteksi wajah:", error);
-                return null;
-            }
-        }
-    
-        // Fungsi untuk membandingkan wajah
-        function compareFaces(descriptor1, descriptor2) {
-            if (!descriptor1 || !descriptor2) return 1; // Return nilai tinggi jika salah satu tidak ada
-            return faceapi.euclideanDistance(descriptor1, descriptor2);
-        }
-    
-        // Modifikasi fungsi startCamera dengan pengenalan wajah
-        async function startCamera(type) {
-            // Jika ini absen masuk dan sudah lewat jam 08:30
-            if (type === 'In' && isLateForClockIn()) {
-                alert("Maaf, waktu absen masuk sudah habis (pukul 08:30). Anda tidak dapat melakukan absen masuk sekarang.");
-                return;
-            }
-            
-            const videoElement = document.getElementById(`cameraFeed${type}`);
-            const cameraPlaceholder = document.getElementById(`cameraPlaceholder${type}`);
-            const scanButton = document.getElementById(`scanButton${type}`);
-            const captureButton = document.getElementById(`captureButton${type}`);
-            
-            // Jika belum ada wajah referensi dan ini absen masuk
-            if (!referenceFaceDescriptor && type === 'In') {
-                if (confirm("Anda belum mendaftarkan wajah. Apakah Anda ingin mendaftarkan wajah sekarang sebagai referensi?")) {
-                    await registerReferenceFace(type);
-                    return;
-                } else {
-                    return;
-                }
-            }
-    
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: "user", width: 640, height: 480 } 
-                });
-                
-                // Set video dimensions
-                videoElement.width = 640;
-                videoElement.height = 480;
-                
-                videoElement.srcObject = stream;
-                videoElement.style.display = 'block';
-                await videoElement.play();
-                
-                cameraPlaceholder.style.display = 'none';
-                scanButton.style.display = 'none';
-                captureButton.style.display = 'block';
-                
-                const cameraBox = videoElement.parentElement;
-                cameraBox.querySelector('.face-scan-animation').style.display = 'block';
-                
-                // Mulai deteksi wajah real-time
-                startFaceDetection(videoElement, type);
-            } catch (err) {
-                console.error("Error mengakses kamera: ", err);
-                alert("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.");
-            }
-        }
-    
-        // Fungsi untuk memulai deteksi wajah real-time
-        function startFaceDetection(videoElement, type) {
-            // Hentikan interval sebelumnya jika ada
-            if (faceDetectionInterval) {
-                clearInterval(faceDetectionInterval);
-            }
-            
-            // Buat canvas untuk deteksi wajah
-            const canvas = faceapi.createCanvasFromMedia(videoElement);
-            document.body.append(canvas);
-            canvas.style.display = 'none';
-            
-            const displaySize = { width: videoElement.width, height: videoElement.height };
-            faceapi.matchDimensions(canvas, displaySize);
-            
-            // Jalankan deteksi wajah setiap 500ms
-            faceDetectionInterval = setInterval(async () => {
-                if (!faceDetectionModelLoaded) return;
-                
-                const detections = await faceapi.detectAllFaces(videoElement, 
-                    new faceapi.TinyFaceDetectorOptions())
-                    .withFaceLandmarks()
-                    .withFaceDescriptors();
-                
-                // Jika wajah terdeteksi
-                if (detections && detections.length > 0) {
-                    console.log("Wajah terdeteksi");
-                }
-            }, 500);
-        }
-    
-        // Fungsi untuk mendaftarkan wajah referensi
-        async function registerReferenceFace(type) {
-            const videoElement = document.getElementById(`cameraFeed${type}`);
-            const cameraPlaceholder = document.getElementById(`cameraPlaceholder${type}`);
-            const scanButton = document.getElementById(`scanButton${type}`);
-            const captureButton = document.getElementById(`captureButton${type}`);
-            
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: "user", width: 640, height: 480 } 
-                });
-                
-                // Set video dimensions
-                videoElement.width = 640;
-                videoElement.height = 480;
-                
-                videoElement.srcObject = stream;
-                videoElement.style.display = 'block';
-                await videoElement.play();
-                
-                cameraPlaceholder.style.display = 'none';
-                scanButton.style.display = 'none';
-                captureButton.style.display = 'block';
-                captureButton.textContent = "Ambil Wajah Referensi";
-                captureButton.onclick = () => captureReferenceFace(type);
-                
-                const cameraBox = videoElement.parentElement;
-                cameraBox.querySelector('.face-scan-animation').style.display = 'block';
-                
-                // Mulai deteksi wajah real-time
-                startFaceDetection(videoElement, type);
-            } catch (err) {
-                console.error("Error mengakses kamera: ", err);
-                alert("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.");
-            }
-        }
-    
-        // Fungsi untuk mengambil wajah referensi
-        async function captureReferenceFace(type) {
-            const videoElement = document.getElementById(`cameraFeed${type}`);
-            const detections = await detectFaces(videoElement);
-            
-            if (!detections || detections.length === 0) {
-                alert("Tidak ada wajah yang terdeteksi. Pastikan wajah Anda terlihat jelas di kamera.");
-                return;
-            }
-            
-            // Simpan wajah pertama sebagai referensi
-            referenceFaceDescriptor = detections[0].descriptor;
-            localStorage.setItem('referenceFaceDescriptor', 
-                JSON.stringify(Array.from(referenceFaceDescriptor)));
-            
-            alert("Wajah referensi berhasil disimpan. Sekarang Anda dapat melakukan absen.");
-            
-            // Hentikan kamera dan deteksi wajah
-            stopCameraAndDetection(videoElement, type);
-            
-            // Reset tombol capture ke fungsi semula
-            document.getElementById(`captureButton${type}`).textContent = "Scan Wajah untuk Absen Masuk";
-            document.getElementById(`captureButton${type}`).onclick = () => captureFace(type);
-        }
-    
-        // Fungsi untuk menghentikan kamera dan deteksi wajah
-        function stopCameraAndDetection(videoElement, type) {
-            // Hentikan interval deteksi wajah
-            if (faceDetectionInterval) {
-                clearInterval(faceDetectionInterval);
-                faceDetectionInterval = null;
-            }
-            
-            // Hentikan stream kamera
-            if (videoElement.srcObject) {
-                const tracks = videoElement.srcObject.getTracks();
-                tracks.forEach(track => track.stop());
-                videoElement.srcObject = null;
-            }
-            
-            // Reset tampilan
-            videoElement.style.display = 'none';
-            document.getElementById(`cameraPlaceholder${type}`).style.display = 'flex';
-            document.getElementById(`scanButton${type}`).style.display = 'block';
-            document.getElementById(`captureButton${type}`).style.display = 'none';
-            
-            const cameraBox = videoElement.parentElement;
-            cameraBox.querySelector('.face-scan-animation').style.display = 'none';
-        }
-        
-        // Fungsi untuk membuka modal
-        function openModal(modalId) {
-            document.getElementById(modalId).style.display = 'flex';
         }
 
-        // Fungsi untuk menutup modal
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
+        // User data management
+        let userData = {
+            level: 1,
+            xp: 0,
+            scannedEvents: []
+        };
+
+        const xpPerLevel = 1000;
+
+        // Load user data
+        function loadUserData() {
+            const saved = localStorage.getItem("personaUser");
+            if (saved) {
+                userData = JSON.parse(saved);
+            }
+            updateUI();
         }
 
-        // Fungsi untuk mengubah password
-        function changePassword() {
-            const currentPassword = document.getElementById('currentPassword').value;
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            if (!currentPassword || !newPassword || !confirmPassword) {
-                alert('Harap isi semua field!');
-                return;
-            }
-            
-            if (newPassword !== confirmPassword) {
-                alert('Password baru dan konfirmasi password tidak cocok!');
-                return;
-            }
-            
-            // Di sini Anda bisa menambahkan logika untuk mengubah password
-            alert('Password berhasil diubah!');
-            closeModal('passwordModal');
+        // Save user data
+        function saveUserData() {
+            localStorage.setItem("personaUser", JSON.stringify(userData));
         }
 
-        // Update event handlers untuk tombol di profil
-        document.addEventListener('DOMContentLoaded', function() {
-            // Perbarui Foto Wajah
-            document.querySelector('.profile-section .action-btn.btn-primary').onclick = function() {
-                openModal('updateFaceModal');
-                // Tambahkan logika untuk memulai kamera jika diperlukan
-            };
+        // Update UI
+        function updateUI() {
+            document.querySelector(".level-number").textContent = userData.level;
             
-            // Pengaturan Notifikasi
-            document.querySelector('.profile-section .action-btn.btn-outline:nth-of-type(1)').onclick = function() {
-                openModal('notificationModal');
-            };
+            const currentLevelXP = userData.xp % xpPerLevel;
+            const xpToNext = xpPerLevel - currentLevelXP;
             
-            // Ubah Password
-            document.querySelector('.profile-section .action-btn.btn-outline:nth-of-type(2)').onclick = function() {
-                openModal('passwordModal');
-            };
-            
-            // Logout
-            document.querySelector('.profile-section .action-btn.btn-outline:nth-of-type(3)').onclick = function() {
-                if (confirm('Apakah Anda yakin ingin logout?')) {
-                    // Tambahkan logika logout di sini
-                    alert('Anda telah logout');
-                    // Redirect ke halaman login atau refresh halaman
-                    window.location.href = 'login.html'; // Ganti dengan URL login yang sesuai
-                }
-            };
-        });
-
-        // Modifikasi fungsi captureFace dengan validasi wajah
-        async function captureFace(type) {
-            // Jika ini absen masuk dan sudah lewat jam 08:30
-            if (type === 'In' && isLateForClockIn()) {
-                alert("Maaf, waktu absen masuk sudah habis (pukul 08:30). Anda tidak dapat melakukan absen masuk sekarang.");
-                return;
-            }
-            
-            const videoElement = document.getElementById(`cameraFeed${type}`);
-            const detections = await detectFaces(videoElement);
-            
-            if (!detections || detections.length === 0) {
-                alert("Tidak ada wajah yang terdeteksi. Pastikan wajah Anda terlihat jelas di kamera.");
-                return;
-            }
-            
-            // Jika ada wajah referensi, bandingkan
-            if (referenceFaceDescriptor) {
-                const distance = compareFaces(referenceFaceDescriptor, detections[0].descriptor);
-                const threshold = 0.6; // Threshold untuk kemiripan wajah (semakin kecil semakin mirip)
-                
-                console.log("Jarak kemiripan wajah:", distance);
-                
-                if (distance > threshold) {
-                    alert("Wajah tidak cocok dengan referensi. Absen gagal.");
-                    return;
-                }
-            }
-            
-            // Jika sampai di sini, wajah valid
-            stopCameraAndDetection(videoElement, type);
-            
-            // Show success
-            if (type === 'In') {
-                showClockInSuccess();
-                
-                // Simpan waktu absen masuk
-                const now = new Date();
-                localStorage.setItem('lastClockIn', now.toISOString());
-            } else {
-                showClockOutSuccess();
-                
-                // Simpan waktu absen pulang
-                const now = new Date();
-                localStorage.setItem('lastClockOut', now.toISOString());
-            }
-        }
-    
-        // Set default page on load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load model pengenalan wajah
-            loadFaceDetectionModels();
-            
-            // Set halaman default
-            switchPage('homePage');
-            updateActiveClockButton();
-            updateDateTime();
-            
-            // Update jam pulang setiap detik
-            setInterval(updateClockOutTime, 1000);
-            updateClockOutTime();
-            
-            // Update peringatan keterlambatan
-            updateLateWarning();
-            setInterval(updateLateWarning, 60000); // Update setiap menit
-            
-            // Cek apakah sudah pernah absen hari ini
-            checkTodayAttendance();
-        });
-    
-        // Fungsi untuk mengecek absen hari ini
-        function checkTodayAttendance() {
-            const today = new Date().toDateString();
-            const lastClockIn = localStorage.getItem('lastClockIn');
-            const lastClockOut = localStorage.getItem('lastClockOut');
-            
-            if (lastClockIn) {
-                const lastClockInDate = new Date(lastClockIn).toDateString();
-                if (lastClockInDate === today) {
-                    // Sudah absen masuk hari ini
-                    console.log("Sudah absen masuk hari ini");
-                }
-            }
-            
-            if (lastClockOut) {
-                const lastClockOutDate = new Date(lastClockOut).toDateString();
-                if (lastClockOutDate === today) {
-                    // Sudah absen pulang hari ini
-                    console.log("Sudah absen pulang hari ini");
-                }
-            }
-        }
-
-        // Update existing profile menu buttons
-        function updateProfileMenuButtons() {
-            const profileButtons = document.querySelectorAll('#profilePage .action-btn');
-            
-            profileButtons[0].onclick = () => showPage('updateFacePage'); // Perbarui Foto Wajah
-            profileButtons[1].onclick = () => showPage('notificationPage'); // Pengaturan Notifikasi
-            profileButtons[2].onclick = () => showPage('changePasswordPage'); // Ubah Password
-            profileButtons[3].onclick = () => logout(); // Logout
-        }
-
-        // Camera Functions
-        function startCamera() {
-            const placeholder = document.querySelector('.camera-placeholder');
-            const overlay = document.querySelector('.face-detection-overlay');
-            
-            placeholder.innerHTML = '<i class="fas fa-video" style="color: var(--primary);"></i>';
-            overlay.style.display = 'block';
-            
-            // Simulate camera activation
-            setTimeout(() => {
-                placeholder.innerHTML = '<i class="fas fa-user-check" style="color: var(--success);"></i>';
-            }, 2000);
-        }
-
-        function capturePhoto() {
-            const placeholder = document.querySelector('.camera-placeholder');
-            const overlay = document.querySelector('.face-detection-overlay');
-            
-            // Simulate photo capture
-            placeholder.style.background = 'var(--success)';
-            placeholder.innerHTML = '<i class="fas fa-check" style="color: white;"></i>';
-            overlay.style.display = 'none';
-            
-            setTimeout(() => {
-                alert('Foto wajah berhasil diperbarui!');
-                showPage('profilePage');
-            }, 1500);
-        }
-
-        // Notification Settings
-        function saveNotificationSettings() {
-            // Simulate saving settings
-            const successAnimation = document.createElement('div');
-            successAnimation.className = 'success-message';
-            successAnimation.innerHTML = '<i class="fas fa-check-circle"></i> Pengaturan berhasil disimpan!';
-            successAnimation.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: var(--success);
-                color: white;
-                padding: 20px;
-                border-radius: 12px;
-                z-index: 1000;
-                animation: fadeInOut 2s ease;
+            document.querySelector(".xp-info").innerHTML = `
+                <div style="font-size: 14px; font-weight: 600;">${currentLevelXP} / ${xpPerLevel} XP</div>
+                <div style="font-size: 12px; opacity: 0.8;">${xpToNext} XP to next level</div>
             `;
             
-            document.body.appendChild(successAnimation);
+            const fillPercentage = (currentLevelXP / xpPerLevel) * 100;
+            document.querySelector(".xp-fill").style.width = `${fillPercentage}%`;
+        }
+
+        // Add XP and handle level up
+        function addXP(amount, eventName) {
+            const oldLevel = userData.level;
+            userData.xp += amount;
+            
+            // Calculate new level
+            const newLevel = Math.floor(userData.xp / xpPerLevel) + 1;
+            
+            if (newLevel > oldLevel) {
+                // Level up!
+                userData.level = newLevel;
+                saveUserData();
+                updateUI();
+                showLevelUpNotification(newLevel);
+            } else {
+                // Just XP gain
+                saveUserData();
+                updateUI();
+                showXPNotification(amount, eventName);
+            }
+        }
+
+        // Show XP gain notification
+        function showXPNotification(xp, eventName) {
+            const notification = document.createElement('div');
+            notification.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 24px; margin-bottom: 8px;">✨</div>
+                    <div style="font-weight: 700; margin-bottom: 4px;">Selamat!</div>
+                    <div style="font-size: 14px;">Kamu dapat +${xp} XP</div>
+                    <div style="font-size: 12px; opacity: 0.8; margin-top: 4px;">${eventName}</div>
+                </div>
+            `;
+            notification.className = 'notification xp';
+            
+            document.body.appendChild(notification);
             
             setTimeout(() => {
-                document.body.removeChild(successAnimation);
-                showPage('profilePage');
-            }, 2000);
+                notification.remove();
+            }, 3000);
         }
 
-        // Password Strength Checker
-        function checkPasswordStrength() {
-            const password = document.getElementById('newPassword').value;
-            const strengthContainer = document.getElementById('passwordStrength');
-            const strengthBar = document.getElementById('strengthBar');
-            const strengthText = document.getElementById('strengthText');
+        // Show level up notification
+        function showLevelUpNotification(level) {
+            const notification = document.createElement('div');
+            notification.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 32px; margin-bottom: 12px;">🎉</div>
+                    <div style="font-weight: 700; font-size: 18px; margin-bottom: 8px;">LEVEL UP!</div>
+                    <div style="font-size: 16px; margin-bottom: 4px;">Sekarang kamu di level ${level}!</div>
+                    <div style="font-size: 12px; opacity: 0.8;">Skill baru telah terbuka!</div>
+                </div>
+            `;
+            notification.className = 'notification level-up';
             
-            if (password.length === 0) {
-                strengthContainer.style.display = 'none';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 4000);
+        }
+
+        // QR Scanner functionality
+        let qrScanner;
+
+        function startScanner() {
+            const qrModal = document.getElementById("qrModal");
+            qrModal.style.display = "flex";
+
+            if (!qrScanner) {
+                qrScanner = new Html5Qrcode("qr-reader");
+            }
+
+            qrScanner.start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: 250 },
+                (decodedText) => {
+                    // Stop scanner first
+                    qrScanner.stop().then(() => {
+                        closeScanner();
+                        handleQRScan(decodedText);
+                    });
+                },
+                (error) => {
+                    // Silent error handling
+                }
+            );
+        }
+
+        function closeScanner() {
+            document.getElementById("qrModal").style.display = "none";
+            if (qrScanner) {
+                qrScanner.stop().catch(e => {});
+            }
+        }
+
+        function handleQRScan(qrText) {
+            // Check if already scanned
+            if (userData.scannedEvents.includes(qrText)) {
+                alert("⚠️ QR code ini sudah pernah di-scan!");
                 return;
             }
-            
-            strengthContainer.style.display = 'block';
-            
-            let strength = 0;
-            const requirements = {
-                length: password.length >= 8,
-                upper: /[A-Z]/.test(password),
-                lower: /[a-z]/.test(password),
-                number: /\d/.test(password),
-                special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+
+            // Parse QR code
+            const eventXP = {
+                'event_marketing_250': { xp: 250, name: 'Event Marketing' },
+                'event_workshop_400': { xp: 400, name: 'Workshop Design' },
+                'event_social_150': { xp: 150, name: 'Social Gathering' },
+                'event_levelup_900': { xp: 900, name: 'Level Up Test' }
             };
-            
-            // Update requirement indicators
-            updateRequirement('lengthReq', requirements.length);
-            updateRequirement('upperReq', requirements.upper);
-            updateRequirement('lowerReq', requirements.lower);
-            updateRequirement('numberReq', requirements.number);
-            updateRequirement('specialReq', requirements.special);
-            
-            // Calculate strength
-            strength = Object.values(requirements).filter(Boolean).length;
-            
-            if (strength < 3) {
-                strengthBar.className = 'strength-bar weak';
-                strengthText.textContent = 'Password lemah';
-                strengthText.style.color = 'var(--danger)';
-            } else if (strength < 5) {
-                strengthBar.className = 'strength-bar medium';
-                strengthText.textContent = 'Password sedang';
-                strengthText.style.color = 'var(--warning)';
+
+            if (eventXP[qrText]) {
+                // Add to scanned events
+                userData.scannedEvents.push(qrText);
+                
+                // Add XP
+                const event = eventXP[qrText];
+                addXP(event.xp, event.name);
+                
             } else {
-                strengthBar.className = 'strength-bar strong';
-                strengthText.textContent = 'Password kuat';
-                strengthText.style.color = 'var(--success)';
+                alert("❌ QR code tidak valid!");
             }
         }
 
-            function updateRequirement(elementId, isValid) {
-                const element = document.getElementById(elementId);
-                const icon = element.querySelector('i');
+        // Navigation functionality
+        document.querySelectorAll('.nav-item').forEach((item, index) => {
+            item.addEventListener('click', function () {
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
                 
-                if (isValid) {
-                    element.classList.add('valid');
-                    icon.className = 'fas fa-check-circle';
-                    icon.style.color = 'var(--success)';
-                } else {
-                    element.classList.remove('valid');
-                    icon.className = 'fas fa-times-circle';
-                    icon.style.color = 'var(--danger)';
+                const labels = ['Home', 'Friends', 'Stats', 'Quest', 'Profile'];
+                if (labels[index] !== 'Friends') {
+                    alert(`Navigating to ${labels[index]}...`);
                 }
-            }
-
-            // Change Password
-            function changePassword() {
-                const currentPassword = document.getElementById('currentPassword').value;
-                const newPassword = document.getElementById('newPassword').value;
-                const confirmPassword = document.getElementById('confirmPassword').value;
-                
-                if (!currentPassword || !newPassword || !confirmPassword) {
-                    alert('Harap isi semua field password!');
-                    return;
-                }
-                
-                if (newPassword !== confirmPassword) {
-                    alert('Password baru dan konfirmasi password tidak cocok!');
-                    return;
-                }
-                
-                // Simulate password change
-                alert('Password berhasil diubah!');
-                showPage('profilePage');
-            }
-
-            // Logout Function
-            function logout() {
-                if (confirm('Apakah Anda yakin ingin logout?')) {
-                    alert('Anda telah logout');
-                    // Redirect to login page or clear session
-                }
-            }
-
-            // Initialize profile menu buttons when page loads
-            document.addEventListener('DOMContentLoaded', function() {
-                updateProfileMenuButtons();
             });
-
-            // Add CSS animation
-            const style = document.createElement('style');
-            style.textContent = `
-            @keyframes fadeInOut {
-                0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-                20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-                80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-                100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-            }
-            `;
-            document.head.appendChild(style);
-
-            // Sembunyikan semua halaman dan tampilkan halaman tertentu
-        function showPage(pageId) {
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => page.style.display = 'none');
-            const pageToShow = document.getElementById(pageId);
-            if (pageToShow) pageToShow.style.display = 'block';
-        }
-
-        // Listener untuk tombol-tombol pengaturan profil
-        document.addEventListener('DOMContentLoaded', function() {
-    // Ganti dengan selector yang lebih spesifik
-    document.getElementById('notificationSettingsBtn')?.addEventListener('click', () => showPage('notificationPage'));
-    document.getElementById('changePasswordBtn')?.addEventListener('click', () => showPage('changePasswordPage'));
         });
-    </script>   
+
+        //Navbar
+        fetch("Navbar.html")
+        .then(res => res.text())
+        .then(data => {
+            document.getElementById("navbar-placeholder").innerHTML = data;
+            lucide.createIcons(); // untuk refresh icon lucide
+        });
+
+         // Initialize app
+        window.onload = () => {
+            loadUserData();
+            lucide.createIcons();
+            
+            // Generate QR codes after a small delay to ensure QRCode library is loaded
+            setTimeout(() => {
+                generateTestQRs();
+            }, 100);
+        };
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Activity cards interaction
+        document.querySelectorAll('.activity-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+    </script>
 </body>
 </html>
