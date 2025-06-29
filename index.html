@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Absensi Jawa - Masuk/Daftar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 30px 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .app-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .app-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 40px 30px;
+        }
+
+        .form-tabs {
+            display: flex;
+            background: #f8f9ff;
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 30px;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 12px 16px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .form-content {
+            display: none;
+        }
+
+        .form-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-button:active {
+            transform: translateY(0);
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .forgot-password a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e5e7eb;
+        }
+
+        .divider span {
+            padding: 0 16px;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-button {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            transition: all 0.3s ease;
+        }
+
+        .social-button:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #16a34a;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .auth-container {
+                border-radius: 16px;
+            }
+            
+            .header {
+                padding: 30px 20px 20px;
+            }
+            
+            .form-container {
+                padding: 30px 20px;
+            }
+            
+            .app-name {
+                font-size: 20px;
+            }
+        }
+
+        /* Animation untuk transisi form */
+        .form-content {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .form-content.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="header">
+            <div class="logo">AJ</div>
+            <div class="app-name">Absensi Jawa</div>
+            <div class="app-subtitle">Sistem Absensi Modern</div>
+        </div>
+
+        <div class="form-container">
+            <div class="form-tabs">
+                <button class="tab-button active" onclick="switchTab('signin')">Masuk</button>
+                <button class="tab-button" onclick="switchTab('signup')">Daftar</button>
+            </div>
+
+            <div id="error-message" class="error-message"></div>
+            <div id="success-message" class="success-message"></div>
+
+            <!-- Form Signin -->
+            <div id="signin-form" class="form-content active">
+                <form onsubmit="handleSignin(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="signin-email">Email atau Username</label>
+                        <input 
+                            type="text" 
+                            id="signin-email" 
+                            class="form-input" 
+                            placeholder="Masukkan email atau username"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="signin-password">Password</label>
+                        <input 
+                            type="password" 
+                            id="signin-password" 
+                            class="form-input" 
+                            placeholder="Masukkan password"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="submit-button">Masuk</button>
+                </form>
+
+                <div class="forgot-password">
+                    <a href="#" onclick="showForgotPassword()">Lupa password?</a>
+                </div>
+            </div>
+
+            <!-- Form Signup -->
+            <div id="signup-form" class="form-content">
+                <form onsubmit="handleSignup(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="signup-name">Nama Lengkap</label>
+                        <input 
+                            type="text" 
+                            id="signup-name" 
+                            class="form-input" 
+                            placeholder="Masukkan nama lengkap"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="signup-email">Email</label>
+                        <input 
+                            type="email" 
+                            id="signup-email" 
+                            class="form-input" 
+                            placeholder="Masukkan email"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="signup-username">Username</label>
+                        <input 
+                            type="text" 
+                            id="signup-username" 
+                            class="form-input" 
+                            placeholder="Masukkan username"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="signup-password">Password</label>
+                        <input 
+                            type="password" 
+                            id="signup-password" 
+                            class="form-input" 
+                            placeholder="Minimal 8 karakter"
+                            required
+                            minlength="8"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="signup-confirm-password">Konfirmasi Password</label>
+                        <input 
+                            type="password" 
+                            id="signup-confirm-password" 
+                            class="form-input" 
+                            placeholder="Ulangi password"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="submit-button">Daftar</button>
+                </form>
+            </div>
+
+            <div class="divider">
+                <span>atau</span>
+            </div>
+
+            <div class="social-buttons">
+                <button class="social-button" onclick="handleGoogleAuth()">
+                    📧 Google
+                </button>
+                <button class="social-button" onclick="handleFacebookAuth()">
+                    📘 Facebook
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        let currentTab = 'signin';
+
+        // Switch tabs
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update form content
+            document.querySelectorAll('.form-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tab + '-form').classList.add('active');
+            
+            // Clear messages
+            hideMessages();
+        }
+
+        // Handle signin
+        function handleSignin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('signin-email').value;
+            const password = document.getElementById('signin-password').value;
+            
+            // Basic validation
+            if (!email || !password) {
+                showError('Harap isi semua field');
+                return;
+            }
+            
+            // Simulate API call
+            showLoading('Memproses login...');
+            
+            setTimeout(() => {
+                // Simulate successful login
+                if (email === 'demo@test.com' && password === 'password') {
+                    showSuccess('Login berhasil! Mengarahkan...');
+                    setTimeout(() => {
+                        // Redirect to main.html
+                        window.location.href = 'main.html';
+                    }, 1500);
+                } else {
+                    showError('Email/username atau password salah');
+                }
+            }, 1500);
+        }
+
+        // Handle signup
+        function handleSignup(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const username = document.getElementById('signup-username').value;
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
+            
+            // Validation
+            if (!name || !email || !username || !password || !confirmPassword) {
+                showError('Harap isi semua field');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showError('Password dan konfirmasi password tidak sama');
+                return;
+            }
+            
+            if (password.length < 8) {
+                showError('Password harus minimal 8 karakter');
+                return;
+            }
+            
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('Format email tidak valid');
+                return;
+            }
+            
+            // Simulate API call
+            showLoading('Mendaftarkan akun...');
+            
+            setTimeout(() => {
+                showSuccess('Pendaftaran berhasil! Mengarahkan ke halaman utama...');
+                // Redirect to main.html after successful registration
+                setTimeout(() => {
+                    window.location.href = 'main.html';
+                }, 2000);
+            }, 2000);
+        }
+
+        // Social auth handlers
+        function handleGoogleAuth() {
+            showLoading('Menghubungkan dengan Google...');
+            setTimeout(() => {
+                showError('Fitur login Google belum tersedia');
+            }, 1000);
+        }
+
+        function handleFacebookAuth() {
+            showLoading('Menghubungkan dengan Facebook...');
+            setTimeout(() => {
+                showError('Fitur login Facebook belum tersedia');
+            }, 1000);
+        }
+
+        // Forgot password
+        function showForgotPassword() {
+            const email = prompt('Masukkan email Anda untuk reset password:');
+            if (email) {
+                showSuccess('Link reset password telah dikirim ke email Anda');
+            }
+        }
+
+        // Utility functions
+        function showError(message) {
+            hideMessages();
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function showSuccess(message) {
+            hideMessages();
+            const successDiv = document.getElementById('success-message');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+
+        function showLoading(message) {
+            hideMessages();
+            const successDiv = document.getElementById('success-message');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+
+        function hideMessages() {
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('success-message').style.display = 'none';
+        }
+
+        // Auto-hide messages after 5 seconds
+        setInterval(() => {
+            const errorMsg = document.getElementById('error-message');
+            const successMsg = document.getElementById('success-message');
+            
+            if (errorMsg.style.display === 'block') {
+                setTimeout(() => errorMsg.style.display = 'none', 5000);
+            }
+            if (successMsg.style.display === 'block') {
+                setTimeout(() => successMsg.style.display = 'none', 5000);
+            }
+        }, 100);
+
+        // Demo credentials hint
+        console.log('Demo login credentials:');
+        console.log('Email: a.com');
+        console.log('Password: a');
+    </script>
+</body>
+</html>
