@@ -3,570 +3,393 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Absensi Jawa - Masuk/Daftar</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .auth-container {
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            width: 100%;
-            max-width: 400px;
-            position: relative;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 40px 30px 30px;
-            text-align: center;
-            color: white;
-        }
-
-        .logo {
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .app-name {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .app-subtitle {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .form-container {
-            padding: 40px 30px;
-        }
-
-        .form-tabs {
-            display: flex;
-            background: #f8f9ff;
-            border-radius: 12px;
-            padding: 4px;
-            margin-bottom: 30px;
-        }
-
-        .tab-button {
-            flex: 1;
-            padding: 12px 16px;
-            background: transparent;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #667eea;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .tab-button.active {
-            background: #667eea;
-            color: white;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-        }
-
-        .form-content {
-            display: none;
-        }
-
-        .form-content.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 8px;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 16px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: #f9fafb;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .submit-button {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .submit-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-        }
-
-        .submit-button:active {
-            transform: translateY(0);
-        }
-
-        .forgot-password {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .forgot-password a {
-            color: #667eea;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .forgot-password a:hover {
-            text-decoration: underline;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 25px 0;
-            color: #9ca3af;
-            font-size: 14px;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: #e5e7eb;
-        }
-
-        .divider span {
-            padding: 0 16px;
-        }
-
-        .social-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .social-button {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            background: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 500;
-            color: #374151;
-            transition: all 0.3s ease;
-        }
-
-        .social-button:hover {
-            border-color: #667eea;
-            background: #f8f9ff;
-        }
-
-        .error-message {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #dc2626;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .success-message {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            color: #16a34a;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-            
-            .auth-container {
-                border-radius: 16px;
-            }
-            
-            .header {
-                padding: 30px 20px 20px;
-            }
-            
-            .form-container {
-                padding: 30px 20px;
-            }
-            
-            .app-name {
-                font-size: 20px;
-            }
-        }
-
-        /* Animation untuk transisi form */
-        .form-content {
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.3s ease;
-        }
-
-        .form-content.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
+    <title>Absensi Jawa - Masuk</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
 </head>
 <body>
     <div class="auth-container">
-        <div class="header">
-            <div class="logo">AJ</div>
-            <div class="app-name">Absensi Jawa</div>
-            <div class="app-subtitle">Sistem Absensi Modern</div>
-        </div>
-
-        <div class="form-container">
-            <div class="form-tabs">
-                <button class="tab-button active" onclick="switchTab('signin')">Masuk</button>
-                <button class="tab-button" onclick="switchTab('signup')">Daftar</button>
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <i class="fas fa-user-clock"></i>
+                </div>
+                <h1 class="auth-title" id="auth-title">Selamat Datang</h1>
+                <p class="auth-subtitle" id="auth-subtitle">Masuk ke Sistem Absensi Jawa</p>
             </div>
 
-            <div id="error-message" class="error-message"></div>
-            <div id="success-message" class="success-message"></div>
-
-            <!-- Form Signin -->
-            <div id="signin-form" class="form-content active">
-                <form onsubmit="handleSignin(event)">
+            <!-- Sign In Form -->
+            <div class="form-section active" id="signin-section">
+                <form class="auth-form" id="signin-form">
                     <div class="form-group">
-                        <label class="form-label" for="signin-email">Email atau Username</label>
-                        <input 
-                            type="text" 
-                            id="signin-email" 
-                            class="form-input" 
-                            placeholder="Masukkan email atau username"
-                            required
-                        >
+                        <label for="signin-email">Email atau Username</label>
+                        <div class="input-group">
+                            <input type="text" id="signin-email" class="form-input" placeholder="Masukkan email atau username" required>
+                            <i class="fas fa-user input-icon"></i>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="signin-password">Password</label>
-                        <input 
-                            type="password" 
-                            id="signin-password" 
-                            class="form-input" 
-                            placeholder="Masukkan password"
-                            required
-                        >
+                        <label for="signin-password">Password</label>
+                        <div class="input-group">
+                            <input type="password" id="signin-password" class="form-input" placeholder="Masukkan password" required>
+                            <i class="fas fa-lock input-icon"></i>
+                            <i class="fas fa-eye password-toggle" onclick="togglePassword('signin-password', this)"></i>
+                        </div>
+                        <div class="forgot-password">
+                            <a href="#" onclick="showForgotPassword()">Lupa password?</a>
+                        </div>
                     </div>
 
-                    <button type="submit" class="submit-button">Masuk</button>
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember-me">
+                        <label for="remember-me">Ingat saya</label>
+                    </div>
+
+                    <button type="submit" class="auth-button">
+                        <span class="button-text">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Masuk
+                        </span>
+                        <div class="loading"></div>
+                    </button>
+
+                    <div class="error-message" id="signin-error"></div>
                 </form>
 
-                <div class="forgot-password">
-                    <a href="#" onclick="showForgotPassword()">Lupa password?</a>
+                <div class="auth-divider">
+                    <span>atau</span>
+                </div>
+
+                <div class="auth-switch">
+                    <p>Belum punya akun?</p>
+                    <button class="switch-button" onclick="switchToSignup()">Daftar Sekarang</button>
                 </div>
             </div>
 
-            <!-- Form Signup -->
-            <div id="signup-form" class="form-content">
-                <form onsubmit="handleSignup(event)">
+            <!-- Sign Up Form -->
+            <div class="form-section" id="signup-section">
+                <form class="auth-form" id="signup-form">
                     <div class="form-group">
-                        <label class="form-label" for="signup-name">Nama Lengkap</label>
-                        <input 
-                            type="text" 
-                            id="signup-name" 
-                            class="form-input" 
-                            placeholder="Masukkan nama lengkap"
-                            required
-                        >
+                        <label for="signup-name">Nama Lengkap</label>
+                        <div class="input-group">
+                            <input type="text" id="signup-name" class="form-input" placeholder="Masukkan nama lengkap" required>
+                            <i class="fas fa-user input-icon"></i>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="signup-email">Email</label>
-                        <input 
-                            type="email" 
-                            id="signup-email" 
-                            class="form-input" 
-                            placeholder="Masukkan email"
-                            required
-                        >
+                        <label for="signup-email">Email</label>
+                        <div class="input-group">
+                            <input type="email" id="signup-email" class="form-input" placeholder="Masukkan email" required>
+                            <i class="fas fa-envelope input-icon"></i>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="signup-username">Username</label>
-                        <input 
-                            type="text" 
-                            id="signup-username" 
-                            class="form-input" 
-                            placeholder="Masukkan username"
-                            required
-                        >
+                        <label for="signup-username">Username</label>
+                        <div class="input-group">
+                            <input type="text" id="signup-username" class="form-input" placeholder="Masukkan username" required>
+                            <i class="fas fa-at input-icon"></i>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="signup-password">Password</label>
-                        <input 
-                            type="password" 
-                            id="signup-password" 
-                            class="form-input" 
-                            placeholder="Minimal 8 karakter"
-                            required
-                            minlength="8"
-                        >
+                        <label for="signup-password">Password</label>
+                        <div class="input-group">
+                            <input type="password" id="signup-password" class="form-input" placeholder="Buat password" required>
+                            <i class="fas fa-lock input-icon"></i>
+                            <i class="fas fa-eye password-toggle" onclick="togglePassword('signup-password', this)"></i>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="signup-confirm-password">Konfirmasi Password</label>
-                        <input 
-                            type="password" 
-                            id="signup-confirm-password" 
-                            class="form-input" 
-                            placeholder="Ulangi password"
-                            required
-                        >
+                        <label for="confirm-password">Konfirmasi Password</label>
+                        <div class="input-group">
+                            <input type="password" id="confirm-password" class="form-input" placeholder="Konfirmasi password" required>
+                            <i class="fas fa-lock input-icon"></i>
+                            <i class="fas fa-eye password-toggle" onclick="togglePassword('confirm-password', this)"></i>
+                        </div>
                     </div>
 
-                    <button type="submit" class="submit-button">Daftar</button>
+                    <button type="submit" class="auth-button">
+                        <span class="button-text">
+                            <i class="fas fa-user-plus"></i>
+                            Daftar
+                        </span>
+                        <div class="loading"></div>
+                    </button>
+
+                    <div class="error-message" id="signup-error"></div>
+                    <div class="success-message" id="signup-success"></div>
                 </form>
+
+                <div class="auth-divider">
+                    <span>atau</span>
+                </div>
+
+                <div class="auth-switch">
+                    <p>Sudah punya akun?</p>
+                    <button class="switch-button" onclick="switchToSignin()">Masuk Sekarang</button>
+                </div>
             </div>
 
-            <div class="divider">
-                <span>atau</span>
-            </div>
+            <!-- Forgot Password Form -->
+            <div class="form-section" id="forgot-section">
+                <form class="auth-form" id="forgot-form">
+                    <div class="form-group">
+                        <label for="forgot-email">Email</label>
+                        <div class="input-group">
+                            <input type="email" id="forgot-email" class="form-input" placeholder="Masukkan email Anda" required>
+                            <i class="fas fa-envelope input-icon"></i>
+                        </div>
+                    </div>
 
-            <div class="social-buttons">
-                <button class="social-button" onclick="handleGoogleAuth()">
-                    📧 Google
-                </button>
-                <button class="social-button" onclick="handleFacebookAuth()">
-                    📘 Facebook
-                </button>
+                    <button type="submit" class="auth-button">
+                        <span class="button-text">
+                            <i class="fas fa-paper-plane"></i>
+                            Kirim Link Reset
+                        </span>
+                        <div class="loading"></div>
+                    </button>
+
+                    <div class="error-message" id="forgot-error"></div>
+                    <div class="success-message" id="forgot-success"></div>
+                </form>
+
+                <div class="auth-switch">
+                    <p>Ingat password Anda?</p>
+                    <button class="switch-button" onclick="switchToSignin()">Kembali ke Masuk</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // State management
-        let currentTab = 'signin';
+        // Sample user data for demo
+        const users = [
+            {
+                email: 'kiraitsu@demo.com',
+                username: 'kiraitsu',
+                password: 'demo123',
+                name: 'Kiraitsu M.'
+            },
+            {
+                email: 'admin@demo.com',
+                username: 'admin',
+                password: 'admin123',
+                name: 'Administrator'
+            }
+        ];
 
-        // Switch tabs
-        function switchTab(tab) {
-            currentTab = tab;
+        // Toggle password visibility
+        function togglePassword(inputId, toggleIcon) {
+            const input = document.getElementById(inputId);
+            const icon = toggleIcon;
             
-            // Update tab buttons
-            document.querySelectorAll('.tab-button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // Update form content
-            document.querySelectorAll('.form-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.getElementById(tab + '-form').classList.add('active');
-            
-            // Clear messages
-            hideMessages();
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
         }
 
-        // Handle signin
-        function handleSignin(event) {
-            event.preventDefault();
+        // Switch between forms
+        function switchToSignup() {
+            document.getElementById('signin-section').classList.remove('active');
+            document.getElementById('signup-section').classList.add('active');
+            document.getElementById('auth-title').textContent = 'Buat Akun Baru';
+            document.getElementById('auth-subtitle').textContent = 'Daftar untuk menggunakan Sistem Absensi Jawa';
+            clearMessages();
+        }
+
+        function switchToSignin() {
+            document.getElementById('signup-section').classList.remove('active');
+            document.getElementById('forgot-section').classList.remove('active');
+            document.getElementById('signin-section').classList.add('active');
+            document.getElementById('auth-title').textContent = 'Selamat Datang';
+            document.getElementById('auth-subtitle').textContent = 'Masuk ke Sistem Absensi Jawa';
+            clearMessages();
+        }
+
+        function showForgotPassword() {
+            document.getElementById('signin-section').classList.remove('active');
+            document.getElementById('forgot-section').classList.add('active');
+            document.getElementById('auth-title').textContent = 'Lupa Password';
+            document.getElementById('auth-subtitle').textContent = 'Masukkan email untuk reset password';
+            clearMessages();
+        }
+
+        // Clear all messages
+        function clearMessages() {
+            const messages = document.querySelectorAll('.error-message, .success-message');
+            messages.forEach(msg => {
+                msg.style.display = 'none';
+                msg.textContent = '';
+            });
+        }
+
+        // Show message
+        function showMessage(elementId, message, isError = true) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+            
+            // Hide message after 5 seconds
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 5000);
+        }
+
+        // Set loading state
+        function setLoading(button, isLoading) {
+            if (isLoading) {
+                button.classList.add('loading');
+            } else {
+                button.classList.remove('loading');
+            }
+        }
+
+        // Sign In Form Handler
+        document.getElementById('signin-form').addEventListener('submit', function(e) {
+            e.preventDefault();
             
             const email = document.getElementById('signin-email').value;
             const password = document.getElementById('signin-password').value;
+            const button = this.querySelector('.auth-button');
             
-            // Basic validation
-            if (!email || !password) {
-                showError('Harap isi semua field');
-                return;
-            }
+            setLoading(button, true);
+            clearMessages();
             
             // Simulate API call
-            showLoading('Memproses login...');
-            
             setTimeout(() => {
-                // Simulate successful login
-                if (email === 'demo@test.com' && password === 'password') {
-                    showSuccess('Login berhasil! Mengarahkan...');
+                // Check credentials
+                const user = users.find(u => 
+                    (u.email === email || u.username === email) && u.password === password
+                );
+                
+                if (user) {
+                    // Store user data in localStorage
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    localStorage.setItem('isLoggedIn', 'true');
+                    
+                    // Show success and redirect
+                    showMessage('signin-error', 'Login berhasil! Mengalihkan...', false);
                     setTimeout(() => {
-                        // Redirect to main.html
                         window.location.href = 'main.html';
                     }, 1500);
                 } else {
-                    showError('Email/username atau password salah');
+                    showMessage('signin-error', 'Email/username atau password salah!');
                 }
+                
+                setLoading(button, false);
             }, 1500);
-        }
+        });
 
-        // Handle signup
-        function handleSignup(event) {
-            event.preventDefault();
+        // Sign Up Form Handler
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
             
             const name = document.getElementById('signup-name').value;
             const email = document.getElementById('signup-email').value;
             const username = document.getElementById('signup-username').value;
             const password = document.getElementById('signup-password').value;
-            const confirmPassword = document.getElementById('signup-confirm-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const button = this.querySelector('.auth-button');
             
-            // Validation
-            if (!name || !email || !username || !password || !confirmPassword) {
-                showError('Harap isi semua field');
-                return;
-            }
+            setLoading(button, true);
+            clearMessages();
             
+            // Validate passwords match
             if (password !== confirmPassword) {
-                showError('Password dan konfirmasi password tidak sama');
+                showMessage('signup-error', 'Password tidak cocok!');
+                setLoading(button, false);
                 return;
             }
             
-            if (password.length < 8) {
-                showError('Password harus minimal 8 karakter');
-                return;
-            }
-            
-            // Email validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                showError('Format email tidak valid');
+            // Check if user already exists
+            const existingUser = users.find(u => u.email === email || u.username === username);
+            if (existingUser) {
+                showMessage('signup-error', 'Email atau username sudah digunakan!');
+                setLoading(button, false);
                 return;
             }
             
             // Simulate API call
-            showLoading('Mendaftarkan akun...');
-            
             setTimeout(() => {
-                showSuccess('Pendaftaran berhasil! Mengarahkan ke halaman utama...');
-                // Redirect to main.html after successful registration
+                // Add new user
+                const newUser = {
+                    email: email,
+                    username: username,
+                    password: password,
+                    name: name
+                };
+                users.push(newUser);
+                
+                showMessage('signup-success', 'Akun berhasil dibuat! Silakan masuk.', false);
+                
+                // Clear form
+                this.reset();
+                
+                // Switch to signin after 2 seconds
                 setTimeout(() => {
-                    window.location.href = 'main.html';
+                    switchToSignin();
                 }, 2000);
-            }, 2000);
-        }
+                
+                setLoading(button, false);
+            }, 1500);
+        });
 
-        // Social auth handlers
-        function handleGoogleAuth() {
-            showLoading('Menghubungkan dengan Google...');
-            setTimeout(() => {
-                showError('Fitur login Google belum tersedia');
-            }, 1000);
-        }
-
-        function handleFacebookAuth() {
-            showLoading('Menghubungkan dengan Facebook...');
-            setTimeout(() => {
-                showError('Fitur login Facebook belum tersedia');
-            }, 1000);
-        }
-
-        // Forgot password
-        function showForgotPassword() {
-            const email = prompt('Masukkan email Anda untuk reset password:');
-            if (email) {
-                showSuccess('Link reset password telah dikirim ke email Anda');
-            }
-        }
-
-        // Utility functions
-        function showError(message) {
-            hideMessages();
-            const errorDiv = document.getElementById('error-message');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-        }
-
-        function showSuccess(message) {
-            hideMessages();
-            const successDiv = document.getElementById('success-message');
-            successDiv.textContent = message;
-            successDiv.style.display = 'block';
-        }
-
-        function showLoading(message) {
-            hideMessages();
-            const successDiv = document.getElementById('success-message');
-            successDiv.textContent = message;
-            successDiv.style.display = 'block';
-        }
-
-        function hideMessages() {
-            document.getElementById('error-message').style.display = 'none';
-            document.getElementById('success-message').style.display = 'none';
-        }
-
-        // Auto-hide messages after 5 seconds
-        setInterval(() => {
-            const errorMsg = document.getElementById('error-message');
-            const successMsg = document.getElementById('success-message');
+        // Forgot Password Form Handler
+        document.getElementById('forgot-form').addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            if (errorMsg.style.display === 'block') {
-                setTimeout(() => errorMsg.style.display = 'none', 5000);
-            }
-            if (successMsg.style.display === 'block') {
-                setTimeout(() => successMsg.style.display = 'none', 5000);
-            }
-        }, 100);
+            const email = document.getElementById('forgot-email').value;
+            const button = this.querySelector('.auth-button');
+            
+            setLoading(button, true);
+            clearMessages();
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Check if email exists
+                const user = users.find(u => u.email === email);
+                
+                if (user) {
+                    showMessage('forgot-success', 'Link reset password telah dikirim ke email Anda!', false);
+                    this.reset();
+                } else {
+                    showMessage('forgot-error', 'Email tidak ditemukan!');
+                }
+                
+                setLoading(button, false);
+            }, 1500);
+        });
 
-        // Demo credentials hint
-        console.log('Demo login credentials:');
-        console.log('Email: a.com');
-        console.log('Password: a');
+        // Check if user is already logged in
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            window.location.href = 'main.html';
+        }
+
+        // Add some interactive effects
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('focused');
+            });
+        });
     </script>
 </body>
 </html>
+
+// Email: kiraitsu@demo.com
+Password: demo123
+Atau Username: admin, Password: admin123
