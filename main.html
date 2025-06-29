@@ -7,6 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>  
     <!-- Header -->
@@ -314,135 +315,191 @@
         </div>
         
         <!-- Salary Page -->
-        <div id="salaryPage" class="page" style="display: none;">
-            <div class="card">
-                <div class="card-title">
-                    <span><i class="fas fa-money-bill-wave"></i> Ringkasan Gaji</span>
-                    <small>April 2025</small>
-                </div>
-                
-                <div class="salary-summary">
-                    <div class="salary-amount">
-                        <div class="salary-text">Total Gaji</div>
-                        <div class="salary-value">Rp 8.750.000</div>
-                    </div>
-                    
-                    <div class="salary-status">
-                        <div class="status-badge paid">
-                            <i class="fas fa-check-circle"></i>
-                            Sudah Dibayar
-                        </div>
-                        <div class="salary-date">Dibayarkan pada 25 April 2025</div>
-                    </div>
-                </div>
+        <!-- Salary Header Card -->
+    <div id="salaryPage" class="page" style="display: none;">
+        <div class="card salary-header">
+            <div class="salary-period">
+                <i class="fas fa-calendar-alt"></i>
+                Ringkasan Gaji
             </div>
-            
-            <div class="card">
-                <div class="card-title">
-                    <span><i class="fas fa-receipt"></i> Rincian Gaji</span>
-                </div>
-                
-                <div class="salary-breakdown">
-                    <div class="salary-component">
-                        <div class="component-name">Gaji Pokok</div>
-                        <div class="component-value">Rp 7.500.000</div>
-                    </div>
-                    
-                    <div class="salary-component">
-                        <div class="component-name">Tunjangan Transport</div>
-                        <div class="component-value">Rp 500.000</div>
-                    </div>
-                    
-                    <div class="salary-component">
-                        <div class="component-name">Tunjangan Makan</div>
-                        <div class="component-value">Rp 800.000</div>
-                    </div>
-                    
-                    <div class="salary-component">
-                        <div class="component-name">Bonus Kinerja</div>
-                        <div class="component-value">Rp 450.000</div>
-                    </div>
-                    
-                    <div class="salary-divider"></div>
-                    
-                    <div class="salary-component">
-                        <div class="component-name">Potongan Pajak (PPh 21)</div>
-                        <div class="component-value negative">- Rp 375.000</div>
-                    </div>
-                    
-                    <div class="salary-component">
-                        <div class="component-name">Potongan BPJS</div>
-                        <div class="component-value negative">- Rp 125.000</div>
-                    </div>
-                    
-                    <div class="salary-component total">
-                        <div class="component-name">Total Diterima</div>
-                        <div class="component-value">Rp 8.750.000</div>
-                    </div>
-                </div>
+            <div class="salary-amount animate-value" id="totalSalary">
+                Rp 8.750.000
             </div>
-            
-            <div class="card">
-                <div class="card-title">
-                    <span><i class="fas fa-calendar-check"></i> Performa Kehadiran</span>
-                </div>
-                
-                <div class="attendance-performance">
-                    <div class="performance-item">
-                        <div class="performance-label">Kehadiran</div>
-                        <div class="progress-bar">
-                            <div class="progress" style="width: 95%"></div>
-                        </div>
-                        <div class="performance-value">95%</div>
-                    </div>
-                    
-                    <div class="performance-item">
-                        <div class="performance-label">Ketepatan Waktu</div>
-                        <div class="progress-bar">
-                            <div class="progress" style="width: 80%"></div>
-                        </div>
-                        <div class="performance-value">80%</div>
-                    </div>
-                    
-                    <div class="performance-info">
-                        <i class="fas fa-info-circle"></i>
-                        <span>Insentif kehadiran: Rp 150.000 (termasuk dalam bonus kinerja)</span>
-                    </div>
-                </div>
+            <div class="salary-status">
+                <i class="fas fa-check-circle"></i>
+                Sudah Dibayar
             </div>
-            
-            <div class="card">
-                <div class="card-title">
-                    <span><i class="fas fa-history"></i> Riwayat Gaji</span>
-                </div>
-                
-                <div class="salary-history">
-                    <div class="salary-history-item">
-                        <div class="history-month">Maret 2025</div>
-                        <div class="history-amount">Rp 8.500.000</div>
-                        <div class="history-status paid">Dibayar</div>
-                    </div>
-                    
-                    <div class="salary-history-item">
-                        <div class="history-month">Februari 2025</div>
-                        <div class="history-amount">Rp 8.500.000</div>
-                        <div class="history-status paid">Dibayar</div>
-                    </div>
-                    
-                    <div class="salary-history-item">
-                        <div class="history-month">Januari 2025</div>
-                        <div class="history-amount">Rp 8.300.000</div>
-                        <div class="history-status paid">Dibayar</div>
-                    </div>
-                </div>
-                
-                <button class="action-btn btn-outline">
-                    <i class="fas fa-download"></i>
-                    Unduh Slip Gaji
-                </button>
+            <div class="salary-date">
+                Dibayarkan pada 25 April 2025
             </div>
         </div>
 
+        <!-- Salary Breakdown -->
+        <div class="card">
+            <div class="card-title">
+                <span><i class="fas fa-receipt"></i> Rincian Gaji</span>
+            </div>
+            
+            <div class="salary-breakdown">
+                <!-- Gaji Pokok -->
+                <div class="salary-component">
+                    <div class="component-info">
+                        <div class="component-icon icon-salary">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="component-details">
+                            <div class="component-name">Gaji Pokok</div>
+                            <div class="component-desc">Gaji dasar bulanan</div>
+                        </div>
+                    </div>
+                    <div class="component-value positive animate-value">
+                        Rp 7.500.000
+                    </div>
+                </div>
+
+                <!-- Tunjangan Transport -->
+                <div class="salary-component">
+                    <div class="component-info">
+                        <div class="component-icon icon-transport">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <div class="component-details">
+                            <div class="component-name">Tunjangan Transport</div>
+                            <div class="component-desc">Biaya transportasi</div>
+                        </div>
+                    </div>
+                    <div class="component-value positive animate-value">
+                        Rp 500.000
+                    </div>
+                </div>
+
+                <!-- Tunjangan Makan -->
+                <div class="salary-component">
+                    <div class="component-info">
+                        <div class="component-icon icon-food">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div class="component-details">
+                            <div class="component-name">Tunjangan Makan</div>
+                            <div class="component-desc">Biaya makan harian</div>
+                        </div>
+                    </div>
+                    <div class="component-value positive animate-value">
+                        Rp 800.000
+                    </div>
+                </div>
+
+                <!-- Bonus Kinerja -->
+                <div class="salary-component">
+                    <div class="component-info">
+                        <div class="component-icon icon-bonus">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <div class="component-details">
+                            <div class="component-name">Bonus Kinerja</div>
+                            <div class="component-desc">Bonus berdasarkan performa</div>
+                        </div>
+                    </div>
+                    <div class="component-value positive animate-value">
+                        Rp 450.000
+                    </div>
+                </div>
+
+                <!-- Salary Divider -->
+                <div class="salary-divider"></div>
+
+                <!-- Potongan Pajak -->
+                <div class="salary-component">
+                    <div class="component-info">
+                        <div class="component-icon icon-tax">
+                            <i class="fas fa-minus-circle"></i>
+                        </div>
+                        <div class="component-details">
+                            <div class="component-name">Potongan Pajak (PPh 21)</div>
+                            <div class="component-desc">Pajak penghasilan</div>
+                        </div>
+                    </div>
+                    <div class="component-value negative animate-value">
+                        -Rp 375.000
+                    </div>
+                </div>
+
+                <!-- Potongan BPJS -->
+                <div class="salary-component">
+                    <div class="component-info">
+                        <div class="component-icon icon-tax">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="component-details">
+                            <div class="component-name">Potongan BPJS</div>
+                            <div class="component-desc">Iuran BPJS Kesehatan & Ketenagakerjaan</div>
+                        </div>
+                    </div>
+                    <div class="component-value negative animate-value">
+                        -Rp 125.000
+                    </div>
+                </div>
+
+                <!-- Total Section -->
+                <div class="salary-total">
+                    <div class="total-label">
+                        <i class="fas fa-wallet"></i>
+                        Total Diterima
+                    </div>
+                    <div class="total-value animate-value">
+                        Rp 8.750.000
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Section -->
+        <div class="card">
+            <div class="card-title">
+                <span><i class="fas fa-calendar-check"></i> Performa Kehadiran</span>
+            </div>
+            
+            <div class="performance-item">
+                <div class="performance-icon">
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+                <div class="performance-details">
+                    <div class="performance-label">Kehadiran</div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 95%"></div>
+                    </div>
+                    <div class="performance-value">95%</div>
+                </div>
+            </div>
+
+            <div class="performance-item">
+                <div class="performance-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="performance-details">
+                    <div class="performance-label">Ketepatan Waktu</div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 80%"></div>
+                    </div>
+                    <div class="performance-value">80%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Incentive Info -->
+        <div class="incentive-info">
+            <div class="incentive-header">
+                <i class="fas fa-info-circle"></i>
+                <h3>Insentif Kehadiran</h3>
+            </div>
+            <div class="incentive-text">
+                Insentif kehadiran: <strong>Rp 150.000 (termasuk dalam bonus kinerja)</strong>
+            </div>
+            <div class="incentive-amount">
+                Bonus tambahan untuk kehadiran 100%: Rp 200.000
+            </div>
+        </div>
+    </div>
         <!-- History Page -->
         <div id="historyPage" class="page" style="display: none;">
             <div class="card">
