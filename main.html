@@ -1880,8 +1880,17 @@
             // Logout Function
             function logout() {
                 if (confirm('Apakah Anda yakin ingin logout?')) {
-                    alert('Anda telah logout');
-                    // Redirect to login page or clear session
+                    // Tampilkan loading (opsional)
+                    document.body.style.cursor = 'wait';
+                    
+                    // Clear session data
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    
+                    // Delay sedikit untuk effect, lalu redirect
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 500);
                 }
             }
 
