@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - Absensi Jawa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: #f5f5f5;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header .icon {
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .user-badge {
+            width: 35px;
+            height: 35px;
+            background: #4f46e5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            color: white;
+        }
+
+        .profile-section {
+            background: white;
+            margin: 20px;
+            border-radius: 16px;
+            padding: 30px 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .profile-role {
+            color: #888;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .profile-division {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .info-section {
+            background: white;
+            margin: 20px;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .info-header .icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .info-icon.nip { background: #667eea; }
+        .info-icon.email { background: #7c4dff; }
+        .info-icon.phone { background: #2196f3; }
+        .info-icon.date { background: #ff9800; }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .settings-section {
+            background: white;
+            margin: 20px;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .settings-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .settings-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .settings-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .settings-icon.photo { background: #667eea; }
+        .settings-icon.notif { background: #ff9800; }
+        .settings-icon.password { background: #4caf50; }
+        .settings-icon.logout { background: #f44336; }
+
+        .settings-text {
+            flex: 1;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .settings-text.logout {
+            color: #f44336;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 400px;
+            width: 100%;
+            background: white;
+            border-top: 1px solid #eee;
+            padding: 12px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            text-decoration: none;
+            color: #888;
+            font-size: 12px;
+            transition: color 0.2s;
+        }
+
+        .nav-item.active {
+            color: #667eea;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .nav-item.active .nav-icon {
+            background: #667eea;
+            color: white;
+        }
+
+        .content-wrapper {
+            padding-bottom: 80px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+        }
+
+        .error {
+            text-align: center;
+            padding: 20px;
+            color: #f44336;
+            background: #ffebee;
+            margin: 20px;
+            border-radius: 8px;
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-name {
+            height: 24px;
+            width: 150px;
+            margin: 0 auto 8px;
+        }
+
+        .skeleton-role {
+            height: 16px;
+            width: 80px;
+            margin: 0 auto 20px;
+        }
+
+        .skeleton-text {
+            height: 16px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <div class="icon">📱</div>
+                Absensi Jawa
+            </h1>
+            <div class="user-badge" id="userBadge">?</div>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="profile-section">
+                <div class="profile-avatar" id="profileAvatar">?</div>
+                <div class="profile-name" id="profileName">
+                    <div class="skeleton skeleton-name"></div>
+                </div>
+                <div class="profile-role" id="profileRole">
+                    <div class="skeleton skeleton-role"></div>
+                </div>
+                <div class="profile-division" id="profileDivision">Loading...</div>
+            </div>
+
+            <div class="info-section">
+                <div class="info-header">
+                    <div class="icon">👤</div>
+                    Informasi Pribadi
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon nip">🆔</div>
+                    <div class="info-content">
+                        <div class="info-label">User ID</div>
+                        <div class="info-value" id="userId">
+                            <div class="skeleton skeleton-text"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon email">📧</div>
+                    <div class="info-content">
+                        <div class="info-label">Email</div>
+                        <div class="info-value" id="userEmail">
+                            <div class="skeleton skeleton-text"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon phone">📱</div>
+                    <div class="info-content">
+                        <div class="info-label">Status</div>
+                        <div class="info-value" id="userStatus">
+                            <div class="skeleton skeleton-text"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon date">📅</div>
+                    <div class="info-content">
+                        <div class="info-label">Tanggal Hari Ini</div>
+                        <div class="info-value" id="currentDate">
+                            <div class="skeleton skeleton-text"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <div class="settings-header">
+                    <div class="icon">⚙️</div>
+                    Pengaturan
+                </div>
+
+                <div class="settings-item">
+                    <div class="settings-icon photo">📷</div>
+                    <div class="settings-text">Perbarui Foto Wajah</div>
+                </div>
+
+                <div class="settings-item">
+                    <div class="settings-icon notif">🔔</div>
+                    <div class="settings-text">Pengaturan Notifikasi</div>
+                </div>
+
+                <div class="settings-item">
+                    <div class="settings-icon password">🔒</div>
+                    <div class="settings-text">Ubah Password</div>
+                </div>
+
+                <div class="settings-item">
+                    <div class="settings-icon logout">🚪</div>
+                    <div class="settings-text logout">Logout</div>
+                </div>
+            </div>
+
+            <div id="errorMessage" class="error" style="display: none;"></div>
+        </div>
+        <div id="navbar-container"></div>
+    </div>
+
+    <script>
+        // Configuration
+        const API_BASE_URL = 'api.php'; // Sesuaikan dengan path API Anda
+        const USER_ID = 1; // Default user ID, bisa diambil dari localStorage atau session
+
+        // DOM Elements
+        const elements = {
+            userBadge: document.getElementById('userBadge'),
+            profileAvatar: document.getElementById('profileAvatar'),
+            profileName: document.getElementById('profileName'),
+            profileRole: document.getElementById('profileRole'),
+            profileDivision: document.getElementById('profileDivision'),
+            userId: document.getElementById('userId'),
+            userEmail: document.getElementById('userEmail'),
+            userStatus: document.getElementById('userStatus'),
+            currentDate: document.getElementById('currentDate'),
+            errorMessage: document.getElementById('errorMessage')
+        };
+
+        // Utility Functions
+        function getInitials(name) {
+            return name.split(' ').map(word => word.charAt(0)).join('').toUpperCase();
+        }
+
+        function formatDate(date) {
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            return date.toLocaleDateString('id-ID', options);
+        }
+
+        function showError(message) {
+            elements.errorMessage.textContent = message;
+            elements.errorMessage.style.display = 'block';
+        }
+
+        function hideError() {
+            elements.errorMessage.style.display = 'none';
+        }
+
+        // API Functions
+        async function fetchUserData() {
+            try {
+                const response = await fetch(`${API_BASE_URL}?action=getUser&id=${USER_ID}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    return data.user;
+                } else {
+                    throw new Error(data.message || 'Gagal mengambil data user');
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                throw error;
+            }
+        }
+
+        async function fetchTodayAttendance() {
+            try {
+                const response = await fetch(`${API_BASE_URL}?action=getTodayAttendance&user_id=${USER_ID}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    return data.attendance;
+                } else {
+                    throw new Error(data.message || 'Gagal mengambil data absensi');
+                }
+            } catch (error) {
+                console.error('Error fetching attendance:', error);
+                return null;
+            }
+        }
+
+        // UI Update Functions
+        function updateUserProfile(user) {
+            const initials = getInitials(user.nama);
+            
+            // Update avatar and badge
+            elements.userBadge.textContent = initials;
+            elements.profileAvatar.textContent = initials;
+            
+            // Update profile info
+            elements.profileName.textContent = user.nama;
+            elements.profileRole.textContent = user.jabatan || 'Staff';
+            elements.profileDivision.textContent = user.jabatan || 'Divisi Umum';
+            
+            // Update personal info
+            elements.userId.textContent = user.id;
+            elements.userEmail.textContent = user.email || 'Tidak ada email';
+            
+            // Update current date
+            elements.currentDate.textContent = formatDate(new Date());
+        }
+
+        function updateAttendanceStatus(attendance) {
+            let status = 'Belum Absen';
+            
+            if (attendance && attendance.jam_masuk) {
+                if (attendance.jam_pulang) {
+                    status = 'Sudah Pulang';
+                } else {
+                    status = 'Sudah Masuk';
+                }
+            }
+            
+            elements.userStatus.textContent = status;
+        }
+
+        // Main Application Logic
+        async function initializeApp() {
+            try {
+                hideError();
+                
+                // Fetch user data
+                const user = await fetchUserData();
+                updateUserProfile(user);
+                
+                // Fetch attendance data
+                const attendance = await fetchTodayAttendance();
+                updateAttendanceStatus(attendance);
+                
+                console.log('App initialized successfully');
+            } catch (error) {
+                console.error('Error initializing app:', error);
+                showError('Gagal memuat data profil. Silakan coba lagi.');
+                
+                // Show fallback data
+                elements.profileName.textContent = 'Error Loading';
+                elements.profileRole.textContent = 'Silakan refresh halaman';
+                elements.profileDivision.textContent = 'Error';
+                elements.userId.textContent = 'Error';
+                elements.userEmail.textContent = 'Error';
+                elements.userStatus.textContent = 'Error';
+                elements.currentDate.textContent = formatDate(new Date());
+            }
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.settings-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const text = this.querySelector('.settings-text').textContent;
+                
+                if (text === 'Logout') {
+                    if (confirm('Apakah Anda yakin ingin logout?')) {
+                        // Hapus data user dari localStorage
+                        localStorage.removeItem('user_id');
+                        localStorage.removeItem('user_name');
+                        localStorage.removeItem('user_email');
+                        
+                        // Redirect ke halaman login
+                        window.location.href = 'login.html';
+                    }
+                } else {
+                    alert(`Fitur "${text}" akan segera tersedia!`);
+                }
+            });
+        });
+
+        // Load navbar
+        fetch('navbar.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navbar-container').innerHTML = html;
+            });
+
+        // Refresh data function
+        function refreshData() {
+            initializeApp();
+        }
+
+        // Initialize app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        // Auto refresh every 30 seconds
+        setInterval(refreshData, 30000);
+
+        // Add pull-to-refresh functionality (simple version)
+        let startY = 0;
+        let currentY = 0;
+        let isRefreshing = false;
+
+        document.addEventListener('touchstart', function(e) {
+            if (window.scrollY === 0) {
+                startY = e.touches[0].pageY;
+            }
+        });
+
+        document.addEventListener('touchmove', function(e) {
+            if (window.scrollY === 0 && !isRefreshing) {
+                currentY = e.touches[0].pageY;
+                if (currentY - startY > 100) {
+                    isRefreshing = true;
+                    refreshData();
+                    setTimeout(() => {
+                        isRefreshing = false;
+                    }, 2000);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

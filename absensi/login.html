@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Absensi Jawa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .video-background iframe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 56.25vw;
+            min-height: 100vh;
+            min-width: 177.78vh;
+            transform: translate(-50%, -50%);
+        }
+
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.85) 0%, rgba(118, 75, 162, 0.85) 100%);
+            z-index: -1;
+        }
+
+        .navbar {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            position: relative;
+            z-index: 10;
+        }
+
+        .navbar h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .menu-toggle {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+        }
+
+        .welcome-section {
+            color: white;
+            margin-bottom: 60px;
+            max-width: 600px;
+        }
+
+        .welcome-section h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .welcome-section p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .auth-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            padding: 4px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .social-section {
+            margin-bottom: 30px;
+        }
+
+        .social-title {
+            color: #8e9aaf;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 25px;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .social-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            border: none;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .social-btn.facebook {
+            color: #1877F2;
+        }
+
+        .social-btn.apple {
+            color: #000;
+        }
+
+        .social-btn.google {
+            color: #DB4437;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+            color: #8e9aaf;
+            font-size: 14px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e9ecef;
+        }
+
+        .divider span {
+            padding: 0 20px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 18px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+            color: #495057;
+        }
+
+        .form-group input::placeholder {
+            color: #adb5bd;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #667eea;
+            margin-top: 3px;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .checkbox-group a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .checkbox-group a:hover {
+            text-decoration: underline;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .forgot-password a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background: #cce7ff;
+            color: #004085;
+            border: 1px solid #b8daff;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 20px;
+            }
+
+            .welcome-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .welcome-section p {
+                font-size: 1rem;
+            }
+
+            .auth-container {
+                padding: 30px 25px;
+                margin: 0 10px;
+            }
+
+            .social-buttons {
+                gap: 15px;
+            }
+
+            .social-btn {
+                width: 55px;
+                height: 55px;
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .welcome-section h1 {
+                font-size: 2rem;
+            }
+
+            .auth-container {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Video Background -->
+    <div class="video-background">
+        <iframe 
+            src="https://www.youtube.com/embed/GzyiYB8BoRs?autoplay=1&mute=1&loop=1&playlist=GzyiYB8BoRs&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&disablekb=1&fs=0&cc_load_policy=0&playsinline=1&autohide=1"
+            frameborder="0"
+            allow="autoplay; encrypted-media"
+            allowfullscreen>
+        </iframe>
+    </div>
+    
+    <!-- Video Overlay -->
+    <div class="video-overlay"></div>
+
+    <div class="navbar">
+        <h1>Absensi Jawa</h1>
+    </div>
+
+    <div class="main-content">
+        <div class="welcome-section">
+            <h1>Selamat Datang!</h1>
+        </div>
+
+        <div class="auth-container">
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('signin')">Masuk</div>
+                <div class="tab" onclick="switchTab('signup')">Daftar</div>
+            </div>
+
+            <!-- Sign In Form -->
+            <div id="signin" class="form-section active">
+                <div class="social-section">
+                    <div class="social-title">Daftar dengan</div>
+                    <div class="social-buttons">
+                        <button class="social-btn facebook" onclick="socialLogin('facebook')">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </button>
+                        <button class="social-btn google" onclick="socialLogin('google')">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="divider">
+                    <span>atau</span>
+                </div>
+
+                <div id="signin-alert"></div>
+
+                <form id="signin-form" onsubmit="handleSignIn(event)">
+                    <div class="form-group">
+                        <input type="email" id="signin-email" name="email" required placeholder="Email">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password" id="signin-password" name="password" required placeholder="Password">
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="signin-btn">Masuk</button>
+                </form>
+
+                <div class="forgot-password">
+                    <a href="#" onclick="forgotPassword()">Lupa password?</a>
+                </div>
+            </div>
+
+            <!-- Sign Up Form -->
+            <div id="signup" class="form-section">
+                <div class="social-section">
+                    <div class="social-title">Daftar dengan</div>
+                    <div class="social-buttons">
+                        <button class="social-btn facebook" onclick="socialLogin('facebook')">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </button>
+                        <button class="social-btn google" onclick="socialLogin('google')">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="divider">
+                    <span>atau</span>
+                </div>
+
+                <div id="signup-alert"></div>
+
+                <form id="signup-form" onsubmit="handleSignUp(event)">
+                    <div class="form-group">
+                        <input type="text" id="signup-name" name="name" required placeholder="Nama Lengkap">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="email" id="signup-email" name="email" required placeholder="Email">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password" id="signup-password" name="password" required placeholder="Password">
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">
+                            Saya setuju dengan <a href="#" onclick="showTerms()">Syarat dan Ketentuan</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="signup-btn">Daftar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Konfigurasi API URL - sesuaikan dengan lokasi file API Anda
+        const API_URL = 'api.php';
+        
+        function switchTab(tab) {
+            // Remove active class from all tabs and sections
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+            
+            // Add active class to selected tab and section
+            event.target.classList.add('active');
+            document.getElementById(tab).classList.add('active');
+            
+            // Clear alerts
+            clearAlerts();
+        }
+
+        function showAlert(elementId, message, type = 'error') {
+            const alertElement = document.getElementById(elementId);
+            alertElement.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                alertElement.innerHTML = '';
+            }, 5000);
+        }
+
+        function clearAlerts() {
+            document.getElementById('signin-alert').innerHTML = '';
+            document.getElementById('signup-alert').innerHTML = '';
+        }
+
+        function setLoading(buttonId, isLoading) {
+            const button = document.getElementById(buttonId);
+            if (isLoading) {
+                button.disabled = true;
+                button.innerHTML = '<span class="loading"></span>Memproses...';
+            } else {
+                button.disabled = false;
+                button.innerHTML = buttonId === 'signin-btn' ? 'Masuk' : 'Daftar';
+            }
+        }
+
+        async function handleSignIn(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('signin-email').value;
+            const password = document.getElementById('signin-password').value;
+            
+            if (!email || !password) {
+                showAlert('signin-alert', 'Mohon lengkapi semua field');
+                return;
+            }
+
+            setLoading('signin-btn', true);
+            clearAlerts();
+
+            try {
+                const response = await fetch(`${API_URL}?action=login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Simpan data user ke localStorage
+                    localStorage.setItem('user_id', data.user.id);
+                    localStorage.setItem('user_name', data.user.nama);
+                    localStorage.setItem('user_email', data.user.email);
+                    
+                    showAlert('signin-alert', 'Berhasil masuk! Mengalihkan ke dashboard...', 'success');
+                    
+                    // Redirect ke dashboard setelah 2 detik
+                    setTimeout(() => {
+                        window.location.href = 'newind.html';
+                    }, 2000);
+                } else {
+                    showAlert('signin-alert', data.message || 'Email atau password salah');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showAlert('signin-alert', 'Terjadi kesalahan saat login. Silakan coba lagi.');
+            } finally {
+                setLoading('signin-btn', false);
+            }
+        }
+
+        async function handleSignUp(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const terms = document.getElementById('terms').checked;
+            
+            if (!name || !email || !password) {
+                showAlert('signup-alert', 'Mohon lengkapi semua field');
+                return;
+            }
+            
+            if (!terms) {
+                showAlert('signup-alert', 'Mohon setujui syarat dan ketentuan');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showAlert('signup-alert', 'Password minimal 6 karakter');
+                return;
+            }
+
+            setLoading('signup-btn', true);
+            clearAlerts();
+
+            try {
+                const response = await fetch(`${API_URL}?action=register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAlert('signup-alert', 'Berhasil mendaftar! Silakan masuk dengan akun Anda.', 'success');
+                    
+                    // Clear form
+                    document.getElementById('signup-form').reset();
+                    
+                    // Switch to signin tab after 2 seconds
+                    setTimeout(() => {
+                        switchTab('signin');
+                    }, 2000);
+                } else {
+                    showAlert('signup-alert', data.message || 'Gagal mendaftar');
+                }
+            } catch (error) {
+                console.error('Register error:', error);
+                showAlert('signup-alert', 'Terjadi kesalahan saat mendaftar. Silakan coba lagi.');
+            } finally {
+                setLoading('signup-btn', false);
+            }
+        }
+
+        function socialLogin(provider) {
+            showAlert('signin-alert', `Login dengan ${provider} akan segera tersedia`, 'info');
+        }
+
+        function forgotPassword() {
+            const email = prompt('Masukkan email Anda untuk reset password:');
+            if (email) {
+                // Implementasi reset password di sini
+                showAlert('signin-alert', `Link reset password telah dikirim ke ${email}`, 'info');
+            }
+        }
+
+        function showTerms() {
+            alert('Syarat dan Ketentuan:\n\n1. Pengguna wajib menggunakan aplikasi sesuai dengan ketentuan yang berlaku\n2. Dilarang menyalahgunakan sistem absensi\n3. Data pribadi akan dijaga kerahasiaannya\n4. Pelanggaran dapat mengakibatkan pemblokiran akun');
+        }
+
+        // Check if user is already logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            const userId = localStorage.getItem('user_id');
+            if (userId) {
+                // User sudah login, redirect ke dashboard
+                window.location.href = 'newind.html';
+            }
+        });
+
+        // Menu toggle animation
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
+            this.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

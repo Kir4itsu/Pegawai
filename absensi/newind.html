@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Absensi Jawa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: #f5f5f5;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 0 0 25px 25px;
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .app-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .app-icon {
+            width: 28px;
+            height: 28px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            background: #4f46e5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            color: white;
+        }
+
+        .username-small {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .main-card {
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            text-align: left;
+        }
+
+        .greeting {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 3px;
+        }
+
+        .username-large {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .time-display {
+            font-size: 48px;
+            font-weight: 300;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .date-display {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            padding: 25px 20px;
+            background: #f5f5f5;
+        }
+
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #374151;
+            padding: 12px 8px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .action-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: white;
+        }
+
+        .action-icon.masuk { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
+        .action-icon.pulang { background: linear-gradient(135deg, #f472b6 0%, #ec4899 100%); }
+        .action-icon.riwayat { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+        .action-icon.gaji { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+
+        .action-text {
+            font-size: 13px;
+            text-align: center;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .today-section {
+            background: white;
+            margin: 0 20px;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .today-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .status-item {
+            text-align: center;
+        }
+
+        .status-time {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .status-label {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .divider {
+            width: 1px;
+            height: 30px;
+            background: #e5e7eb;
+        }
+
+        .schedule-section {
+            background: white;
+            margin: 0 20px;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 90px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .schedule-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .schedule-count {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .schedule-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .schedule-item:last-child {
+            border-bottom: none;
+        }
+
+        .schedule-time {
+            font-size: 16px;
+            font-weight: 600;
+            color: #6366f1;
+            min-width: 50px;
+        }
+
+        .schedule-content {
+            flex: 1;
+            margin-left: 20px;
+        }
+
+        .schedule-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 3px;
+        }
+
+        .schedule-location {
+            font-size: 13px;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .schedule-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: 10px;
+            flex-shrink: 0;
+        }
+
+        .indicator-red { background: #ef4444; }
+        .indicator-orange { background: #f59e0b; }
+        .indicator-blue { background: #06b6d4; }
+        .indicator-green { background: #10b981; }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 20px 20px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #9ca3af;
+            font-size: 11px;
+            transition: color 0.3s ease;
+            padding: 8px 12px;
+            border-radius: 12px;
+            min-width: 50px;
+        }
+
+        .nav-item.active {
+            color: #6366f1;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            border-radius: 50%;
+        }
+
+        .nav-item.active .nav-icon {
+            background: #6366f1;
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 300px;
+            margin: 20px;
+        }
+
+        .modal-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #1f2937;
+        }
+
+        .modal-message {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .modal-btn {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .modal-btn:hover {
+            background: #5b21b6;
+        }
+
+        .loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255,255,255,0.9);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1001;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #6366f1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 20px;
+            font-size: 14px;
+            border: 1px solid #fecaca;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            color: #16a34a;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 20px;
+            font-size: 14px;
+            border: 1px solid #bbf7d0;
+        }
+
+        /* Modal untuk riwayat */
+        .modal-riwayat {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-riwayat-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 90%;
+            max-height: 80%;
+            width: 380px;
+            margin: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-riwayat-header {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-riwayat-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            line-height: 1;
+        }
+
+        .modal-riwayat-body {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .filter-section {
+            margin-bottom: 20px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .filter-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .filter-btn {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .riwayat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            background: #f9fafb;
+        }
+
+        .riwayat-date {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 14px;
+        }
+
+        .riwayat-times {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .riwayat-time {
+            text-align: center;
+        }
+
+        .riwayat-time-label {
+            font-size: 10px;
+            color: #6b7280;
+            margin-bottom: 2px;
+        }
+
+        .riwayat-time-value {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .riwayat-status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .status-hadir {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-telat {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-alpha {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #6b7280;
+            padding: 40px 20px;
+        }
+
+        .loading-riwayat {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6b7280;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .summary-number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        .summary-label {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .summary-card.hadir .summary-number { color: #059669; }
+        .summary-card.telat .summary-number { color: #d97706; }
+        .summary-card.alpha .summary-number { color: #dc2626; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-top">
+                <div class="app-title">
+                    <div class="app-icon">📊</div>
+                    <span>Absensi Jawa</span>
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar" id="userAvatar">KM</div>
+                    <div class="username-small" id="userNameSmall">Loading...</div>
+                </div>
+            </div>
+            
+            <div class="main-card">
+                <div class="greeting" id="greeting">Selamat Pagi,</div>
+                <div class="username-large" id="userNameLarge">Loading...</div>
+                <div class="time-display" id="currentTime">00:00</div>
+                <div class="date-display" id="currentDate">Loading...</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <button class="action-btn" id="btnMasuk" onclick="handleAbsensi('masuk')">
+                <div class="action-icon masuk">➡️</div>
+                <div class="action-text">Absen Masuk</div>
+            </button>
+            <button class="action-btn" id="btnPulang" onclick="handleAbsensi('pulang')">
+                <div class="action-icon pulang">📤</div>
+                <div class="action-text">Absen Pulang</div>
+            </button>
+            <button class="action-btn" onclick="showRiwayat()">
+                <div class="action-icon riwayat">🔄</div>
+                <div class="action-text">Riwayat</div>
+            </button>
+            <button class="action-btn" onclick="showGaji()">
+                <div class="action-icon gaji">📊</div>
+                <div class="action-text">Gaji</div>
+            </button>
+        </div>
+
+        <!-- Today Status -->
+        <div class="today-section">
+            <div class="section-header">
+                <div class="section-title">📅 Hari Ini</div>
+            </div>
+            <div class="today-grid">
+                <div class="status-item">
+                    <div class="status-time" id="absenMasuk">-</div>
+                    <div class="status-label">Absen Masuk</div>
+                </div>
+                <div class="divider"></div>
+                <div class="status-item">
+                    <div class="status-time" id="absenPulang">-</div>
+                    <div class="status-label">Absen Pulang</div>
+                </div>
+                <div class="divider"></div>
+                <div class="status-item">
+                    <div class="status-time" id="tugasSelesai">0/0</div>
+                    <div class="status-label">Tugas Selesai</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule -->
+        <div class="schedule-section">
+            <div class="schedule-header">
+                <div class="section-header">
+                    <div class="section-title">📅 Jadwal Hari Ini</div>
+                </div>
+                <div class="schedule-count" id="scheduleCount">0 Jadwal</div>
+            </div>
+            
+            <div id="scheduleList">
+                <div class="schedule-item">
+                    <div class="schedule-time">-</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">Tidak ada jadwal</div>
+                        <div class="schedule-location">Belum ada jadwal untuk hari ini</div>
+                    </div>
+                    <div class="schedule-indicator indicator-blue"></div>
+                </div>
+            </div>
+        </div>
+        <div id="navbar-container"></div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="actionModal">
+        <div class="modal-content">
+            <div class="modal-icon" id="modalIcon"></div>
+            <div class="modal-title" id="modalTitle"></div>
+            <div class="modal-message" id="modalMessage"></div>
+            <button class="modal-btn" onclick="closeModal()">OK</button>
+        </div>
+    </div>
+
+    <div class="modal-riwayat" id="riwayatModal">
+        <div class="modal-riwayat-content">
+            <div class="modal-riwayat-header">
+                <h3 class="modal-riwayat-title">📊 Riwayat Absensi</h3>
+                <button class="modal-close-btn" onclick="closeRiwayatModal()">&times;</button>
+            </div>
+            
+            <div class="modal-riwayat-body">
+                <!-- Filter Section -->
+                <div class="filter-section">
+                    <div class="filter-row">
+                        <input type="date" id="filterStartDate" class="filter-input" placeholder="Tanggal Mulai">
+                        <input type="date" id="filterEndDate" class="filter-input" placeholder="Tanggal Akhir">
+                        <button class="filter-btn" onclick="filterRiwayat()">Filter</button>
+                    </div>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="summary-cards">
+                    <div class="summary-card hadir">
+                        <div class="summary-number" id="summaryHadir">0</div>
+                        <div class="summary-label">Hadir</div>
+                    </div>
+                    <div class="summary-card telat">
+                        <div class="summary-number" id="summaryTelat">0</div>
+                        <div class="summary-label">Telat</div>
+                    </div>
+                    <div class="summary-card alpha">
+                        <div class="summary-number" id="summaryAlpha">0</div>
+                        <div class="summary-label">Alpha</div>
+                    </div>
+                </div>
+
+                <!-- Riwayat List -->
+                <div id="riwayatList">
+                    <div class="loading-riwayat">
+                        <div>⏳ Memuat data...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <script>
+        // app.js - Sistem Absensi Jawa
+        // Konfigurasi API
+        const API_BASE_URL = 'api.php';
+
+        // State management
+        let currentUser = null;
+        let todayAttendance = null;
+        let scheduleData = [];
+        let riwayatData = [];
+
+        // Fungsi untuk menampilkan modal riwayat
+        async function showRiwayat() {
+            document.getElementById('riwayatModal').style.display = 'flex';
+            
+            // Set default date range (30 hari terakhir)
+            const today = new Date();
+            const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+            
+            document.getElementById('filterEndDate').value = today.toISOString().split('T')[0];
+            document.getElementById('filterStartDate').value = thirtyDaysAgo.toISOString().split('T')[0];
+            
+            // Load data riwayat
+            await loadRiwayatData();
+        }
+
+        // Fungsi untuk menutup modal riwayat
+        function closeRiwayatModal() {
+            document.getElementById('riwayatModal').style.display = 'none';
+        }
+
+        // Fungsi untuk memuat data riwayat
+        async function loadRiwayatData(startDate = null, endDate = null) {
+            try {
+                showRiwayatLoading();
+                
+                // Jika tidak ada filter tanggal, gunakan 30 hari terakhir
+                if (!startDate || !endDate) {
+                    const today = new Date();
+                    const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+                    startDate = thirtyDaysAgo.toISOString().split('T')[0];
+                    endDate = today.toISOString().split('T')[0];
+                }
+
+                const response = await fetch(`${API_BASE_URL}?action=getRiwayatAbsensi&user_id=1&start_date=${startDate}&end_date=${endDate}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    riwayatData = data.riwayat;
+                    updateRiwayatDisplay();
+                    updateSummaryCards();
+                } else {
+                    showRiwayatError('Gagal memuat data riwayat');
+                }
+            } catch (error) {
+                console.error('Error loading riwayat:', error);
+                showRiwayatError('Koneksi error');
+            }
+        }
+
+        // Fungsi untuk update tampilan riwayat
+        function updateRiwayatDisplay() {
+            const riwayatList = document.getElementById('riwayatList');
+            
+            if (!riwayatData || riwayatData.length === 0) {
+                riwayatList.innerHTML = `
+                    <div class="no-data">
+                        <div>📅</div>
+                        <div>Tidak ada data riwayat</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let riwayatHTML = '';
+            riwayatData.forEach(item => {
+                const status = getStatusAbsensi(item.jam_masuk, item.jam_pulang);
+                const statusClass = status === 'Hadir' ? 'status-hadir' : 
+                                  status === 'Telat' ? 'status-telat' : 'status-alpha';
+
+                riwayatHTML += `
+                    <div class="riwayat-item">
+                        <div class="riwayat-date">
+                            ${formatDateIndonesia(item.tanggal)}
+                        </div>
+                        <div class="riwayat-times">
+                            <div class="riwayat-time">
+                                <div class="riwayat-time-label">Masuk</div>
+                                <div class="riwayat-time-value">${item.jam_masuk || '-'}</div>
+                            </div>
+                            <div class="riwayat-time">
+                                <div class="riwayat-time-label">Pulang</div>
+                                <div class="riwayat-time-value">${item.jam_pulang || '-'}</div>
+                            </div>
+                        </div>
+                        <div class="riwayat-status ${statusClass}">
+                            ${status}
+                        </div>
+                    </div>
+                `;
+            });
+
+            riwayatList.innerHTML = riwayatHTML;
+        }
+
+        // Fungsi untuk update summary cards
+        function updateSummaryCards() {
+            let hadir = 0, telat = 0, alpha = 0;
+
+            riwayatData.forEach(item => {
+                const status = getStatusAbsensi(item.jam_masuk, item.jam_pulang);
+                if (status === 'Hadir') hadir++;
+                else if (status === 'Telat') telat++;
+                else alpha++;
+            });
+
+            document.getElementById('summaryHadir').textContent = hadir;
+            document.getElementById('summaryTelat').textContent = telat;
+            document.getElementById('summaryAlpha').textContent = alpha;
+        }
+
+        // Fungsi untuk menentukan status absensi
+        function getStatusAbsensi(jamMasuk, jamPulang) {
+            if (!jamMasuk) return 'Alpha';
+            
+            // Jam kerja mulai 08:00
+            const jamKerjaMulai = '08:00';
+            
+            if (jamMasuk <= jamKerjaMulai) {
+                return 'Hadir';
+            } else {
+                return 'Telat';
+            }
+        }
+
+        // Fungsi untuk format tanggal Indonesia
+        function formatDateIndonesia(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('id-ID', {
+                weekday: 'short',
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
+
+        // Fungsi untuk filter riwayat
+        function filterRiwayat() {
+            const startDate = document.getElementById('filterStartDate').value;
+            const endDate = document.getElementById('filterEndDate').value;
+            
+            if (!startDate || !endDate) {
+                alert('Pilih tanggal mulai dan akhir');
+                return;
+            }
+            
+            if (startDate > endDate) {
+                alert('Tanggal mulai tidak boleh lebih besar dari tanggal akhir');
+                return;
+            }
+            
+            loadRiwayatData(startDate, endDate);
+        }
+
+        // Helper functions untuk loading dan error
+        function showRiwayatLoading() {
+            document.getElementById('riwayatList').innerHTML = `
+                <div class="loading-riwayat">
+                    <div>⏳ Memuat data...</div>
+                </div>
+            `;
+        }
+
+        function showRiwayatError(message) {
+            document.getElementById('riwayatList').innerHTML = `
+                <div class="no-data">
+                    <div>❌</div>
+                    <div>${message}</div>
+                </div>
+            `;
+        }
+
+        // Event listener untuk menutup modal saat klik backdrop
+        document.getElementById('riwayatModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeRiwayatModal();
+            }
+        });
+
+        // Inisialisasi aplikasi
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+            loadUserData();
+            loadTodayAttendance();
+            loadSchedule();
+            
+            // Setup event listeners
+            setupEventListeners();
+        });
+
+        // Inisialisasi aplikasi
+        function initializeApp() {
+            // Set greeting berdasarkan waktu
+            setGreeting();
+            
+            // Load user dari localStorage jika ada
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateUserDisplay();
+            }
+        }
+
+        // Load navbar
+        fetch('navbar.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navbar-container').innerHTML = html;
+            });
+
+        // Update date and time
+        function updateDateTime() {
+            const now = new Date();
+            
+            // Update time
+            const timeOptions = {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            };
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('id-ID', timeOptions);
+            
+            // Update date
+            const dateOptions = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('id-ID', dateOptions);
+        }
+
+        // Set greeting berdasarkan waktu
+        function setGreeting() {
+            const hour = new Date().getHours();
+            let greeting = 'Selamat Pagi,';
+            
+            if (hour >= 12 && hour < 15) {
+                greeting = 'Selamat Siang,';
+            } else if (hour >= 15 && hour < 18) {
+                greeting = 'Selamat Sore,';
+            } else if (hour >= 18 || hour < 5) {
+                greeting = 'Selamat Malam,';
+            }
+            
+            document.getElementById('greeting').textContent = greeting;
+        }
+
+        // Load user data
+        async function loadUserData() {
+            try {
+                showLoading();
+                
+                const response = await fetch(`${API_BASE_URL}?action=getUser&id=1`); // Sesuaikan dengan user ID
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentUser = data.user;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    updateUserDisplay();
+                } else {
+                    showError('Gagal memuat data user');
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                showError('Koneksi error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Update user display
+        function updateUserDisplay() {
+            if (!currentUser) return;
+            
+            const initials = currentUser.nama.split(' ').map(n => n[0]).join('').toUpperCase();
+            document.getElementById('userAvatar').textContent = initials;
+            document.getElementById('userNameSmall').textContent = currentUser.nama;
+            document.getElementById('userNameLarge').textContent = currentUser.nama;
+        }
+
+        // Load today's attendance
+        async function loadTodayAttendance() {
+            try {
+                const today = new Date().toISOString().split('T')[0];
+                const response = await fetch(`${API_BASE_URL}?action=getTodayAttendance&date=${today}&user_id=1`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    todayAttendance = data.attendance;
+                    updateAttendanceDisplay();
+                    updateAbsensiButtons();
+                }
+            } catch (error) {
+                console.error('Error loading attendance:', error);
+            }
+        }
+
+        // Update attendance display
+        function updateAttendanceDisplay() {
+            const masukElement = document.getElementById('absenMasuk');
+            const pulangElement = document.getElementById('absenPulang');
+            
+            if (todayAttendance) {
+                masukElement.textContent = todayAttendance.jam_masuk || '-';
+                pulangElement.textContent = todayAttendance.jam_pulang || '-';
+            } else {
+                masukElement.textContent = '-';
+                pulangElement.textContent = '-';
+            }
+        }
+
+        // Update absensi buttons state
+        function updateAbsensiButtons() {
+            const btnMasuk = document.getElementById('btnMasuk');
+            const btnPulang = document.getElementById('btnPulang');
+            
+            if (todayAttendance) {
+                if (todayAttendance.jam_masuk) {
+                    btnMasuk.disabled = true;
+                    btnMasuk.style.opacity = '0.5';
+                }
+                if (todayAttendance.jam_pulang) {
+                    btnPulang.disabled = true;
+                    btnPulang.style.opacity = '0.5';
+                }
+                if (!todayAttendance.jam_masuk) {
+                    btnPulang.disabled = true;
+                    btnPulang.style.opacity = '0.5';
+                }
+            } else {
+                btnPulang.disabled = true;
+                btnPulang.style.opacity = '0.5';
+            }
+        }
+
+        // Handle absensi
+        async function handleAbsensi(type) {
+            try {
+                showLoading();
+                
+                // Cek geolocation
+                if (!navigator.geolocation) {
+                    showError('Geolocation tidak didukung browser');
+                    return;
+                }
+                
+                navigator.geolocation.getCurrentPosition(async (position) => {
+                    const { latitude, longitude } = position.coords;
+                    
+                    try {
+                        let endpoint, requestData;
+                        
+                        if (type === 'masuk') {
+                            endpoint = `${API_BASE_URL}?action=absen-masuk`;
+                            requestData = {
+                                user_id: 1,
+                                latitude: latitude,
+                                longitude: longitude
+                            };
+                        } else if (type === 'pulang') {
+                            endpoint = `${API_BASE_URL}?action=absen-pulang`;
+                            requestData = {
+                                user_id: 1,
+                                latitude: latitude,
+                                longitude: longitude
+                            };
+                        }
+                        
+                        const response = await fetch(endpoint, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(requestData)
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            showSuccess(type === 'masuk' ? 'Absen masuk berhasil!' : 'Absen pulang berhasil!');
+                            loadTodayAttendance(); // Refresh attendance data
+                        } else {
+                            showError(data.message || 'Absensi gagal');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        showError('Koneksi error');
+                    }
+                }, (error) => {
+                    console.error('Geolocation error:', error);
+                    showError('Tidak dapat mengakses lokasi');
+                });
+                
+            } catch (error) {
+                console.error('Error handling absensi:', error);
+                showError('Terjadi kesalahan');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Load today's attendance - Fixed version
+        async function loadTodayAttendance() {
+            try {
+                const response = await fetch(`${API_BASE_URL}?action=status-hari-ini&user_id=1`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    todayAttendance = data.attendance;
+                    updateAttendanceDisplay();
+                    updateAbsensiButtons();
+                }
+            } catch (error) {
+                console.error('Error loading attendance:', error);
+            }
+        }
+
+        // Load schedule - Fixed version
+        async function loadSchedule() {
+            try {
+                const response = await fetch(`${API_BASE_URL}?action=jadwal-hari-ini&user_id=1`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    scheduleData = data.schedule;
+                    updateScheduleDisplay();
+                }
+            } catch (error) {
+                console.error('Error loading schedule:', error);
+            }
+        }
+
+        // Update schedule display
+        function updateScheduleDisplay() {
+            const scheduleList = document.getElementById('scheduleList');
+            const scheduleCount = document.getElementById('scheduleCount');
+            
+            if (!scheduleData || scheduleData.length === 0) {
+                scheduleCount.textContent = '0 Jadwal';
+                scheduleList.innerHTML = `
+                    <div class="schedule-item">
+                        <div class="schedule-time">-</div>
+                        <div class="schedule-content">
+                            <div class="schedule-title">Tidak ada jadwal</div>
+                            <div class="schedule-location">Belum ada jadwal untuk hari ini</div>
+                        </div>
+                        <div class="schedule-indicator indicator-blue"></div>
+                    </div>
+                `;
+                return;
+            }
+            
+            scheduleCount.textContent = `${scheduleData.length} Jadwal`;
+            
+            let scheduleHTML = '';
+            scheduleData.forEach((schedule, index) => {
+                const indicators = ['indicator-red', 'indicator-orange', 'indicator-blue', 'indicator-green'];
+                const indicator = indicators[index % indicators.length];
+                
+                scheduleHTML += `
+                    <div class="schedule-item">
+                        <div class="schedule-time">${schedule.jam}</div>
+                        <div class="schedule-content">
+                            <div class="schedule-title">${schedule.judul}</div>
+                            <div class="schedule-location">
+                                📍 ${schedule.lokasi}
+                            </div>
+                        </div>
+                        <div class="schedule-indicator ${indicator}"></div>
+                    </div>
+                `;
+            });
+            
+            scheduleList.innerHTML = scheduleHTML;
+        }
+
+        // Show riwayat
+        function showRiwayat() {
+            showModal('📊', 'Riwayat Absensi', 'Fitur riwayat absensi akan segera hadir');
+        }
+
+        // Show gaji
+        function showGaji() {
+            showModal('💰', 'Informasi Gaji', 'Fitur informasi gaji akan segera hadir');
+        }
+
+        // Modal functions
+        function showModal(icon, title, message) {
+            document.getElementById('modalIcon').textContent = icon;
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('actionModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('actionModal').style.display = 'none';
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            showModal('✅', 'Berhasil', message);
+        }
+
+        // Show error message
+        function showError(message) {
+            showModal('❌', 'Error', message);
+        }
+
+        // Loading functions
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // Utility functions
+        function formatTime(timeString) {
+            if (!timeString) return '-';
+            return new Date(`1970-01-01T${timeString}`).toLocaleTimeString('id-ID', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            });
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            return new Date(dateString).toLocaleDateString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // API Helper functions
+        async function apiRequest(endpoint, options = {}) {
+            const defaultOptions = {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            };
+            
+            const config = { ...defaultOptions, ...options };
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || `HTTP error! status: ${response.status}`);
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('API request failed:', error);
+                throw error;
+            }
+        }
+
+        // Refresh data periodically
+        setInterval(() => {
+            loadTodayAttendance();
+            loadSchedule();
+        }, 60000); // Refresh every minute
+
+        // Service Worker Registration (optional)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+
+        // Export functions for testing (optional)
+        if (typeof module !== 'undefined' && module.exports) {
+            module.exports = {
+                handleAbsensi,
+                loadUserData,
+                loadTodayAttendance,
+                loadSchedule,
+                showModal,
+                closeModal
+            };
+        }
+</script>
+</body>
+</html>
