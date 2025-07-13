@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 13, 2025 at 11:29 AM
+-- Generation Time: Jul 13, 2025 at 06:38 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -28,16 +28,18 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `absensi` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` int(11) NOT NULL,
   `pegawai_id` bigint(20) UNSIGNED NOT NULL,
-  `tipe` enum('masuk','pulang') NOT NULL,
-  `waktu` time NOT NULL,
   `tanggal` date NOT NULL,
-  `lokasi` varchar(255) DEFAULT NULL,
-  `catatan` text DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `jam_masuk` time DEFAULT NULL,
+  `jam_pulang` time DEFAULT NULL,
+  `latitude_masuk` varchar(50) DEFAULT NULL,
+  `longitude_masuk` varchar(50) DEFAULT NULL,
+  `latitude_pulang` varchar(50) DEFAULT NULL,
+  `longitude_pulang` varchar(50) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -324,7 +326,7 @@ CREATE TABLE `pegawais` (
 --
 
 INSERT INTO `pegawais` (`id`, `nama`, `jabatan`, `gender`, `alamat`, `no_telepon`, `email`, `foto`, `created_at`, `updated_at`) VALUES
-(1, 'Admin', 'Manager', 'laki-laki', 'Jl. Contoh No. 123', '08123456789', 'admin@example.com', NULL, NULL, NULL),
+(1, 'Kiraitsu Mochizuki', 'Manager', 'laki-laki', 'Jl. GPA MALANG', '08123456789', 'kiraitsu@gmail.com', NULL, '2025-07-13 14:41:15', '2025-07-13 14:41:15'),
 (91, 'andi', 'Manager', 'laki-laki', 'Jl. Buring ', '082112385294', 'andi@gmail.com', NULL, NULL, NULL),
 (92, 'ando dodo', 'HeadOffice', 'laki-laki', 'Jl Buring No 15', '084654658651', 'akuaku@gmail.com', NULL, '2025-06-29 19:02:18', '2025-06-29 19:08:18');
 
@@ -467,7 +469,27 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Admin', 'admin@example.com', NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, NULL, NULL);
+(1, 'Kiraitsu Mochizuki', 'kiraitsu@gmail.com', NULL, '$2y$10$oxj/J323DjYbtFwKllR9QOSMIGZBacAwd.XsRmIhclh1uMTfn0KW2', NULL, '2025-07-13 14:36:15', '2025-07-13 14:36:15');
+
+--
+-- Triggers `users`
+--
+DELIMITER $$
+CREATE TRIGGER `after_user_insert` AFTER INSERT ON `users` FOR EACH ROW BEGIN
+    INSERT INTO pegawais (nama, email, jabatan, gender, alamat, no_telepon, created_at, updated_at)
+    VALUES (
+        NEW.name, 
+        NEW.email, 
+        'Staff', 
+        'laki-laki', 
+        '', 
+        '', 
+        NEW.created_at, 
+        NEW.updated_at
+    );
+END
+$$
+DELIMITER ;
 
 --
 -- Indexes for dumped tables
@@ -478,8 +500,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `re
 --
 ALTER TABLE `absensi`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `pegawai_id` (`pegawai_id`),
-  ADD KEY `tanggal` (`tanggal`);
+  ADD KEY `pegawai_id` (`pegawai_id`);
 
 --
 -- Indexes for table `cache`
@@ -614,6 +635,12 @@ ALTER TABLE `status_keaktifans`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -621,7 +648,7 @@ ALTER TABLE `status_keaktifans`
 -- AUTO_INCREMENT for table `absensi`
 --
 ALTER TABLE `absensi`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `harijamkerjas`
@@ -666,6 +693,12 @@ ALTER TABLE `status_keaktifans`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -673,7 +706,7 @@ ALTER TABLE `status_keaktifans`
 -- Constraints for table `absensi`
 --
 ALTER TABLE `absensi`
-  ADD CONSTRAINT `absensi_pegawai_id_foreign` FOREIGN KEY (`pegawai_id`) REFERENCES `pegawais` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `absensi_ibfk_1` FOREIGN KEY (`pegawai_id`) REFERENCES `pegawais` (`id`);
 
 --
 -- Constraints for table `jadwal`
